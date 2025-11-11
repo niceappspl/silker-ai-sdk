@@ -48,6 +48,100 @@ Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji 
 npm install @vibeguard/agent
 ```
 
+## 🌐 Kompatybilność
+
+VibeGuard SDK działa z **dowolnym runtime Node.js** (po stronie serwera):
+
+### ✅ Pełne Wsparcie
+
+- **Node.js** (v14+) - Wszystkie funkcje działają
+- **Next.js** (Server-side / API Routes) - Pełne wsparcie przez `initVibeGuard()` i `middleware()`
+- **Express.js** - Pełne wsparcie przez `middleware()`
+- **Fastify** - Działa z adapterem Express middleware
+- **Koa.js** - Działa z adapterem Express middleware
+- **NestJS** - Działa jako Express middleware
+- **SvelteKit** - Server-side API routes
+- **Remix** - Server-side loaders/actions
+- **Nuxt.js** - Server-side API routes
+- **Cloudflare Workers** - Ograniczone (brak `process.env`, użyj parametru `env`)
+- **Vercel Edge Functions** - Ograniczone (brak `process.env`, użyj parametru `env`)
+- **AWS Lambda** - Pełne wsparcie
+- **Google Cloud Functions** - Pełne wsparcie
+- **Azure Functions** - Pełne wsparcie
+
+### ⚠️ Ograniczone Wsparcie
+
+- **Przeglądarka/Client-side** - Tylko `hookFetch()` działa, brak `process.env`, brak health checks
+- **Deno** - Nie testowane, może wymagać modyfikacji
+- **Bun** - Powinno działać, ale nie oficjalnie testowane
+
+### 📋 Wymagania
+
+- **Node.js**: >= 14.0.0
+- **Runtime**: Server-side środowisko Node.js
+- **Zależności**: axios, events, http-proxy (wbudowane)
+
+### 🔧 Przykłady dla Różnych Frameworków
+
+#### Next.js (App Router)
+
+```typescript
+// app/api/route.ts lub middleware.ts
+import { initVibeGuard, middleware } from '@vibeguard/agent';
+
+await initVibeGuard({
+  apiKey: process.env.VIBEGUARD_API_KEY!
+});
+
+export const config = {
+  matcher: '/api/:path*'
+};
+
+export default middleware({ apiKey: process.env.VIBEGUARD_API_KEY! });
+```
+
+#### Next.js (Pages Router)
+
+```typescript
+// pages/_middleware.ts lub pages/api/[...route].ts
+import { initVibeGuard, middleware } from '@vibeguard/agent';
+
+await initVibeGuard({
+  apiKey: process.env.VIBEGUARD_API_KEY!
+});
+
+export default middleware({ apiKey: process.env.VIBEGUARD_API_KEY! });
+```
+
+#### Express.js
+
+```typescript
+import express from 'express';
+import { initVibeGuard, middleware } from '@vibeguard/agent';
+
+const app = express();
+const options = { apiKey: process.env.VIBEGUARD_API_KEY! };
+
+await initVibeGuard(options);
+app.use(middleware(options));
+```
+
+#### Cloudflare Workers / Vercel Edge
+
+```typescript
+// Uwaga: Użyj parametru env zamiast process.env
+export default {
+  async fetch(request: Request, env: any) {
+    await initVibeGuard({
+      apiKey: env.VIBEGUARD_API_KEY,
+      features: { cloudCommunication: true }
+    });
+    
+    // Twoja logika worker...
+  }
+};
+```
+
 ## 🏁 Szybki Start
 
 ### Podstawowa Konfiguracja
