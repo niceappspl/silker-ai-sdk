@@ -31,7 +31,9 @@ export function hookExpress(options: VibeGuardOptions) {
 
     const anomaly = isAnomaly(event);
     if (anomaly) {
-      const cloudResponse = await sendToCloud(event, options);
+      const cloudResponse = options.features?.cloudCommunication !== false 
+        ? await sendToCloud(event, options)
+        : null;
 
       if (cloudResponse?.block) {
         if (options.debug) {

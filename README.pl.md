@@ -221,8 +221,53 @@ interface VibeGuardOptions {
   endpoint?: string;       // Opcjonalne: Niestandardowy endpoint chmurowy (domyślnie: Cloudflare Workers)
   debug?: boolean;         // Opcjonalne: Włącz logowanie do konsoli
   proxyMode?: boolean;     // Opcjonalne: Włącz tryb proxy dla konfiguracji CNAME
+  features?: VibeGuardFeatures; // Opcjonalne: Włącz/wyłącz konkretne funkcjonalności
+}
+
+interface VibeGuardFeatures {
+  rateLimit?: boolean;                      // Wykrywanie limitu szybkości
+  sqliDetection?: boolean;                 // Wykrywanie ataków SQL injection
+  xssDetection?: boolean;                  // Wykrywanie ataków XSS
+  pathTraversalDetection?: boolean;        // Ochrona przed path traversal
+  csrfDetection?: boolean;                 // Ochrona CSRF
+  ssrfDetection?: boolean;                 // Zapobieganie SSRF
+  idorDetection?: boolean;                 // Wykrywanie IDOR
+  hostHeaderInjectionDetection?: boolean;  // Ochrona przed host header injection
+  securityHeadersValidation?: boolean;    // Walidacja nagłówków bezpieczeństwa
+  dataLeakageDetection?: boolean;         // Zapobieganie wyciekom danych
+  apiSchemaValidation?: boolean;           // Walidacja schematu API
+  sessionAnomaliesDetection?: boolean;    // Wykrywanie anomalii sesji
+  fileUploadDetection?: boolean;          // Bezpieczeństwo uploadów plików
+  thirdPartyDetection?: boolean;          // Bezpieczeństwo integracji zewnętrznych
+  complianceDetection?: boolean;          // Monitorowanie compliance
+  threatIntelligence?: boolean;           // Threat intelligence
+  zeroTrustDetection?: boolean;           // Weryfikacja zero-trust
+  auditLogging?: boolean;                  // Logowanie audytu
+  performanceMonitoring?: boolean;       // Monitorowanie wydajności
+  cloudCommunication?: boolean;          // Komunikacja z chmurą
 }
 ```
+
+### Przykład Włączania/Wyłączania Funkcjonalności
+
+Możesz włączyć lub wyłączyć konkretne funkcjonalności bezpieczeństwa:
+
+```typescript
+import { initVibeGuard } from '@vibeguard/agent';
+
+await initVibeGuard({
+  apiKey: 'your-api-key',
+  features: {
+    rateLimit: true,              // Włącz wykrywanie limitu szybkości
+    sqliDetection: true,          // Włącz wykrywanie SQL injection
+    xssDetection: false,          // Wyłącz wykrywanie XSS
+    auditLogging: true,           // Włącz logowanie audytu
+    cloudCommunication: true     // Włącz komunikację z chmurą
+  }
+});
+```
+
+Domyślnie wszystkie funkcjonalności są **włączone** (zachowana kompatybilność wsteczna). Ustaw funkcjonalność na `false`, aby ją wyłączyć.
 
 ## 🛡️ Funkcje Bezpieczeństwa
 
@@ -382,6 +427,30 @@ interface VibeGuardOptions {
   endpoint?: string;
   debug?: boolean;
   proxyMode?: boolean;
+  features?: VibeGuardFeatures;
+}
+
+interface VibeGuardFeatures {
+  rateLimit?: boolean;
+  sqliDetection?: boolean;
+  xssDetection?: boolean;
+  pathTraversalDetection?: boolean;
+  csrfDetection?: boolean;
+  ssrfDetection?: boolean;
+  idorDetection?: boolean;
+  hostHeaderInjectionDetection?: boolean;
+  securityHeadersValidation?: boolean;
+  dataLeakageDetection?: boolean;
+  apiSchemaValidation?: boolean;
+  sessionAnomaliesDetection?: boolean;
+  fileUploadDetection?: boolean;
+  thirdPartyDetection?: boolean;
+  complianceDetection?: boolean;
+  threatIntelligence?: boolean;
+  zeroTrustDetection?: boolean;
+  auditLogging?: boolean;
+  performanceMonitoring?: boolean;
+  cloudCommunication?: boolean;
 }
 
 interface VibeGuardEvent {

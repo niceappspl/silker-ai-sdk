@@ -37,16 +37,23 @@ export function hookFetch(options: VibeGuardOptions) {
         console.log('🚨 Anomaly detected, consulting cloud...');
       }
 
-      logAuditEvent(event, 'flagged', 'Security anomaly detected', 'high');
+      const isAuditEnabled = options.features?.auditLogging !== false;
+      if (isAuditEnabled) {
+        logAuditEvent(event, 'flagged', 'Security anomaly detected', 'high');
+      }
 
-      const cloudResponse = await sendToCloud(event, options);
+      const cloudResponse = options.features?.cloudCommunication !== false 
+        ? await sendToCloud(event, options)
+        : null;
 
       if (cloudResponse?.block) {
         if (options.debug) {
           console.log('🚫 Cloud says BLOCK! Returning 403');
         }
 
-        logAuditEvent(event, 'blocked', `Cloud blocked: ${cloudResponse.fixSnippet || 'Unknown threat'}`, 'critical');
+        if (isAuditEnabled) {
+          logAuditEvent(event, 'blocked', `Cloud blocked: ${cloudResponse.fixSnippet || 'Unknown threat'}`, 'critical');
+        }
 
         return new Response(JSON.stringify({
           error: 'Request blocked by VibeGuard',
@@ -57,9 +64,13 @@ export function hookFetch(options: VibeGuardOptions) {
         });
       }
 
-      logAuditEvent(event, 'allowed', 'Anomaly flagged but allowed by cloud', 'medium');
+      if (isAuditEnabled) {
+        logAuditEvent(event, 'allowed', 'Anomaly flagged but allowed by cloud', 'medium');
+      }
     } else {
-      logAuditEvent(event, 'allowed', 'Request passed security checks', 'low');
+      if (options.features?.auditLogging !== false) {
+        logAuditEvent(event, 'allowed', 'Request passed security checks', 'low');
+      }
     }
 
     return originalFetch.call(this, input, init);

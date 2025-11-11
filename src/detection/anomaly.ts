@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { VibeGuardEvent, VibeGuardOptions } from '../types';
 import { checkRateLimit } from './rateLimit';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection } from './owasp';
 import { detectDataLeakage } from './dataLeakage';
@@ -11,13 +11,23 @@ import { detectSessionAnomalies } from '../analytics/userBehavior';
 import { validateSecurityHeaders } from '../validation/securityHeaders';
 import { performApiValidation } from '../validation/apiSchema';
 
-let globalOptions: { debug?: boolean } | null = null;
+let globalOptions: VibeGuardOptions | null = null;
+
+/**
+ * Sprawdza czy funkcjonalność jest włączona (domyślnie true).
+ */
+function isFeatureEnabled(feature: keyof NonNullable<VibeGuardOptions['features']>): boolean {
+  if (!globalOptions?.features) {
+    return true;
+  }
+  return globalOptions.features[feature] !== false;
+}
 
 /**
  * Ustawia globalne opcje dla modułu detekcji anomalii.
- * @param options - Opcje konfiguracyjne z flagą debug
+ * @param options - Opcje konfiguracyjne VibeGuard
  */
-export function setGlobalOptions(options: { debug?: boolean } | null) {
+export function setGlobalOptions(options: VibeGuardOptions | null) {
   globalOptions = options;
 }
 
@@ -31,26 +41,36 @@ export function setGlobalOptions(options: { debug?: boolean } | null) {
 export function isAnomaly(event: VibeGuardEvent): boolean {
   const { method, url, payload, ip, headers } = event;
 
-  if (ip && checkRateLimit(event)) {
+  if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
     return true;
   }
 
   if (payload && typeof payload === 'string') {
-    const sqliPatterns = [
-      /(\bUNION\b|\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b|\bDROP\b).*(\bFROM\b|\bWHERE\b|\bINTO\b)/i,
-      /('|(\\x27)|(\\x2D\\x2D)|(\\x23)|(\\x3B)|(\\x2F\\x2A)|(\\x2A\\x2F))/i
-    ];
+    if (isFeatureEnabled('sqliDetection')) {
+      const sqliPatterns = [
+        /(\bUNION\b|\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b|\bDROP\b).*(\bFROM\b|\bWHERE\b|\bINTO\b)/i,
+        /('|(\\x27)|(\\x2D\\x2D)|(\\x23)|(\\x3B)|(\\x2F\\x2A)|(\\x2A\\x2F))/i
+      ];
 
-    const xssPatterns = [
-      /<script[^>]*>.*?<\/script>/i,
-      /javascript:/i,
-      /on\w+\s*=/i,
-      /<iframe[^>]*>/i
-    ];
+      for (const pattern of sqliPatterns) {
+        if (pattern.test(payload)) {
+          return true;
+        }
+      }
+    }
 
-    for (const pattern of [...sqliPatterns, ...xssPatterns]) {
-      if (pattern.test(payload)) {
-        return true;
+    if (isFeatureEnabled('xssDetection')) {
+      const xssPatterns = [
+        /<script[^>]*>.*?<\/script>/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /<iframe[^>]*>/i
+      ];
+
+      for (const pattern of xssPatterns) {
+        if (pattern.test(payload)) {
+          return true;
+        }
       }
     }
   }
@@ -59,34 +79,36 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
     return false;
   }
 
-  if (url.includes('../') || url.includes('..\\')) {
+  if (isFeatureEnabled('pathTraversalDetection') && (url.includes('../') || url.includes('..\\'))) {
     return true;
   }
 
-  if (detectCsrfAttack(event, headers)) {
+  if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
     return true;
   }
 
-  if (detectSsrfAttack(event)) {
+  if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
     return true;
   }
 
-  if (detectIdorAttack(event, payload)) {
+  if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, payload)) {
     return true;
   }
 
-  if (detectHostHeaderInjection(event, headers)) {
+  if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
     return true;
   }
 
-  const headerValidation = validateSecurityHeaders(headers);
-  if (!headerValidation.valid && headers) {
-    if (globalOptions?.debug) {
-      console.log('⚠️ Missing security headers:', headerValidation.missing);
+  if (isFeatureEnabled('securityHeadersValidation')) {
+    const headerValidation = validateSecurityHeaders(headers);
+    if (!headerValidation.valid && headers) {
+      if (globalOptions?.debug) {
+        console.log('⚠️ Missing security headers:', headerValidation.missing);
+      }
     }
   }
 
-  if (event.method === 'GET' || event.method === 'POST') {
+  if (isFeatureEnabled('dataLeakageDetection') && (event.method === 'GET' || event.method === 'POST')) {
     const leakageCheck = detectDataLeakage(event.payload);
     if (leakageCheck.leaked) {
       if (globalOptions?.debug) {
@@ -98,38 +120,40 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
     }
   }
 
-  if (event.url.includes('/api/') && event.payload) {
+  if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && event.payload) {
     const apiValidation = performApiValidation(event);
     if (!apiValidation.valid && globalOptions?.debug) {
       console.log('⚠️ API schema validation warnings:', apiValidation.warnings);
     }
   }
 
-  if (detectSessionAnomalies(event)) {
+  if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
     return true;
   }
 
-  if (detectFileUploadAttack(event)) {
+  if (isFeatureEnabled('fileUploadDetection') && detectFileUploadAttack(event)) {
     return true;
   }
 
-  if (detectThirdPartyAttack(event)) {
+  if (isFeatureEnabled('thirdPartyDetection') && detectThirdPartyAttack(event)) {
     return true;
   }
 
-  if (detectComplianceViolation(event)) {
+  if (isFeatureEnabled('complianceDetection') && detectComplianceViolation(event)) {
     return true;
   }
 
-  const threatCheck = checkThreatIntelligence(event);
-  if (threatCheck.threat) {
-    if (globalOptions?.debug) {
-      console.log('🕵️ Threat intelligence alert:', threatCheck.details);
+  if (isFeatureEnabled('threatIntelligence')) {
+    const threatCheck = checkThreatIntelligence(event);
+    if (threatCheck.threat) {
+      if (globalOptions?.debug) {
+        console.log('🕵️ Threat intelligence alert:', threatCheck.details);
+      }
+      return true;
     }
-    return true;
   }
 
-  if (detectZeroTrustViolation(event)) {
+  if (isFeatureEnabled('zeroTrustDetection') && detectZeroTrustViolation(event)) {
     return true;
   }
 

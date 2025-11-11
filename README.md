@@ -223,8 +223,53 @@ interface VibeGuardOptions {
   endpoint?: string;       // Optional: Custom cloud endpoint (default: Cloudflare Workers)
   debug?: boolean;         // Optional: Enable console logging
   proxyMode?: boolean;     // Optional: Enable proxy mode for CNAME setups
+  features?: VibeGuardFeatures; // Optional: Enable/disable specific features
+}
+
+interface VibeGuardFeatures {
+  rateLimit?: boolean;                      // Rate limiting detection
+  sqliDetection?: boolean;                 // SQL injection detection
+  xssDetection?: boolean;                  // XSS attack detection
+  pathTraversalDetection?: boolean;        // Path traversal protection
+  csrfDetection?: boolean;                 // CSRF protection
+  ssrfDetection?: boolean;                 // SSRF prevention
+  idorDetection?: boolean;                 // IDOR detection
+  hostHeaderInjectionDetection?: boolean;  // Host header injection protection
+  securityHeadersValidation?: boolean;    // Security headers validation
+  dataLeakageDetection?: boolean;         // Data leakage prevention
+  apiSchemaValidation?: boolean;           // API schema validation
+  sessionAnomaliesDetection?: boolean;    // Session anomalies detection
+  fileUploadDetection?: boolean;          // File upload security
+  thirdPartyDetection?: boolean;          // Third-party integration security
+  complianceDetection?: boolean;          // Compliance monitoring
+  threatIntelligence?: boolean;           // Threat intelligence
+  zeroTrustDetection?: boolean;           // Zero-trust verification
+  auditLogging?: boolean;                  // Audit logging
+  performanceMonitoring?: boolean;       // Performance monitoring
+  cloudCommunication?: boolean;          // Cloud communication
 }
 ```
+
+### Feature Toggle Example
+
+You can enable or disable specific security features:
+
+```typescript
+import { initVibeGuard } from '@vibeguard/agent';
+
+await initVibeGuard({
+  apiKey: 'your-api-key',
+  features: {
+    rateLimit: true,              // Enable rate limiting
+    sqliDetection: true,          // Enable SQL injection detection
+    xssDetection: false,          // Disable XSS detection
+    auditLogging: true,           // Enable audit logging
+    cloudCommunication: true     // Enable cloud communication
+  }
+});
+```
+
+By default, all features are **enabled** (backward compatible). Set a feature to `false` to disable it.
 
 ## 🛡️ Security Features
 
@@ -384,6 +429,30 @@ interface VibeGuardOptions {
   endpoint?: string;
   debug?: boolean;
   proxyMode?: boolean;
+  features?: VibeGuardFeatures;
+}
+
+interface VibeGuardFeatures {
+  rateLimit?: boolean;
+  sqliDetection?: boolean;
+  xssDetection?: boolean;
+  pathTraversalDetection?: boolean;
+  csrfDetection?: boolean;
+  ssrfDetection?: boolean;
+  idorDetection?: boolean;
+  hostHeaderInjectionDetection?: boolean;
+  securityHeadersValidation?: boolean;
+  dataLeakageDetection?: boolean;
+  apiSchemaValidation?: boolean;
+  sessionAnomaliesDetection?: boolean;
+  fileUploadDetection?: boolean;
+  thirdPartyDetection?: boolean;
+  complianceDetection?: boolean;
+  threatIntelligence?: boolean;
+  zeroTrustDetection?: boolean;
+  auditLogging?: boolean;
+  performanceMonitoring?: boolean;
+  cloudCommunication?: boolean;
 }
 
 interface VibeGuardEvent {

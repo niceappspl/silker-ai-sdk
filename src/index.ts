@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { VibeGuardOptions, VibeGuardEvent, CloudResponse } from './types';
+import { VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent, CloudResponse } from './types';
 import { VibeGuardError } from './types/errors';
 import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection';
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
@@ -41,15 +41,17 @@ export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
 
   (global as any).vibeGuardStartTime = Date.now();
 
-  const testEvent: VibeGuardEvent = {
-    method: 'GET',
-    url: '/vibeguard/test',
-    timestamp: Date.now()
-  };
+  if (options.features?.cloudCommunication !== false) {
+    const testEvent: VibeGuardEvent = {
+      method: 'GET',
+      url: '/vibeguard/test',
+      timestamp: Date.now()
+    };
 
-  const response = await sendToCloud(testEvent, options);
-  if (response === null) {
-    throw new VibeGuardError('Failed to connect to VibeGuard cloud', 'CONNECTION_FAILED');
+    const response = await sendToCloud(testEvent, options);
+    if (response === null) {
+      throw new VibeGuardError('Failed to connect to VibeGuard cloud', 'CONNECTION_FAILED');
+    }
   }
 
   if (options.debug) {
@@ -61,7 +63,9 @@ export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
   const vibeEmitter = getVibeEmitter();
   vibeEmitter.on('workflow', async (event: VibeGuardEvent) => {
     if (isAnomaly(event)) {
-      const cloudResponse = await sendToCloud(event, options);
+      const cloudResponse = options.features?.cloudCommunication !== false 
+        ? await sendToCloud(event, options)
+        : null;
       if (cloudResponse?.block && options.debug) {
         console.log('🚫 Workflow anomaly blocked:', event.url);
       }
@@ -103,6 +107,7 @@ export {
 
 export type {
   VibeGuardOptions,
+  VibeGuardFeatures,
   VibeGuardEvent,
   CloudResponse
 };
