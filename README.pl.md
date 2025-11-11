@@ -55,14 +55,19 @@ npm install @vibeguard/agent
 ```typescript
 import { initVibeGuard } from '@vibeguard/agent';
 
-// Zainicjalizuj z swoim kluczem API
+// Zainicjalizuj z kluczem API ze zmiennej środowiskowej
 await initVibeGuard({
-  apiKey: 'your-api-key-here',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   debug: true // Opcjonalne: Włącz logowanie debug
 });
 
 // To wszystko! Twoja aplikacja jest teraz chroniona ✨
 // Wywołania API przez fetch() są automatycznie monitorowane
+```
+
+**⚠️ Uwaga Bezpieczeństwa**: Nigdy nie hardcoduj kluczy API w kodzie. Zawsze używaj zmiennych środowiskowych:
+```bash
+export VIBEGUARD_API_KEY="your-api-key-here"
 ```
 
 ### Integracja z Express.js
@@ -73,10 +78,12 @@ import { initVibeGuard, middleware } from '@vibeguard/agent';
 
 const app = express();
 
-await initVibeGuard({ apiKey: 'your-api-key' });
+const options = { apiKey: process.env.VIBEGUARD_API_KEY! };
+
+await initVibeGuard(options);
 
 // Dodaj middleware dla monitorowania specyficznego dla Express
-app.use(middleware({ apiKey: 'your-api-key' }));
+app.use(middleware(options));
 
 app.post('/api/login', (req, res) => {
   // VibeGuard automatycznie skanuje żądania
@@ -113,7 +120,7 @@ export VIBEGUARD_PROXY_PORT="8080"
 
 # Włącz tryb proxy
 await initVibeGuard({
-  apiKey: 'your-api-key',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   proxyMode: true
 });
 ```
@@ -256,7 +263,7 @@ Możesz włączyć lub wyłączyć konkretne funkcjonalności bezpieczeństwa:
 import { initVibeGuard } from '@vibeguard/agent';
 
 await initVibeGuard({
-  apiKey: 'your-api-key',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   features: {
     rateLimit: true,              // Włącz wykrywanie limitu szybkości
     sqliDetection: true,          // Włącz wykrywanie SQL injection
@@ -268,6 +275,12 @@ await initVibeGuard({
 ```
 
 Domyślnie wszystkie funkcjonalności są **włączone** (zachowana kompatybilność wsteczna). Ustaw funkcjonalność na `false`, aby ją wyłączyć.
+
+**🔒 Najlepsze Praktyki Bezpieczeństwa:**
+- Zawsze używaj zmiennych środowiskowych dla kluczy API: `process.env.VIBEGUARD_API_KEY`
+- Nigdy nie commituj kluczy API do kontroli wersji
+- Używaj plików `.env` (dodaj do `.gitignore`) do lokalnego rozwoju
+- Używaj bezpiecznego zarządzania sekretami w produkcji (AWS Secrets Manager, Vercel Environment Variables, itp.)
 
 ## 🛡️ Funkcje Bezpieczeństwa
 

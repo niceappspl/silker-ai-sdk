@@ -33,9 +33,16 @@ function setGlobalOptions(options: VibeGuardOptions | null) {
  * @throws {VibeGuardError} Jeśli brakuje klucza API lub połączenie z chmurą nie powiodło się
  */
 export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
-  if (!options.apiKey) {
-    throw new VibeGuardError('API key required', 'MISSING_API_KEY');
+  const apiKey = options.apiKey || process.env.VIBEGUARD_API_KEY;
+  
+  if (!apiKey) {
+    throw new VibeGuardError(
+      'API key required. Provide it via options.apiKey or VIBEGUARD_API_KEY environment variable.',
+      'MISSING_API_KEY'
+    );
   }
+
+  const optionsWithApiKey = { ...options, apiKey };
 
   setGlobalOptions(options);
 

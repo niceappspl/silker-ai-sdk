@@ -57,14 +57,19 @@ npm install @vibeguard/agent
 ```typescript
 import { initVibeGuard } from '@vibeguard/agent';
 
-// Initialize with your API key
+// Initialize with your API key from environment variable
 await initVibeGuard({
-  apiKey: 'your-api-key-here',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   debug: true // Optional: Enable debug logging
 });
 
 // That's it! Your app is now protected ✨
 // API calls via fetch() are automatically monitored
+```
+
+**⚠️ Security Note**: Never hardcode API keys in your code. Always use environment variables:
+```bash
+export VIBEGUARD_API_KEY="your-api-key-here"
 ```
 
 ### Express.js Integration
@@ -75,10 +80,12 @@ import { initVibeGuard, middleware } from '@vibeguard/agent';
 
 const app = express();
 
-await initVibeGuard({ apiKey: 'your-api-key' });
+const options = { apiKey: process.env.VIBEGUARD_API_KEY! };
+
+await initVibeGuard(options);
 
 // Add middleware for Express-specific monitoring
-app.use(middleware({ apiKey: 'your-api-key' }));
+app.use(middleware(options));
 
 app.post('/api/login', (req, res) => {
   // VibeGuard automatically scans requests
@@ -115,7 +122,7 @@ export VIBEGUARD_PROXY_PORT="8080"
 
 # Enable proxy mode
 await initVibeGuard({
-  apiKey: 'your-api-key',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   proxyMode: true
 });
 ```
@@ -258,7 +265,7 @@ You can enable or disable specific security features:
 import { initVibeGuard } from '@vibeguard/agent';
 
 await initVibeGuard({
-  apiKey: 'your-api-key',
+  apiKey: process.env.VIBEGUARD_API_KEY!,
   features: {
     rateLimit: true,              // Enable rate limiting
     sqliDetection: true,          // Enable SQL injection detection
@@ -270,6 +277,12 @@ await initVibeGuard({
 ```
 
 By default, all features are **enabled** (backward compatible). Set a feature to `false` to disable it.
+
+**🔒 Security Best Practices:**
+- Always use environment variables for API keys: `process.env.VIBEGUARD_API_KEY`
+- Never commit API keys to version control
+- Use `.env` files (add to `.gitignore`) for local development
+- Use secure secret management in production (AWS Secrets Manager, Vercel Environment Variables, etc.)
 
 ## 🛡️ Security Features
 
