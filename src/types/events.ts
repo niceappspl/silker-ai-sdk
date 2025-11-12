@@ -1,7 +1,7 @@
 /**
- * Zdarzenie monitorowane przez VibeGuard.
+ * Zdarzenie monitorowane przez Silker AI.
  */
-export interface VibeGuardEvent {
+export interface SilkerEvent {
   /** Metoda HTTP żądania */
   method: string;
   /** URL żądania */
@@ -17,4 +17,6 @@ export interface VibeGuardEvent {
   /** Opcjonalne nagłówki HTTP */
   headers?: Record<string, string>;
 }
+
+export type VibeGuardEvent = SilkerEvent;
 

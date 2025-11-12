@@ -1,4 +1,4 @@
-# VibeGuard Multi-Language SDK Architecture
+# Silker AI Multi-Language SDK Architecture
 
 ## Obecna Architektura (Node.js SDK)
 
@@ -14,7 +14,7 @@
 │         └─────────────────┼────────────────────┘             │
 │                           │                                  │
 │                  ┌────────▼────────┐                        │
-│                  │  VibeGuard SDK  │                        │
+│                  │   Silker AI     │                        │
 │                  │  (TypeScript)   │                        │
 │                  └────────┬─────────┘                        │
 │                           │                                  │
@@ -45,8 +45,8 @@
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │  REST API Contract                                   │  │
 │  │  POST /api                                           │  │
-│  │  Headers: Authorization, X-VibeGuard-Version        │  │
-│  │  Body: VibeGuardEvent (JSON)                        │  │
+│  │  Headers: Authorization, X-Silker-Version           │  │
+│  │  Body: SilkerEvent (JSON)                           │  │
 │  │  Response: CloudResponse (JSON)                     │  │
 │  └──────────────────────────────────────────────────────┘  │
 │                                                              │
@@ -72,7 +72,7 @@
 
 ### 1. Protokół Komunikacji z Chmurą (REST API)
 
-**Endpoint:** `POST https://vibeguard.cloudflareworkers.com/api`
+**Endpoint:** `POST https://silker.cloudflareworkers.com/api`
 
 **Request:**
 ```json
@@ -103,7 +103,7 @@
 **Headers:**
 - `Authorization: Bearer {apiKey}`
 - `Content-Type: application/json`
-- `X-VibeGuard-Version: {version}`
+- `X-Silker-Version: {version}`
 
 ### 2. Wspólne Reguły Detekcji
 
@@ -137,33 +137,33 @@ Wspólna logika maskowania wrażliwych danych przed wysłaniem do chmury.
 ### Python SDK
 
 ```python
-# vibeguard/__init__.py
-from vibeguard.agent import VibeGuard
+# silker/__init__.py
+from silker.agent import SilkerAI
 
-agent = VibeGuard(api_key="your-key")
+agent = SilkerAI(api_key="your-key")
 agent.init()
 
 # Flask integration
-from vibeguard.flask import VibeGuardMiddleware
+from silker.flask import SilkerMiddleware
 
 app = Flask(__name__)
-app.wsgi_app = VibeGuardMiddleware(app.wsgi_app, api_key="your-key")
+app.wsgi_app = SilkerMiddleware(app.wsgi_app, api_key="your-key")
 
 # Django integration
 MIDDLEWARE = [
-    'vibeguard.django.VibeGuardMiddleware',
+    'silker.django.SilkerMiddleware',
 ]
 
 # FastAPI integration
-from vibeguard.fastapi import VibeGuardMiddleware
+from silker.fastapi import SilkerMiddleware
 
-app.add_middleware(VibeGuardMiddleware, api_key="your-key")
+app.add_middleware(SilkerMiddleware, api_key="your-key")
 ```
 
 **Struktura:**
 ```
-vibeguard-python/
-├── vibeguard/
+silker-python/
+├── silker/
 │   ├── __init__.py
 │   ├── agent.py          # Główna klasa agenta
 │   ├── detection.py      # Lokalna detekcja anomalii
@@ -180,9 +180,9 @@ vibeguard-python/
 
 ```java
 // Maven/Gradle dependency
-import com.vibeguard.agent.VibeGuard;
+import com.silker.agent.SilkerAI;
 
-VibeGuard agent = VibeGuard.builder()
+SilkerAI agent = SilkerAI.builder()
     .apiKey("your-key")
     .debug(true)
     .build();
@@ -191,25 +191,25 @@ agent.init();
 
 // Spring Boot integration
 @Configuration
-public class VibeGuardConfig {
+public class SilkerConfig {
     @Bean
-    public VibeGuardFilter vibeGuardFilter() {
-        return new VibeGuardFilter("your-key");
+    public SilkerFilter silkerFilter() {
+        return new SilkerFilter("your-key");
     }
 }
 
 // Servlet Filter
 @WebFilter(urlPatterns = "/*")
-public class VibeGuardFilter implements Filter {
+public class SilkerFilter implements Filter {
     // ...
 }
 ```
 
 **Struktura:**
 ```
-vibeguard-java/
-├── src/main/java/com/vibeguard/agent/
-│   ├── VibeGuard.java
+silker-java/
+├── src/main/java/com/silker/agent/
+│   ├── SilkerAI.java
 │   ├── DetectionEngine.java
 │   ├── CloudClient.java
 │   ├── Sanitization.java
@@ -222,9 +222,9 @@ vibeguard-java/
 ### Go SDK
 
 ```go
-import "github.com/vibeguard/agent"
+import "github.com/silker/agent"
 
-agent := vibeguard.New(vibeguard.Config{
+agent := silker.New(silker.Config{
     APIKey: "your-key",
     Debug: true,
 })
@@ -232,15 +232,15 @@ agent := vibeguard.New(vibeguard.Config{
 agent.Init()
 
 // Gin integration
-import "github.com/vibeguard/agent/gin"
+import "github.com/silker/agent/gin"
 
 r := gin.Default()
-r.Use(vibeguard.GinMiddleware("your-key"))
+r.Use(silker.GinMiddleware("your-key"))
 
 // Echo integration
-import "github.com/vibeguard/agent/echo"
+import "github.com/silker/agent/echo"
 
-e.Use(vibeguard.EchoMiddleware("your-key"))
+e.Use(silker.EchoMiddleware("your-key"))
 ```
 
 ## Strategia Implementacji
@@ -286,10 +286,10 @@ e.Use(vibeguard.EchoMiddleware("your-key"))
 ## Przykład: Python SDK Structure
 
 ```
-vibeguard-python/
-├── vibeguard/
+silker-python/
+├── silker/
 │   ├── __init__.py
-│   ├── agent.py              # initVibeGuard, emitWorkflowEvent
+│   ├── agent.py              # SilkerAI.init, emitWorkflowEvent
 │   ├── detection/
 │   │   ├── __init__.py
 │   │   ├── anomaly.py        # isAnomaly()
@@ -322,20 +322,20 @@ Wszystkie SDK powinny mieć **identyczne API**:
 
 ```typescript
 // TypeScript (obecny)
-await initVibeGuard({ apiKey: 'key' });
-emitWorkflowEvent({ method: 'POST', url: '/api' });
+await SilkerAI.init({ apiKey: 'key' });
+SilkerAI.emitWorkflowEvent({ method: 'POST', url: '/api' });
 ```
 
 ```python
 # Python (przyszły)
-vibeguard.init(api_key='key')
-vibeguard.emit_workflow_event(method='POST', url='/api')
+silker.init(api_key='key')
+silker.emit_workflow_event(method='POST', url='/api')
 ```
 
 ```java
 // Java (przyszły)
-VibeGuard.init(new VibeGuardOptions().setApiKey("key"));
-VibeGuard.emitWorkflowEvent(new VibeGuardEvent().setMethod("POST").setUrl("/api"));
+SilkerAI.init(new SilkerOptions().setApiKey("key"));
+SilkerAI.emitWorkflowEvent(new SilkerEvent().setMethod("POST").setUrl("/api"));
 ```
 
 ## Zalecenia

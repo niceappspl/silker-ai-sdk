@@ -1,6 +1,6 @@
-# @vibeguard/agent
+# @silker/ai-sdk
 
-🛡️ **Lekki Agent Bezpieczeństwa Runtime** dla aplikacji vibe-coding/no-code. Wykrywa anomalie, blokuje ataki i wysyła alerty do Twojej chmurowej infrastruktury z wsparciem AI.
+**Lekki Agent Bezpieczeństwa Runtime** dla aplikacji opartych na AI. Wykrywa anomalie, blokuje ataki i zapewnia ochronę w czasie rzeczywistym z inteligentnymi informacjami.
 
 Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji Node.js, która potrzebuje bezpieczeństwa runtime bez dużego nakładu pracy.
 
@@ -42,20 +42,20 @@ Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji 
 - 🔒 **Sanityzacja Danych** - Automatyczne maskowanie wrażliwych danych przed wysłaniem
 - ⚡ **Samowystarczalny** - ~63KB spakowane gzip, wszystkie zależności włączone
 
-## 🚀 Instalacja
+## Instalacja
 
 ```bash
-npm install @vibeguard/agent
+npm install @silker/ai-sdk
 ```
 
-## 🌐 Kompatybilność
+## Kompatybilność
 
-VibeGuard SDK działa z **dowolnym runtime Node.js** (po stronie serwera):
+Silker AI SDK działa z **dowolnym runtime Node.js** (po stronie serwera):
 
-### ✅ Pełne Wsparcie
+### Pełne Wsparcie
 
 - **Node.js** (v14+) - Wszystkie funkcje działają
-- **Next.js** (Server-side / API Routes) - Pełne wsparcie przez `initVibeGuard()` i `middleware()`
+- **Next.js** (Server-side / API Routes) - Pełne wsparcie przez `SilkerAI.init()` i `middleware()`
 - **Express.js** - Pełne wsparcie przez `middleware()`
 - **Fastify** - Działa z adapterem Express middleware
 - **Koa.js** - Działa z adapterem Express middleware
@@ -69,71 +69,73 @@ VibeGuard SDK działa z **dowolnym runtime Node.js** (po stronie serwera):
 - **Google Cloud Functions** - Pełne wsparcie
 - **Azure Functions** - Pełne wsparcie
 
-### ⚠️ Ograniczone Wsparcie
+### Ograniczone Wsparcie
 
 - **Przeglądarka/Client-side** - Tylko `hookFetch()` działa, brak `process.env`, brak health checks
 - **Deno** - Nie testowane, może wymagać modyfikacji
 - **Bun** - Powinno działać, ale nie oficjalnie testowane
 
-### 📋 Wymagania
+### Wymagania
 
 - **Node.js**: >= 14.0.0
 - **Runtime**: Server-side środowisko Node.js
 - **Zależności**: axios, events, http-proxy (wbudowane)
 
-### 🔧 Przykłady dla Różnych Frameworków
+### Przykłady dla Różnych Frameworków
 
 #### Next.js (App Router)
 
 ```typescript
 // app/api/route.ts lub middleware.ts
-import { initVibeGuard, middleware } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
-await initVibeGuard({
-  apiKey: process.env.VIBEGUARD_API_KEY!
+await SilkerAI.init({
+  apiKey: process.env.SILKER_API_KEY!
 });
 
 export const config = {
   matcher: '/api/:path*'
 };
 
-export default middleware({ apiKey: process.env.VIBEGUARD_API_KEY! });
+export default SilkerAI.middleware({ apiKey: process.env.SILKER_API_KEY! });
 ```
 
 #### Next.js (Pages Router)
 
 ```typescript
 // pages/_middleware.ts lub pages/api/[...route].ts
-import { initVibeGuard, middleware } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
-await initVibeGuard({
-  apiKey: process.env.VIBEGUARD_API_KEY!
+await SilkerAI.init({
+  apiKey: process.env.SILKER_API_KEY!
 });
 
-export default middleware({ apiKey: process.env.VIBEGUARD_API_KEY! });
+export default SilkerAI.middleware({ apiKey: process.env.SILKER_API_KEY! });
 ```
 
 #### Express.js
 
 ```typescript
 import express from 'express';
-import { initVibeGuard, middleware } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 const app = express();
-const options = { apiKey: process.env.VIBEGUARD_API_KEY! };
+const options = { apiKey: process.env.SILKER_API_KEY! };
 
-await initVibeGuard(options);
-app.use(middleware(options));
+await SilkerAI.init(options);
+app.use(SilkerAI.middleware(options));
 ```
 
 #### Cloudflare Workers / Vercel Edge
 
 ```typescript
 // Uwaga: Użyj parametru env zamiast process.env
+import SilkerAI from '@silker/ai-sdk';
+
 export default {
   async fetch(request: Request, env: any) {
-    await initVibeGuard({
-      apiKey: env.VIBEGUARD_API_KEY,
+    await SilkerAI.init({
+      apiKey: env.SILKER_API_KEY,
       features: { cloudCommunication: true }
     });
     
@@ -142,45 +144,45 @@ export default {
 };
 ```
 
-## 🏁 Szybki Start
+## Szybki Start
 
 ### Podstawowa Konfiguracja
 
 ```typescript
-import { initVibeGuard } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Zainicjalizuj z kluczem API ze zmiennej środowiskowej
-await initVibeGuard({
-  apiKey: process.env.VIBEGUARD_API_KEY!,
+await SilkerAI.init({
+  apiKey: process.env.SILKER_API_KEY!,
   debug: true // Opcjonalne: Włącz logowanie debug
 });
 
-// To wszystko! Twoja aplikacja jest teraz chroniona ✨
+// To wszystko! Twoja aplikacja jest teraz chroniona
 // Wywołania API przez fetch() są automatycznie monitorowane
 ```
 
-**⚠️ Uwaga Bezpieczeństwa**: Nigdy nie hardcoduj kluczy API w kodzie. Zawsze używaj zmiennych środowiskowych:
+**Uwaga Bezpieczeństwa**: Nigdy nie hardcoduj kluczy API w kodzie. Zawsze używaj zmiennych środowiskowych:
 ```bash
-export VIBEGUARD_API_KEY="your-api-key-here"
+export SILKER_API_KEY="your-api-key-here"
 ```
 
 ### Integracja z Express.js
 
 ```typescript
 import express from 'express';
-import { initVibeGuard, middleware } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 const app = express();
 
-const options = { apiKey: process.env.VIBEGUARD_API_KEY! };
+const options = { apiKey: process.env.SILKER_API_KEY! };
 
-await initVibeGuard(options);
+await SilkerAI.init(options);
 
 // Dodaj middleware dla monitorowania specyficznego dla Express
-app.use(middleware(options));
+app.use(SilkerAI.middleware(options));
 
 app.post('/api/login', (req, res) => {
-  // VibeGuard automatycznie skanuje żądania
+  // Silker AI automatycznie skanuje żądania
   res.json({ success: true });
 });
 ```
@@ -188,11 +190,11 @@ app.post('/api/login', (req, res) => {
 ### Monitorowanie Niestandardowych Workflow
 
 ```typescript
-import { emitWorkflowEvent } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Monitoruj niestandardową logikę biznesową
 function processPayment(amount: number, userId: string) {
-  emitWorkflowEvent({
+  SilkerAI.emitWorkflowEvent({
     method: 'POST',
     url: `/payments/${userId}`,
     payload: { amount },
@@ -205,32 +207,32 @@ function processPayment(amount: number, userId: string) {
 
 ### Tryb Proxy (Zaawansowany)
 
-Dla konfiguracji CNAME lub gdy potrzebujesz proxy ruchu przez VibeGuard:
+Dla konfiguracji CNAME lub gdy potrzebujesz proxy ruchu przez Silker AI:
 
 ```bash
 # Ustaw zmienne środowiskowe
-export VIBEGUARD_TARGET_URL="http://your-app.com"
-export VIBEGUARD_PROXY_PORT="8080"
+export SILKER_TARGET_URL="http://your-app.com"
+export SILKER_PROXY_PORT="8080"
 
 # Włącz tryb proxy
-await initVibeGuard({
-  apiKey: process.env.VIBEGUARD_API_KEY!,
+await SilkerAI.init({
+  apiKey: process.env.SILKER_API_KEY!,
   proxyMode: true
 });
 ```
 
-Następnie skieruj swoją domenę na `http://localhost:8080` a VibeGuard będzie proxy wszystkie żądania ze skanowaniem bezpieczeństwa.
+Następnie skieruj swoją domenę na `http://localhost:8080` a Silker AI będzie proxy wszystkie żądania ze skanowaniem bezpieczeństwa.
 
 ### Monitorowanie Wydajności
 
 ```typescript
-import { recordPerformanceMetrics, getPerformanceReport } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Zapisuj metryki wydajności
-recordPerformanceMetrics(event, responseTime, statusCode);
+SilkerAI.recordPerformanceMetrics(event, responseTime, statusCode);
 
 // Pobierz raport wydajności
-const report = getPerformanceReport();
+const report = SilkerAI.getPerformanceReport();
 console.log('Średni czas odpowiedzi:', report.summary.averageResponseTime);
 console.log('Wolne żądania:', report.summary.slowRequests);
 console.log('Anomalie:', report.anomalies);
@@ -239,16 +241,16 @@ console.log('Anomalie:', report.anomalies);
 ### Logowanie Audytu
 
 ```typescript
-import { logAuditEvent, getAuditLogs, getAuditSummary } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Loguj zdarzenie audytu
-logAuditEvent(event, 'blocked', 'SQL injection detected', 'high');
+SilkerAI.logAuditEvent(event, 'blocked', 'SQL injection detected', 'high');
 
 // Pobierz wpisy audytu z filtrami
-const criticalLogs = getAuditLogs(50, 'critical', 'blocked');
+const criticalLogs = SilkerAI.getAuditLogs(50, 'critical', 'blocked');
 
 // Pobierz podsumowanie audytu
-const summary = getAuditSummary();
+const summary = SilkerAI.getAuditSummary();
 console.log('Całkowita liczba wpisów:', summary.totalLogs);
 console.log('Podział według ważności:', summary.severityBreakdown);
 ```
@@ -256,14 +258,14 @@ console.log('Podział według ważności:', summary.severityBreakdown);
 ### Zarządzanie Konfiguracją Runtime
 
 ```typescript
-import { getRuntimeConfig, updateRuntimeConfig } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Pobierz aktualną konfigurację
-const config = getRuntimeConfig();
+const config = SilkerAI.getRuntimeConfig();
 console.log('Próg limitu szybkości:', config.rateLimitThreshold);
 
 // Zaktualizuj konfigurację w czasie rzeczywistym
-const result = updateRuntimeConfig({
+const result = SilkerAI.updateRuntimeConfig({
   rateLimitThreshold: 10,
   slowRequestThreshold: 3000,
   debug: true
@@ -274,10 +276,10 @@ console.log('Zaktualizowane klucze:', result.updated);
 ### Sprawdzanie Zdrowia Systemu
 
 ```typescript
-import { performHealthCheck } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Wykonaj sprawdzenie zdrowia
-const health = performHealthCheck();
+const health = SilkerAI.performHealthCheck();
 console.log('Status:', health.status); // 'healthy' | 'degraded' | 'unhealthy'
 console.log('Pamięć:', health.checks.memory.usage, 'MB');
 console.log('Czas działania:', health.uptime, 'ms');
@@ -286,10 +288,10 @@ console.log('Czas działania:', health.uptime, 'ms');
 ### Analiza Zachowań Użytkowników
 
 ```typescript
-import { analyzeUserBehavior } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Analizuj zachowanie użytkownika
-const behavior = analyzeUserBehavior(event);
+const behavior = SilkerAI.analyzeUserBehavior(event);
 if (behavior.isAnomalous) {
   console.log('Wykryto anomalie:', behavior.reasons);
   console.log('Wynik punktowy:', behavior.score);
@@ -299,33 +301,33 @@ if (behavior.isAnomalous) {
 ### Walidacja API
 
 ```typescript
-import { performApiValidation, validateSecurityHeaders } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
 // Waliduj schemat API
-const apiValidation = performApiValidation(event);
+const apiValidation = SilkerAI.performApiValidation(event);
 if (!apiValidation.valid) {
   console.log('Ostrzeżenia API:', apiValidation.warnings);
 }
 
 // Waliduj nagłówki bezpieczeństwa
-const headerValidation = validateSecurityHeaders(req.headers);
+const headerValidation = SilkerAI.validateSecurityHeaders(req.headers);
 if (!headerValidation.valid) {
   console.log('Brakujące nagłówki:', headerValidation.missing);
 }
 ```
 
-## 🔧 Opcje Konfiguracji
+## Opcje Konfiguracji
 
 ```typescript
-interface VibeGuardOptions {
-  apiKey: string;          // Wymagane: Twój klucz API VibeGuard
+interface SilkerOptions {
+  apiKey: string;          // Wymagane: Twój klucz API Silker AI
   endpoint?: string;       // Opcjonalne: Niestandardowy endpoint chmurowy (domyślnie: Cloudflare Workers)
   debug?: boolean;         // Opcjonalne: Włącz logowanie do konsoli
   proxyMode?: boolean;     // Opcjonalne: Włącz tryb proxy dla konfiguracji CNAME
-  features?: VibeGuardFeatures; // Opcjonalne: Włącz/wyłącz konkretne funkcjonalności
+  features?: SilkerFeatures; // Opcjonalne: Włącz/wyłącz konkretne funkcjonalności
 }
 
-interface VibeGuardFeatures {
+interface SilkerFeatures {
   rateLimit?: boolean;                      // Wykrywanie limitu szybkości
   sqliDetection?: boolean;                 // Wykrywanie ataków SQL injection
   xssDetection?: boolean;                  // Wykrywanie ataków XSS
@@ -354,10 +356,10 @@ interface VibeGuardFeatures {
 Możesz włączyć lub wyłączyć konkretne funkcjonalności bezpieczeństwa:
 
 ```typescript
-import { initVibeGuard } from '@vibeguard/agent';
+import SilkerAI from '@silker/ai-sdk';
 
-await initVibeGuard({
-  apiKey: process.env.VIBEGUARD_API_KEY!,
+await SilkerAI.init({
+  apiKey: process.env.SILKER_API_KEY!,
   features: {
     rateLimit: true,              // Włącz wykrywanie limitu szybkości
     sqliDetection: true,          // Włącz wykrywanie SQL injection
@@ -370,13 +372,13 @@ await initVibeGuard({
 
 Domyślnie wszystkie funkcjonalności są **włączone** (zachowana kompatybilność wsteczna). Ustaw funkcjonalność na `false`, aby ją wyłączyć.
 
-**🔒 Najlepsze Praktyki Bezpieczeństwa:**
-- Zawsze używaj zmiennych środowiskowych dla kluczy API: `process.env.VIBEGUARD_API_KEY`
+**Najlepsze Praktyki Bezpieczeństwa:**
+- Zawsze używaj zmiennych środowiskowych dla kluczy API: `process.env.SILKER_API_KEY`
 - Nigdy nie commituj kluczy API do kontroli wersji
 - Używaj plików `.env` (dodaj do `.gitignore`) do lokalnego rozwoju
 - Używaj bezpiecznego zarządzania sekretami w produkcji (AWS Secrets Manager, Vercel Environment Variables, itp.)
 
-## 🛡️ Funkcje Bezpieczeństwa
+## Funkcje Bezpieczeństwa
 
 ### Rdzeń Silnika Bezpieczeństwa
 - **Ograniczenia Częstotliwości**: Blokuje IP przekraczające 5 żądań na minutę
@@ -472,9 +474,9 @@ Gdy anomalie są wykrywane:
 2. **Alert Chmurowy**: Wysyła metadane do Twojego backendu dla analizy AI
 3. **Łagodna Degradacja**: Nigdy nie psuje Twojej aplikacji - zawodzi bezpiecznie
 
-## 📡 Integracja z Chmurą
+## Integracja z Chmurą
 
-VibeGuard komunikuje się z Twoim backendem Cloudflare Workers:
+Silker AI komunikuje się z Twoim backendem Cloudflare Workers:
 
 ```typescript
 // Przykładowa odpowiedź chmurowa
@@ -488,56 +490,56 @@ VibeGuard komunikuje się z Twoim backendem Cloudflare Workers:
 
 ### Sanityzacja Danych
 
-VibeGuard automatycznie sanityzuje wrażliwe dane przed wysłaniem do chmury:
+Silker AI automatycznie sanityzuje wrażliwe dane przed wysłaniem do chmury:
 - Hasła i sekrety są maskowane
 - Tokeny i klucze API są ukrywane
 - Dane osobowe są chronione
 - Connection strings do baz danych są maskowane
 
-## 📚 API Reference
+## API Reference
 
 ### Eksportowane Funkcje
 
 ```typescript
 // Inicjalizacja
-initVibeGuard(options: VibeGuardOptions): Promise<void>
-emitWorkflowEvent(event: Omit<VibeGuardEvent, 'timestamp'>): void
+SilkerAI.init(options: SilkerOptions): Promise<void>
+SilkerAI.emitWorkflowEvent(event: Omit<SilkerEvent, 'timestamp'>): void
 
 // Middleware Express
-middleware(options: VibeGuardOptions): (req, res, next) => Promise<void>
+SilkerAI.middleware(options: SilkerOptions): (req, res, next) => Promise<void>
 
 // Monitorowanie wydajności
-recordPerformanceMetrics(event: VibeGuardEvent, responseTime: number, statusCode?: number): void
-getPerformanceReport(): PerformanceReport
+SilkerAI.recordPerformanceMetrics(event: SilkerEvent, responseTime: number, statusCode?: number): void
+SilkerAI.getPerformanceReport(): PerformanceReport
 
 // Audyt
-logAuditEvent(event: VibeGuardEvent, action: 'allowed' | 'blocked' | 'flagged', reason: string, severity?: 'low' | 'medium' | 'high' | 'critical', metadata?: any): void
-getAuditLogs(limit?: number, severity?: string, action?: string): AuditLogEntry[]
-getAuditSummary(): AuditSummary
+SilkerAI.logAuditEvent(event: SilkerEvent, action: 'allowed' | 'blocked' | 'flagged', reason: string, severity?: 'low' | 'medium' | 'high' | 'critical', metadata?: any): void
+SilkerAI.getAuditLogs(limit?: number, severity?: string, action?: string): AuditLogEntry[]
+SilkerAI.getAuditSummary(): AuditSummary
 
 // Konfiguracja
-getRuntimeConfig(): RuntimeConfig
-updateRuntimeConfig(updates: Partial<RuntimeConfig>): { success: boolean; updated: string[] }
+SilkerAI.getRuntimeConfig(): RuntimeConfig
+SilkerAI.updateRuntimeConfig(updates: Partial<RuntimeConfig>): { success: boolean; updated: string[] }
 
 // Health check
-performHealthCheck(): HealthStatus
+SilkerAI.performHealthCheck(): HealthStatus
 
 // Komunikacja z chmurą
-sendToCloud(event: VibeGuardEvent, options: VibeGuardOptions): Promise<CloudResponse | null>
+SilkerAI.sendToCloud(event: SilkerEvent, options: SilkerOptions): Promise<CloudResponse | null>
 ```
 
 ### Typy
 
 ```typescript
-interface VibeGuardOptions {
+interface SilkerOptions {
   apiKey: string;
   endpoint?: string;
   debug?: boolean;
   proxyMode?: boolean;
-  features?: VibeGuardFeatures;
+  features?: SilkerFeatures;
 }
 
-interface VibeGuardFeatures {
+interface SilkerFeatures {
   rateLimit?: boolean;
   sqliDetection?: boolean;
   xssDetection?: boolean;
@@ -560,7 +562,7 @@ interface VibeGuardFeatures {
   cloudCommunication?: boolean;
 }
 
-interface VibeGuardEvent {
+interface SilkerEvent {
   method: string;
   url: string;
   payload?: any;
@@ -601,19 +603,19 @@ interface HealthStatus {
 }
 ```
 
-## 🧪 Testowanie
+## Testowanie
 
 ```bash
 npm test
 ```
 
 Testy obejmują:
-- ✅ Inicjalizację agenta
-- ✅ Wykrywanie anomalii (ograniczenia częstotliwości, SQLi, XSS)
-- ✅ Komunikację z chmurą
-- ✅ Obsługę błędów
+- Inicjalizację agenta
+- Wykrywanie anomalii (ograniczenia częstotliwości, SQLi, XSS)
+- Komunikację z chmurą
+- Obsługę błędów
 
-## 📦 Build i Publikacja
+## Build i Publikacja
 
 ```bash
 npm run build    # Kompiluj TypeScript + bundle z esbuild
@@ -621,11 +623,11 @@ npm test         # Uruchom suite testów
 npm publish      # Opublikuj w rejestrze npm
 ```
 
-## 🎯 Architektura
+## Architektura
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Twoja App     │───▶│  VibeGuard Agent │───▶│ Cloudflare + AI │
+│   Twoja App     │───▶│   Silker AI      │───▶│ Cloudflare + AI │
 │                 │    │                  │    │                 │
 │ • wywołania     │    │ • Wykrywanie     │    │ • W czasie      │
 │   fetch()       │    │   Anomalii       │    │   rzeczywistym  │
@@ -634,14 +636,14 @@ npm publish      # Opublikuj w rejestrze npm
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
-## 🤝 Współpraca
+## Współpraca
 
-VibeGuard jest zbudowany z ❤️ dla społeczności deweloperów. PR-y mile widziane!
+Silker AI jest zbudowany dla społeczności deweloperów. PR-y mile widziane!
 
-## 📄 Licencja
+## Licencja
 
-Licencja MIT - Trzymaj vibe bezpiecznie! 🎉
+Licencja MIT
 
 ---
 
-**Stworzone z ❤️ przez VibeGuard AI - Bezpieczeństwo, które nie wkurza**
+**Stworzone przez Silker AI**

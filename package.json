@@ -1,7 +1,7 @@
 {
-  "name": "@vibeguard/agent",
+  "name": "@silker/ai-sdk",
   "version": "0.1.0",
-  "description": "Lightweight runtime security agent for vibe-coding/no-code apps - detects anomalies, blocks attacks, and alerts cloud backend",
+  "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -21,11 +21,11 @@
     "sql-injection",
     "xss"
   ],
-  "author": "VibeGuard AI",
+  "author": "Silker AI",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vibeguard/agent.git"
+    "url": "https://github.com/silker/ai-sdk.git"
   },
   "dependencies": {
     "axios": "^1.6.0",

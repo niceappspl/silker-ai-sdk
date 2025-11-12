@@ -1,7 +1,7 @@
 /**
- * Funkcjonalności VibeGuard do włączania/wyłączania.
+ * Funkcjonalności Silker AI do włączania/wyłączania.
  */
-export interface VibeGuardFeatures {
+export interface SilkerFeatures {
   /** Wykrywanie limitu szybkości (rate limiting) */
   rateLimit?: boolean;
   /** Wykrywanie ataków SQL injection */
@@ -45,18 +45,21 @@ export interface VibeGuardFeatures {
 }
 
 /**
- * Opcje konfiguracyjne dla VibeGuard.
+ * Opcje konfiguracyjne dla Silker AI.
  */
-export interface VibeGuardOptions {
+export interface SilkerOptions {
   /** Klucz API wymagany do komunikacji z chmurą */
   apiKey: string;
-  /** Opcjonalny endpoint chmury (domyślnie: https://vibeguard.cloudflareworkers.com/api) */
+  /** Opcjonalny endpoint chmury (domyślnie: https://silker.cloudflareworkers.com/api) */
   endpoint?: string;
   /** Włącza tryb debugowania z dodatkowymi logami */
   debug?: boolean;
   /** Włącza tryb proxy HTTP */
   proxyMode?: boolean;
   /** Funkcjonalności do włączania/wyłączania (domyślnie wszystkie włączone) */
-  features?: VibeGuardFeatures;
+  features?: SilkerFeatures;
 }
+
+export type VibeGuardOptions = SilkerOptions;
+export type VibeGuardFeatures = SilkerFeatures;
 

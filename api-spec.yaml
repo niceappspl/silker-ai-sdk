@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: VibeGuard Cloud API
-  description: API specification for VibeGuard cloud backend communication
+  title: Silker AI Cloud API
+  description: API specification for Silker AI cloud backend communication
   version: 0.1.0
 
 servers:
-  - url: https://vibeguard.cloudflareworkers.com/api
+  - url: https://silker.cloudflareworkers.com/api
     description: Production server
 
 paths:
@@ -23,7 +23,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VibeGuardEvent'
+              $ref: '#/components/schemas/SilkerEvent'
             examples:
               httpRequest:
                 summary: HTTP Request Event
@@ -71,7 +71,7 @@ components:
       bearerFormat: JWT
 
   schemas:
-    VibeGuardEvent:
+    SilkerEvent:
       type: object
       required:
         - method

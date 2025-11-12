@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent, CloudResponse } from './types';
+import { SilkerOptions, SilkerFeatures, SilkerEvent, VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent, CloudResponse } from './types';
 import { VibeGuardError } from './types/errors';
 import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection';
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
@@ -13,12 +13,15 @@ import { getPerformanceReport, recordPerformanceMetrics } from './analytics/perf
 import { getAuditLogs, getAuditSummary, logAuditEvent } from './monitoring/audit';
 import { getRuntimeConfig, updateRuntimeConfig } from './config';
 import { performHealthCheck } from './monitoring/health';
+import { performApiValidation } from './validation/apiSchema';
+import { validateSecurityHeaders } from './validation/securityHeaders';
+import { analyzeUserBehavior } from './analytics/userBehavior';
 
 /**
- * Ustawia globalne opcje dla wszystkich modułów VibeGuard.
- * @param options - Opcje konfiguracyjne VibeGuard lub null
+ * Ustawia globalne opcje dla wszystkich modułów Silker AI.
+ * @param options - Opcje konfiguracyjne Silker AI lub null
  */
-function setGlobalOptions(options: VibeGuardOptions | null) {
+function setGlobalOptions(options: SilkerOptions | null) {
   setDetectionOptions(options);
   setAnalyticsOptions(options);
   setAuditOptions(options);
@@ -26,18 +29,18 @@ function setGlobalOptions(options: VibeGuardOptions | null) {
 }
 
 /**
- * Inicjalizuje VibeGuard z podanymi opcjami.
+ * Inicjalizuje Silker AI z podanymi opcjami.
  * Weryfikuje połączenie z chmurą, konfiguruje hooki dla fetch i Express,
  * oraz uruchamia tryb proxy jeśli jest włączony.
- * @param options - Opcje konfiguracyjne VibeGuard
+ * @param options - Opcje konfiguracyjne Silker AI
  * @throws {VibeGuardError} Jeśli brakuje klucza API lub połączenie z chmurą nie powiodło się
  */
-export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
-  const apiKey = options.apiKey || process.env.VIBEGUARD_API_KEY;
+async function initSilker(options: SilkerOptions): Promise<void> {
+  const apiKey = options.apiKey || process.env.SILKER_API_KEY || process.env.VIBEGUARD_API_KEY;
   
   if (!apiKey) {
     throw new VibeGuardError(
-      'API key required. Provide it via options.apiKey or VIBEGUARD_API_KEY environment variable.',
+      'API key required. Provide it via options.apiKey or SILKER_API_KEY environment variable.',
       'MISSING_API_KEY'
     );
   }
@@ -46,60 +49,73 @@ export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
 
   setGlobalOptions(options);
 
+  (global as any).silkerStartTime = Date.now();
   (global as any).vibeGuardStartTime = Date.now();
 
   if (options.features?.cloudCommunication !== false) {
-    const testEvent: VibeGuardEvent = {
+    const testEvent: SilkerEvent = {
       method: 'GET',
-      url: '/vibeguard/test',
+      url: '/silker/test',
       timestamp: Date.now()
     };
 
     const response = await sendToCloud(testEvent, options);
     if (response === null) {
-      throw new VibeGuardError('Failed to connect to VibeGuard cloud', 'CONNECTION_FAILED');
+      throw new VibeGuardError('Failed to connect to Silker AI cloud', 'CONNECTION_FAILED');
     }
   }
 
   if (options.debug) {
-    console.log('✨ VibeGuard initialized successfully!');
+    console.log('Silker AI initialized successfully');
   }
 
   hookFetch(options);
 
   const vibeEmitter = getVibeEmitter();
-  vibeEmitter.on('workflow', async (event: VibeGuardEvent) => {
+  vibeEmitter.on('workflow', async (event: SilkerEvent) => {
     if (isAnomaly(event)) {
       const cloudResponse = options.features?.cloudCommunication !== false 
         ? await sendToCloud(event, options)
         : null;
       if (cloudResponse?.block && options.debug) {
-        console.log('🚫 Workflow anomaly blocked:', event.url);
+        console.log('Workflow anomaly blocked:', event.url);
       }
     }
   });
 
+  (global as any).silkerEmitter = vibeEmitter;
   (global as any).vibeGuardEmitter = vibeEmitter;
 
   if (options.proxyMode) {
-    const targetUrl = process.env.VIBEGUARD_TARGET_URL || 'http://localhost:3000';
-    const proxyPort = parseInt(process.env.VIBEGUARD_PROXY_PORT || '8080');
+    const targetUrl = process.env.SILKER_TARGET_URL || process.env.VIBEGUARD_TARGET_URL || 'http://localhost:3000';
+    const proxyPort = parseInt(process.env.SILKER_PROXY_PORT || process.env.VIBEGUARD_PROXY_PORT || '8080');
     startProxyMode(options, targetUrl, proxyPort);
   }
 }
 
 /**
- * Emituje zdarzenie workflow do systemu monitorowania VibeGuard.
+ * Emituje zdarzenie workflow do systemu monitorowania Silker AI.
  * @param event - Zdarzenie workflow bez znacznika czasu (timestamp zostanie dodany automatycznie)
  */
-export function emitWorkflowEvent(event: Omit<VibeGuardEvent, 'timestamp'>) {
+function emitSilkerWorkflowEvent(event: Omit<SilkerEvent, 'timestamp'>) {
   const vibeEmitter = getVibeEmitter();
   vibeEmitter.emit('workflow', { ...event, timestamp: Date.now() });
 }
 
+export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
+  return initSilker(options);
+}
+
+export function emitWorkflowEvent(event: Omit<VibeGuardEvent, 'timestamp'>) {
+  return emitSilkerWorkflowEvent(event);
+}
+
 export const middleware = hookExpress;
 
-export {
+const SilkerAI = {
+  init: initSilker,
+  emitWorkflowEvent: emitSilkerWorkflowEvent,
+  middleware: hookExpress,
   sendToCloud,
   getPerformanceReport,
   recordPerformanceMetrics,
@@ -109,12 +125,36 @@ export {
   getRuntimeConfig,
   updateRuntimeConfig,
   performHealthCheck,
+  performApiValidation,
+  validateSecurityHeaders,
+  analyzeUserBehavior
+};
+
+export default SilkerAI;
+
+export {
+  initSilker,
+  emitSilkerWorkflowEvent,
+  sendToCloud,
+  getPerformanceReport,
+  recordPerformanceMetrics,
+  getAuditLogs,
+  getAuditSummary,
+  logAuditEvent,
+  getRuntimeConfig,
+  updateRuntimeConfig,
+  performHealthCheck,
+  performApiValidation,
+  validateSecurityHeaders,
+  analyzeUserBehavior,
   VibeGuardError
 };
 
 export type {
-  VibeGuardOptions,
-  VibeGuardFeatures,
-  VibeGuardEvent,
+  SilkerOptions,
+  SilkerFeatures,
+  SilkerEvent,
   CloudResponse
 };
+
+export type { VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent };
