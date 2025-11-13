@@ -7,4 +7,8 @@ export * from './thirdParty';
 export * from './compliance';
 export * from './threatIntelligence';
 export * from './zeroTrust';
+export * from './cryptographic';
+export * from './vulnerableComponents';
+export * from './authentication';
+export * from './softwareIntegrity';
 

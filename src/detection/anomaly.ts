@@ -1,6 +1,6 @@
 import { VibeGuardEvent, VibeGuardOptions } from '../types';
 import { checkRateLimit } from './rateLimit';
-import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection } from './owasp';
+import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { detectDataLeakage } from './dataLeakage';
 import { detectFileUploadAttack } from './fileUpload';
 import { detectThirdPartyAttack } from './thirdParty';
@@ -10,6 +10,10 @@ import { detectZeroTrustViolation } from './zeroTrust';
 import { detectSessionAnomalies } from '../analytics/userBehavior';
 import { validateSecurityHeaders } from '../validation/securityHeaders';
 import { performApiValidation } from '../validation/apiSchema';
+import { checkCryptographicFailures, detectWeakEncryption } from './cryptographic';
+import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
+import { detectAuthenticationFailures } from './authentication';
+import { checkSoftwareIntegrity } from './softwareIntegrity';
 
 let globalOptions: VibeGuardOptions | null = null;
 
@@ -97,6 +101,58 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
 
   if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
     return true;
+  }
+
+  if (isFeatureEnabled('accessControlDetection')) {
+    const userRole = (event as any).userRole || headers?.['x-user-role'];
+    if (detectBrokenAccessControl(event, userRole)) {
+      return true;
+    }
+    if ((event as any).currentRole && (event as any).targetRole) {
+      if (detectPrivilegeEscalation(event, (event as any).currentRole, (event as any).targetRole)) {
+        return true;
+      }
+    }
+    if ((event as any).userId && (event as any).resourceUserId) {
+      if (detectHorizontalPrivilegeEscalation(event, (event as any).userId, (event as any).resourceUserId)) {
+        return true;
+      }
+    }
+  }
+
+  if (isFeatureEnabled('cryptographicValidation')) {
+    const cryptoCheck = checkCryptographicFailures(event);
+    if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
+      return true;
+    }
+    if (detectWeakEncryption(headers)) {
+      return true;
+    }
+  }
+
+  if (isFeatureEnabled('vulnerableComponentsDetection')) {
+    const vulnerabilities = detectVulnerableComponents(event);
+    if (vulnerabilities.some(v => v.risk === 'critical' || v.risk === 'high')) {
+      return true;
+    }
+    const cves = checkForCveReferences(event);
+    if (cves.length > 0) {
+      return true;
+    }
+  }
+
+  if (isFeatureEnabled('authenticationValidation')) {
+    const authIssues = detectAuthenticationFailures(event);
+    if (authIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
+      return true;
+    }
+  }
+
+  if (isFeatureEnabled('softwareIntegrityValidation')) {
+    const integrityIssues = checkSoftwareIntegrity(event);
+    if (integrityIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
+      return true;
+    }
   }
 
   if (isFeatureEnabled('securityHeadersValidation')) {

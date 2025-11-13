@@ -42,6 +42,16 @@ export interface SilkerFeatures {
   performanceMonitoring?: boolean;
   /** Komunikacja z chmurą */
   cloudCommunication?: boolean;
+  /** Wykrywanie broken access control */
+  accessControlDetection?: boolean;
+  /** Walidacja kryptograficzna */
+  cryptographicValidation?: boolean;
+  /** Wykrywanie podatnych komponentów */
+  vulnerableComponentsDetection?: boolean;
+  /** Walidacja autentykacji */
+  authenticationValidation?: boolean;
+  /** Walidacja integralności oprogramowania */
+  softwareIntegrityValidation?: boolean;
 }
 
 /**
