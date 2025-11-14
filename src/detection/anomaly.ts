@@ -14,6 +14,7 @@ import { checkCryptographicFailures, detectWeakEncryption } from './cryptographi
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
+import { detectPromptInjection, analyzePromptSafety } from './promptInjection';
 
 let globalOptions: VibeGuardOptions | null = null;
 
@@ -211,6 +212,28 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
 
   if (isFeatureEnabled('zeroTrustDetection') && detectZeroTrustViolation(event)) {
     return true;
+  }
+
+  if (isFeatureEnabled('promptInjectionDetection')) {
+    const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload || '');
+    const promptCheck = detectPromptInjection(payloadStr);
+    
+    if (promptCheck.detected && (promptCheck.severity === 'high' || promptCheck.severity === 'critical')) {
+      if (globalOptions?.debug) {
+        console.log('🚨 Prompt injection detected:', promptCheck.patterns, 'Severity:', promptCheck.severity);
+      }
+      return true;
+    }
+
+    const safetyCheck = analyzePromptSafety(event);
+    if (!safetyCheck.safe) {
+      if (globalOptions?.debug) {
+        console.log('⚠️ Prompt safety issues:', safetyCheck.issues);
+      }
+      if (safetyCheck.issues.some(issue => issue.includes('critical') || issue.includes('jailbreak'))) {
+        return true;
+      }
+    }
   }
 
   return false;

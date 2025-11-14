@@ -28,6 +28,7 @@ Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji 
 - ⚖️ **Monitorowanie Zgodności** - GDPR, HIPAA i ochrona danych
 - 🕵️ **Wywiad Zagrożeń** - Blokowanie na podstawie feeds zagrożeń
 - 🔐 **Weryfikacja Zero-trust** - Ciągła weryfikacja wszystkich operacji
+- 🧠 **Ochrona przed Prompt Injection** - Wykrywa próby jailbreak i manipulacji AI/LLM
 
 ### Monitorowanie i Analityka
 - ⚡ **Monitorowanie Wydajności** - Wykrywa anomalie wydajności i wolne endpointy
@@ -345,6 +346,7 @@ interface SilkerFeatures {
   complianceDetection?: boolean;          // Monitorowanie compliance
   threatIntelligence?: boolean;           // Threat intelligence
   zeroTrustDetection?: boolean;           // Weryfikacja zero-trust
+  promptInjectionDetection?: boolean;     // Ochrona przed prompt injection (AI/LLM)
   auditLogging?: boolean;                  // Logowanie audytu
   performanceMonitoring?: boolean;       // Monitorowanie wydajności
   cloudCommunication?: boolean;          // Komunikacja z chmurą
@@ -364,6 +366,7 @@ await SilkerAI.init({
     rateLimit: true,              // Włącz wykrywanie limitu szybkości
     sqliDetection: true,          // Włącz wykrywanie SQL injection
     xssDetection: false,          // Wyłącz wykrywanie XSS
+    promptInjectionDetection: true, // Włącz ochronę przed prompt injection
     auditLogging: true,           // Włącz logowanie audytu
     cloudCommunication: true     // Włącz komunikację z chmurą
   }
@@ -442,6 +445,17 @@ Domyślnie wszystkie funkcjonalności są **włączone** (zachowana kompatybilno
   - Weryfikacja urządzenia (User-Agent)
   - Dodatkowe potwierdzenia dla operacji destrukcyjnych (DELETE)
   - Weryfikacja dostępu poza godzinami pracy
+- **Ochrona przed Prompt Injection**: Bezpieczeństwo AI/LLM dla nowoczesnych aplikacji
+  - Wykrywanie nadpisywania instrukcji (ignore, disregard, forget)
+  - Blokowanie manipulacji systemowym promptem
+  - Zapobieganie manipulacji rolami
+  - Wykrywanie wstrzykiwania delimiterów (```, ---, ###, tokeny specjalne)
+  - Wykrywanie prób jailbreak (tryb DAN, dostęp bez ograniczeń)
+  - Zapobieganie ekstrakcji promptów
+  - Wykrywanie obfuskacji kodowaniem (base64, unicode, hex)
+  - Blokowanie manipulacji łańcuchami
+  - Wykrywanie ataków wielojęzycznych
+  - Ocena ważności (niska, średnia, wysoka, krytyczna)
 
 ### Funkcje Monitorowania Enterprise
 - **Monitorowanie Wydajności**: Wykrywa anomalie wydajności i wolne endpointy
@@ -557,6 +571,7 @@ interface SilkerFeatures {
   complianceDetection?: boolean;
   threatIntelligence?: boolean;
   zeroTrustDetection?: boolean;
+  promptInjectionDetection?: boolean;
   auditLogging?: boolean;
   performanceMonitoring?: boolean;
   cloudCommunication?: boolean;

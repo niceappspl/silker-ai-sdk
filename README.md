@@ -30,6 +30,7 @@ Perfect for Cursor, Bubble, Next.js on Vercel, and any Node.js app that needs ru
 - ⚖️ **Compliance Monitoring** - GDPR, HIPAA, and data protection compliance
 - 🕵️ **Threat Intelligence** - Real-time blocking based on threat feeds
 - 🔐 **Zero-trust Verification** - Continuous verification of all operations
+- 🧠 **Prompt Injection Protection** - Detects AI/LLM jailbreak and manipulation attempts
 
 ### Monitoring & Analytics
 - ⚡ **Performance Monitoring** - Detects performance anomalies and slow endpoints
@@ -359,6 +360,7 @@ interface SilkerFeatures {
   complianceDetection?: boolean;          // Compliance monitoring
   threatIntelligence?: boolean;           // Threat intelligence
   zeroTrustDetection?: boolean;           // Zero-trust verification
+  promptInjectionDetection?: boolean;     // Prompt injection protection (AI/LLM)
   auditLogging?: boolean;                  // Audit logging
   performanceMonitoring?: boolean;       // Performance monitoring
   cloudCommunication?: boolean;          // Cloud communication
@@ -378,6 +380,7 @@ await SilkerAI.init({
     rateLimit: true,              // Enable rate limiting
     sqliDetection: true,          // Enable SQL injection detection
     xssDetection: false,          // Disable XSS detection
+    promptInjectionDetection: true, // Enable prompt injection protection
     auditLogging: true,           // Enable audit logging
     cloudCommunication: true     // Enable cloud communication
   }
@@ -456,6 +459,17 @@ By default, all features are **enabled** (backward compatible). Set a feature to
   - Device verification (User-Agent)
   - Additional confirmations for destructive operations (DELETE)
   - Off-hours access verification
+- **Prompt Injection Protection**: AI/LLM security for modern applications
+  - Instruction override detection (ignore, disregard, forget)
+  - System prompt manipulation blocking
+  - Role manipulation prevention
+  - Delimiter injection detection (```, ---, ###, special tokens)
+  - Jailbreak attempt detection (DAN mode, unrestricted access)
+  - Prompt extraction prevention
+  - Encoding obfuscation detection (base64, unicode, hex)
+  - Chain manipulation blocking
+  - Multilingual attack detection
+  - Severity scoring (low, medium, high, critical)
 
 ### Enterprise Monitoring Features
 - **Performance Monitoring**: Detects performance anomalies and slow endpoints
@@ -571,6 +585,7 @@ interface SilkerFeatures {
   complianceDetection?: boolean;
   threatIntelligence?: boolean;
   zeroTrustDetection?: boolean;
+  promptInjectionDetection?: boolean;
   auditLogging?: boolean;
   performanceMonitoring?: boolean;
   cloudCommunication?: boolean;

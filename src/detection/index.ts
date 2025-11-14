@@ -11,4 +11,5 @@ export * from './cryptographic';
 export * from './vulnerableComponents';
 export * from './authentication';
 export * from './softwareIntegrity';
+export * from './promptInjection';
 

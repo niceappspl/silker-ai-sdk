@@ -52,6 +52,8 @@ export interface SilkerFeatures {
   authenticationValidation?: boolean;
   /** Walidacja integralności oprogramowania */
   softwareIntegrityValidation?: boolean;
+  /** Wykrywanie prompt injection dla systemów AI/LLM */
+  promptInjectionDetection?: boolean;
 }
 
 /**
