@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -9,7 +9,7 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli przekroczono limit szybkości, false w przeciwnym razie
  */
-export function checkRateLimit(event: VibeGuardEvent): boolean {
+export function checkRateLimit(event: SilkerEvent): boolean {
   if (!event.ip) return false;
 
   const now = Date.now();

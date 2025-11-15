@@ -1,15 +1,15 @@
 import { checkRateLimit } from '../../src/detection/rateLimit';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('checkRateLimit', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should return false when IP is missing', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: undefined
     };
@@ -17,7 +17,7 @@ describe('checkRateLimit', () => {
   });
 
   it('should allow requests within rate limit', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.1'
     };
@@ -28,7 +28,7 @@ describe('checkRateLimit', () => {
   });
 
   it('should block requests exceeding rate limit', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.1'
     };
@@ -45,7 +45,7 @@ describe('checkRateLimit', () => {
     const startTime = Date.now();
     jest.setSystemTime(startTime);
     
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.2',
       timestamp: startTime
@@ -60,7 +60,7 @@ describe('checkRateLimit', () => {
     jest.advanceTimersByTime(61000);
     jest.setSystemTime(startTime + 61000);
 
-    const newEvent: VibeGuardEvent = {
+    const newEvent: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.2',
       timestamp: Date.now()
@@ -70,11 +70,11 @@ describe('checkRateLimit', () => {
   });
 
   it('should track rate limit per IP independently', () => {
-    const event1: VibeGuardEvent = {
+    const event1: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.10'
     };
-    const event2: VibeGuardEvent = {
+    const event2: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.20'
     };
@@ -92,7 +92,7 @@ describe('checkRateLimit', () => {
     const startTime = Date.now();
     jest.setSystemTime(startTime);
     
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.3',
       timestamp: startTime
@@ -105,7 +105,7 @@ describe('checkRateLimit', () => {
     jest.advanceTimersByTime(61000);
     jest.setSystemTime(startTime + 61000);
 
-    const newEvent: VibeGuardEvent = {
+    const newEvent: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.3',
       timestamp: Date.now()
@@ -116,7 +116,7 @@ describe('checkRateLimit', () => {
   });
 
   it('should handle rapid requests correctly', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       ip: '192.168.1.4'
     };

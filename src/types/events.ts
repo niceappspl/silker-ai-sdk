@@ -18,5 +18,4 @@ export interface SilkerEvent {
   headers?: Record<string, string>;
 }
 
-export type VibeGuardEvent = SilkerEvent;
 

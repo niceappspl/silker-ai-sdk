@@ -8,7 +8,7 @@ const express_1 = require("../../src/hooks/express");
 describe('hookExpress', () => {
     const mockOptions = {
         apiKey: 'test-api-key',
-        endpoint: 'https://test-vibeguard.com/api',
+        endpoint: 'https://test-silker.com/api',
         debug: false
     };
     beforeEach(() => {
@@ -39,7 +39,7 @@ describe('hookExpress', () => {
         expect(res.status).not.toHaveBeenCalled();
     });
     it('should block requests with anomalies', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: true, alertId: 'alert-123' });
         const middleware = (0, express_1.hookExpress)(mockOptions);
@@ -59,13 +59,13 @@ describe('hookExpress', () => {
         await middleware(req, res, next);
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
-            error: 'Request blocked by VibeGuard',
+            error: 'Request blocked by Silker AI',
             alertId: 'alert-123'
         });
         expect(next).not.toHaveBeenCalled();
     });
     it('should allow requests when cloud says allow', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: false });
         const middleware = (0, express_1.hookExpress)(mockOptions);
@@ -123,7 +123,7 @@ describe('hookExpress', () => {
         expect(next).toHaveBeenCalled();
     });
     it('should handle cloud connection failure gracefully', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(500);
         const middleware = (0, express_1.hookExpress)(mockOptions);

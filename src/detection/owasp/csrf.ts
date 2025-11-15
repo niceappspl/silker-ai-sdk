@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../../types';
+import { SilkerEvent } from '../../types';
 
 /**
  * Wykrywa potencjalne ataki CSRF (Cross-Site Request Forgery).
@@ -7,7 +7,7 @@ import { VibeGuardEvent } from '../../types';
  * @param headers - Nagłówki HTTP żądania
  * @returns true jeśli wykryto potencjalny atak CSRF, false w przeciwnym razie
  */
-export function detectCsrfAttack(event: VibeGuardEvent, headers?: any): boolean {
+export function detectCsrfAttack(event: SilkerEvent, headers?: any): boolean {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(event.method)) {
     const csrfToken = headers?.['x-csrf-token'] || headers?.['csrf-token'];
     const hasCsrfInBody = event.payload && (

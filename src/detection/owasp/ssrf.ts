@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../../types';
+import { SilkerEvent } from '../../types';
 
 /**
  * Wykrywa potencjalne ataki SSRF (Server-Side Request Forgery).
@@ -6,7 +6,7 @@ import { VibeGuardEvent } from '../../types';
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto potencjalny atak SSRF, false w przeciwnym razie
  */
-export function detectSsrfAttack(event: VibeGuardEvent): boolean {
+export function detectSsrfAttack(event: SilkerEvent): boolean {
   if (!event.url) return false;
 
   const url = event.url.toLowerCase();

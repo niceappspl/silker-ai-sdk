@@ -1,8 +1,8 @@
 import { recordPerformanceMetrics, detectPerformanceAnomalies, getPerformanceReport } from '../../src/analytics/performance';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('recordPerformanceMetrics', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     ip: '127.0.0.1',
@@ -34,7 +34,7 @@ describe('recordPerformanceMetrics', () => {
 describe('detectPerformanceAnomalies', () => {
   beforeEach(() => {
     for (let i = 0; i < 50; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/test${i}`,
         ip: '127.0.0.1',
@@ -51,7 +51,7 @@ describe('detectPerformanceAnomalies', () => {
 
   it('should detect high average response time', () => {
     for (let i = 0; i < 20; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/slow${i}`,
         ip: '127.0.0.1',
@@ -66,7 +66,7 @@ describe('detectPerformanceAnomalies', () => {
 
   it('should detect slow requests', () => {
     for (let i = 0; i < 20; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/slow${i}`,
         ip: '127.0.0.1',
@@ -81,7 +81,7 @@ describe('detectPerformanceAnomalies', () => {
 
   it('should detect slow endpoints', () => {
     for (let i = 0; i < 10; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: '/api/slow-endpoint',
         ip: '127.0.0.1',
@@ -98,7 +98,7 @@ describe('detectPerformanceAnomalies', () => {
 describe('getPerformanceReport', () => {
   beforeEach(() => {
     for (let i = 0; i < 20; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/test${i}`,
         ip: '127.0.0.1',
@@ -130,7 +130,7 @@ describe('getPerformanceReport', () => {
 
   it('should include anomalies if detected', () => {
     for (let i = 0; i < 30; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/slow${i}`,
         ip: '127.0.0.1',

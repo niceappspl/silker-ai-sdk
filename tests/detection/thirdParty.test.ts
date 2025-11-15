@@ -1,8 +1,8 @@
 import { detectThirdPartyRisks, detectThirdPartyAttack } from '../../src/detection/thirdParty';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('detectThirdPartyRisks', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('detectThirdPartyRisks', () => {
 
   describe('Risky domains', () => {
     it('should detect pastebin.com', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://pastebin.com/raw/abc123'
       };
@@ -20,7 +20,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect transfer.sh', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://transfer.sh/file.txt'
       };
@@ -29,7 +29,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect ngrok.io', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://abc123.ngrok.io/api'
       };
@@ -38,7 +38,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect webhook.site', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://webhook.site/abc123'
       };
@@ -47,7 +47,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should not detect legitimate domain', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.github.com/webhook'
       };
@@ -58,7 +58,7 @@ describe('detectThirdPartyRisks', () => {
 
   describe('Webhook validation', () => {
     it('should allow allowed webhook domains', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://hooks.slack.com/services/abc/123'
       };
@@ -67,7 +67,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should allow discord webhooks', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://discord.com/api/webhooks/123'
       };
@@ -76,7 +76,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect unexpected webhook destination', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://evil.com/webhook'
       };
@@ -86,7 +86,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should handle invalid webhook URL', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'not-a-valid-webhook-url'
       };
@@ -97,7 +97,7 @@ describe('detectThirdPartyRisks', () => {
 
   describe('API key exposure', () => {
     it('should detect API key in payload for third-party request', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.example.com/webhook',
         payload: 'api_key=sk-1234567890abcdef123456'
@@ -108,7 +108,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect bearer token in payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.example.com/webhook',
         payload: 'authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
@@ -118,7 +118,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should not detect API key for non-api/webhook URLs', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/local',
         payload: 'api_key=sk-1234567890abcdef123456'
@@ -131,7 +131,7 @@ describe('detectThirdPartyRisks', () => {
   describe('Data exfiltration', () => {
     it('should detect large payload in third-party request', () => {
       const largePayload = 'x'.repeat(10001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: 'https://api.example.com/webhook',
@@ -143,7 +143,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect sensitive data in third-party request', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: 'https://api.example.com/webhook',
@@ -155,7 +155,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should detect credit card in third-party request', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: 'https://api.example.com/webhook',
@@ -167,7 +167,7 @@ describe('detectThirdPartyRisks', () => {
 
     it('should not check exfiltration for GET requests', () => {
       const largePayload = 'x'.repeat(10001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'GET',
         url: 'https://api.example.com/webhook',
@@ -180,7 +180,7 @@ describe('detectThirdPartyRisks', () => {
 
   describe('No risks', () => {
     it('should return no risks for legitimate request', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.github.com/webhook',
         payload: JSON.stringify({ action: 'opened' })
@@ -190,7 +190,7 @@ describe('detectThirdPartyRisks', () => {
     });
 
     it('should return no risks when URL is missing', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: ''
       };
@@ -201,14 +201,14 @@ describe('detectThirdPartyRisks', () => {
 });
 
 describe('detectThirdPartyAttack', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should detect third-party attack', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: 'https://pastebin.com/raw/abc123'
     };
@@ -216,7 +216,7 @@ describe('detectThirdPartyAttack', () => {
   });
 
   it('should not detect localhost as attack', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: 'http://localhost:3000/api'
     };
@@ -224,7 +224,7 @@ describe('detectThirdPartyAttack', () => {
   });
 
   it('should not detect 127.0.0.1 as attack', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: 'http://127.0.0.1:3000/api'
     };
@@ -232,7 +232,7 @@ describe('detectThirdPartyAttack', () => {
   });
 
   it('should return false for legitimate request', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: 'https://api.github.com/webhook'
     };
@@ -240,7 +240,7 @@ describe('detectThirdPartyAttack', () => {
   });
 
   it('should return false when URL is missing', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: ''
     };

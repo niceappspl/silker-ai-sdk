@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 const EXPOSED_FILES = [
   '/.git/config',
@@ -30,7 +30,7 @@ export interface IntegrityIssue {
   resource?: string;
 }
 
-export function checkSoftwareIntegrity(event: VibeGuardEvent): IntegrityIssue[] {
+export function checkSoftwareIntegrity(event: SilkerEvent): IntegrityIssue[] {
   const issues: IntegrityIssue[] = [];
 
   if (event.url) {

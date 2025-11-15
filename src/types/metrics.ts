@@ -24,8 +24,8 @@ export interface AuditLogEntry {
   id: string;
   /** Znacznik czasu */
   timestamp: number;
-  /** Zdarzenie VibeGuard */
-  event: import('./events').VibeGuardEvent;
+  /** Zdarzenie Silker */
+  event: import('./events').SilkerEvent;
   /** Akcja wykonana na żądaniu */
   action: 'allowed' | 'blocked' | 'flagged';
   /** Powód akcji */

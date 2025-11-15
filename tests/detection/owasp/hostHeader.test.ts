@@ -1,15 +1,15 @@
 import { detectHostHeaderInjection } from '../../../src/detection/owasp/hostHeader';
-import { VibeGuardEvent } from '../../../src/types';
+import { SilkerEvent } from '../../../src/types';
 
 describe('detectHostHeaderInjection', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   beforeEach(() => {
-    delete process.env.VIBEGUARD_ALLOWED_HOSTS;
+    delete process.env.SILKER_ALLOWED_HOSTS;
   });
 
   it('should detect newline character in host header', () => {
@@ -28,19 +28,19 @@ describe('detectHostHeaderInjection', () => {
   });
 
   it('should allow host from allowed list', () => {
-    process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com,api.example.com';
+    process.env.SILKER_ALLOWED_HOSTS = 'example.com,api.example.com';
     const headers = { host: 'example.com' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
   });
 
   it('should allow host that includes allowed host', () => {
-    process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com';
+    process.env.SILKER_ALLOWED_HOSTS = 'example.com';
     const headers = { host: 'api.example.com' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
   });
 
   it('should detect host not in allowed list', () => {
-    process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com';
+    process.env.SILKER_ALLOWED_HOSTS = 'example.com';
     const headers = { host: 'evil.com' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(true);
   });
@@ -62,7 +62,7 @@ describe('detectHostHeaderInjection', () => {
   });
 
   it('should handle multiple allowed hosts', () => {
-    process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com,test.com,api.example.com';
+    process.env.SILKER_ALLOWED_HOSTS = 'example.com,test.com,api.example.com';
     const headers = { host: 'test.com' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
   });

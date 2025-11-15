@@ -1,16 +1,17 @@
-import { VibeGuardEvent, VibeGuardOptions, CloudResponse } from '../types';
+import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
-import { sendToCloud } from '../cloud';
+import { sendAlertToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
+import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { logAuditEvent } from '../monitoring/audit';
 
-let globalOptions: VibeGuardOptions | null = null;
+let globalOptions: SilkerOptions | null = null;
 
 /**
  * Przechwytuje globalną funkcję fetch i dodaje monitorowanie bezpieczeństwa.
  * Wszystkie wywołania fetch są sprawdzane pod kątem anomalii przed wykonaniem.
- * @param options - Opcje konfiguracyjne VibeGuard
+ * @param options - Opcje konfiguracyjne Silker
  */
-export function hookFetch(options: VibeGuardOptions) {
+export function hookFetch(options: SilkerOptions) {
   globalOptions = options;
   setGlobalOptions(options);
 
@@ -22,7 +23,7 @@ export function hookFetch(options: VibeGuardOptions) {
 
     const ip = (global as any).request?.ip || (global as any).req?.connection?.remoteAddress;
 
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       method,
       url,
       payload: init?.body ? JSON.stringify(init.body) : undefined,
@@ -34,7 +35,7 @@ export function hookFetch(options: VibeGuardOptions) {
 
     if (isAnomaly(event)) {
       if (options.debug) {
-        console.log('🚨 Anomaly detected, consulting cloud...');
+        console.log('🚨 Anomaly detected, blocking request');
       }
 
       const isAuditEnabled = options.features?.auditLogging !== false;
@@ -42,31 +43,52 @@ export function hookFetch(options: VibeGuardOptions) {
         logAuditEvent(event, 'flagged', 'Security anomaly detected', 'high');
       }
 
-      const cloudResponse = options.features?.cloudCommunication !== false 
-        ? await sendToCloud(event, options)
-        : null;
+      if (options.features?.cloudCommunication !== false && options.appId) {
+        setGlobalOptionsForThreat(options);
+        const threatInfo = detectThreatType(event);
+        if (threatInfo) {
+          const alertId = await sendAlertToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            options
+          );
+          
+          await sendThreatToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            true,
+            threatInfo.description,
+            options
+          );
 
-      if (cloudResponse?.block) {
-        if (options.debug) {
-          console.log('🚫 Cloud says BLOCK! Returning 403');
+          if (isAuditEnabled) {
+            logAuditEvent(event, 'blocked', `Threat blocked: ${threatInfo.type}`, 'critical');
+          }
+
+          return new Response(JSON.stringify({
+            error: 'Request blocked by Silker AI',
+            reason: 'Security threat detected',
+            alertId: alertId || undefined
+          }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          });
         }
-
-        if (isAuditEnabled) {
-          logAuditEvent(event, 'blocked', `Cloud blocked: ${cloudResponse.fixSnippet || 'Unknown threat'}`, 'critical');
-        }
-
-        return new Response(JSON.stringify({
-          error: 'Request blocked by VibeGuard',
-          alertId: cloudResponse.alertId
-        }), {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-        });
       }
 
       if (isAuditEnabled) {
-        logAuditEvent(event, 'allowed', 'Anomaly flagged but allowed by cloud', 'medium');
+        logAuditEvent(event, 'blocked', 'Security anomaly detected', 'high');
       }
+
+      return new Response(JSON.stringify({
+        error: 'Request blocked by Silker AI',
+        reason: 'Security threat detected'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
     } else {
       if (options.features?.auditLogging !== false) {
         logAuditEvent(event, 'allowed', 'Request passed security checks', 'low');

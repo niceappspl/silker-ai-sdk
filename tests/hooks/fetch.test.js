@@ -8,7 +8,7 @@ const fetch_1 = require("../../src/hooks/fetch");
 describe('hookFetch', () => {
     const mockOptions = {
         apiKey: 'test-api-key',
-        endpoint: 'https://test-vibeguard.com/api',
+        endpoint: 'https://test-silker.com/api',
         debug: false
     };
     let originalFetch;
@@ -35,7 +35,7 @@ describe('hookFetch', () => {
         expect(global.fetch).not.toBe(originalFetch);
     });
     it('should allow legitimate fetch requests', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: false });
         mockFetch.mockResolvedValueOnce(new Response(JSON.stringify({ data: [] }), {
@@ -49,7 +49,7 @@ describe('hookFetch', () => {
         expect(data.data).toEqual([]);
     });
     it('should block requests with SQL injection', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: true, alertId: 'alert-123' });
         (0, fetch_1.hookFetch)(mockOptions);
@@ -59,11 +59,11 @@ describe('hookFetch', () => {
         });
         expect(response.status).toBe(403);
         const data = await response.json();
-        expect(data.error).toBe('Request blocked by VibeGuard');
+        expect(data.error).toBe('Request blocked by Silker AI');
         expect(data.alertId).toBe('alert-123');
     });
     it('should block requests with XSS', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: true, alertId: 'alert-xss' });
         (0, fetch_1.hookFetch)(mockOptions);
@@ -74,7 +74,7 @@ describe('hookFetch', () => {
         expect(response.status).toBe(403);
     });
     it('should allow requests when cloud says allow', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(200, { block: false });
         mockFetch.mockResolvedValueOnce(new Response(JSON.stringify({ success: true }), {
@@ -89,7 +89,7 @@ describe('hookFetch', () => {
         expect(response.status).toBe(200);
     });
     it('should handle cloud connection failure gracefully', async () => {
-        (0, nock_1.default)('https://test-vibeguard.com')
+        (0, nock_1.default)('https://test-silker.com')
             .post('/api')
             .reply(500);
         mockFetch.mockResolvedValueOnce(new Response(JSON.stringify({ data: [] }), {

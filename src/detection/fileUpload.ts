@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 import { FileUploadEvent } from '../types/metrics';
 
 /**
@@ -7,7 +7,7 @@ import { FileUploadEvent } from '../types/metrics';
  * @param event - Zdarzenie zawierające informacje o uploadzie pliku
  * @returns Obiekt z flagą bezpieczeństwa i listą znalezionych problemów
  */
-export function validateFileUpload(event: VibeGuardEvent): { safe: boolean; issues: string[] } {
+export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
   let filename = '';
@@ -116,7 +116,7 @@ export function validateFileUpload(event: VibeGuardEvent): { safe: boolean; issu
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto potencjalny atak związany z uploadem, false w przeciwnym razie
  */
-export function detectFileUploadAttack(event: VibeGuardEvent): boolean {
+export function detectFileUploadAttack(event: SilkerEvent): boolean {
   const url = event.url.toLowerCase();
   const method = event.method;
 

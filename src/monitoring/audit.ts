@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 import { AuditLogEntry } from '../types/metrics';
 
 const auditLogs: AuditLogEntry[] = [];
@@ -16,14 +16,14 @@ export function setGlobalOptions(options: { debug?: boolean } | null) {
 
 /**
  * Loguje zdarzenie audytu do dziennika.
- * @param event - Zdarzenie VibeGuard do zalogowania
+ * @param event - Zdarzenie Silker do zalogowania
  * @param action - Akcja wykonana na żądaniu
  * @param reason - Powód akcji
  * @param severity - Poziom ważności (domyślnie: 'low')
  * @param metadata - Opcjonalne dodatkowe metadane
  */
 export function logAuditEvent(
-  event: VibeGuardEvent,
+  event: SilkerEvent,
   action: 'allowed' | 'blocked' | 'flagged',
   reason: string,
   severity: 'low' | 'medium' | 'high' | 'critical' = 'low',

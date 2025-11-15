@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 /**
  * Sprawdza naruszenia zgodności z przepisami (GDPR, HIPAA).
@@ -6,7 +6,7 @@ import { VibeGuardEvent } from '../types';
  * @param event - Zdarzenie do sprawdzenia
  * @returns Obiekt z flagą naruszenia i listą znalezionych problemów
  */
-export function checkComplianceViolations(event: VibeGuardEvent): { violation: boolean; issues: string[] } {
+export function checkComplianceViolations(event: SilkerEvent): { violation: boolean; issues: string[] } {
   const issues: string[] = [];
   const payload = event.payload || '';
 
@@ -102,7 +102,7 @@ export function checkComplianceViolations(event: VibeGuardEvent): { violation: b
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto krytyczne naruszenie zgodności, false w przeciwnym razie
  */
-export function detectComplianceViolation(event: VibeGuardEvent): boolean {
+export function detectComplianceViolation(event: SilkerEvent): boolean {
   const complianceCheck = checkComplianceViolations(event);
 
   if (complianceCheck.violation) {

@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 /**
  * Wykrywa ryzyka związane z integracjami zewnętrznymi.
@@ -6,7 +6,7 @@ import { VibeGuardEvent } from '../types';
  * @param event - Zdarzenie do sprawdzenia
  * @returns Obiekt z flagą ryzyka i listą znalezionych problemów
  */
-export function detectThirdPartyRisks(event: VibeGuardEvent): { risky: boolean; issues: string[] } {
+export function detectThirdPartyRisks(event: SilkerEvent): { risky: boolean; issues: string[] } {
   const issues: string[] = [];
 
   if (!event.url) return { risky: false, issues };
@@ -101,7 +101,7 @@ export function detectThirdPartyRisks(event: VibeGuardEvent): { risky: boolean; 
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto potencjalny atak związany z integracjami zewnętrznymi, false w przeciwnym razie
  */
-export function detectThirdPartyAttack(event: VibeGuardEvent): boolean {
+export function detectThirdPartyAttack(event: SilkerEvent): boolean {
   if (!event.url || event.url.includes('localhost') || event.url.includes('127.0.0.1')) {
     return false;
   }

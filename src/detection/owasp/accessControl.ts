@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../../types';
+import { SilkerEvent } from '../../types';
 
 interface RoleMapping {
   [key: string]: string[];
@@ -14,7 +14,7 @@ const DEFAULT_ROLE_MAPPING: RoleMapping = {
   guest: ['guest', 'anonymous', 'public']
 };
 
-export function detectBrokenAccessControl(event: VibeGuardEvent, userRole?: string, allowedRoles?: string[]): boolean {
+export function detectBrokenAccessControl(event: SilkerEvent, userRole?: string, allowedRoles?: string[]): boolean {
   if (!event.url) return false;
 
   const url = event.url.toLowerCase();
@@ -49,7 +49,7 @@ export function detectBrokenAccessControl(event: VibeGuardEvent, userRole?: stri
   return false;
 }
 
-export function detectPrivilegeEscalation(event: VibeGuardEvent, currentRole?: string, targetRole?: string): boolean {
+export function detectPrivilegeEscalation(event: SilkerEvent, currentRole?: string, targetRole?: string): boolean {
   if (!currentRole || !targetRole) return false;
 
   const roleHierarchy = ['guest', 'user', 'admin', 'superuser'];
@@ -76,7 +76,7 @@ export function detectPrivilegeEscalation(event: VibeGuardEvent, currentRole?: s
   return false;
 }
 
-export function detectHorizontalPrivilegeEscalation(event: VibeGuardEvent, userId?: string, resourceUserId?: string): boolean {
+export function detectHorizontalPrivilegeEscalation(event: SilkerEvent, userId?: string, resourceUserId?: string): boolean {
   if (!userId || !resourceUserId) return false;
 
   const url = event.url || '';

@@ -62,7 +62,9 @@ export interface SilkerFeatures {
 export interface SilkerOptions {
   /** Klucz API wymagany do komunikacji z chmurą */
   apiKey: string;
-  /** Opcjonalny endpoint chmury (domyślnie: https://silker.cloudflareworkers.com/api) */
+  /** Identyfikator aplikacji używany do grupowania danych w dashboardzie */
+  appId: string;
+  /** Opcjonalny endpoint chmury (domyślnie: https://api.silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
   endpoint?: string;
   /** Włącza tryb debugowania z dodatkowymi logami */
   debug?: boolean;
@@ -72,6 +74,4 @@ export interface SilkerOptions {
   features?: SilkerFeatures;
 }
 
-export type VibeGuardOptions = SilkerOptions;
-export type VibeGuardFeatures = SilkerFeatures;
 

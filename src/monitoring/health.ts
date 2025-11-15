@@ -3,13 +3,13 @@ import { getPerformanceReport } from '../analytics/performance';
 import { getAuditLogs } from './audit';
 
 /**
- * Wykonuje sprawdzenie zdrowia systemu VibeGuard.
+ * Wykonuje sprawdzenie zdrowia systemu Silker.
  * Weryfikuje pamięć, wydajność, bezpieczeństwo i łączność z chmurą.
  * @returns Status zdrowia systemu
  */
 export function performHealthCheck(): HealthStatus {
   const now = Date.now();
-  const startTime = (global as any).vibeGuardStartTime || now;
+  const startTime = (global as any).silkerStartTime || now;
 
   const memUsage = process.memoryUsage();
   const memoryMB = memUsage.heapUsed / 1024 / 1024;

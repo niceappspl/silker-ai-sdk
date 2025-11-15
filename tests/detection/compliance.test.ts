@@ -1,8 +1,8 @@
 import { checkComplianceViolations, detectComplianceViolation } from '../../src/detection/compliance';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('checkComplianceViolations', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'POST',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('checkComplianceViolations', () => {
 
   describe('GDPR violations', () => {
     it('should detect PII without consent', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ email: 'user@example.com', name: 'John Doe' }),
         headers: {}
@@ -21,7 +21,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should allow PII with consent header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ email: 'user@example.com' }),
         headers: { 'x-gdpr-consent': 'true' }
@@ -31,7 +31,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should detect SSN without consent', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ ssn: '123-45-6789' }),
         headers: {}
@@ -42,7 +42,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should detect credit card without consent', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ card: '4111-1111-1111-1111' }),
         headers: {}
@@ -52,7 +52,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should detect data deletion without retention policy', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/delete',
         headers: {}
@@ -63,7 +63,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should allow data deletion with retention policy', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/delete',
         headers: { 'x-data-retention': '30-days' }
@@ -75,7 +75,7 @@ describe('checkComplianceViolations', () => {
 
   describe('HIPAA violations', () => {
     it('should detect medical data without authorization', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ diagnosis: 'diabetes', medical: 'data' }),
         headers: {}
@@ -86,7 +86,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should allow medical data with HIPAA authorization', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ diagnosis: 'diabetes' }),
         headers: { 'x-hipaa-authorization': 'true' }
@@ -96,7 +96,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should detect health data without TLS', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://api.example.com/health',
         payload: JSON.stringify({ health: 'data' }),
@@ -108,7 +108,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should allow health data with HTTPS', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.example.com/health',
         payload: JSON.stringify({ health: 'data' }),
@@ -122,7 +122,7 @@ describe('checkComplianceViolations', () => {
   describe('Data classification', () => {
     it('should detect large data transfer without classification', () => {
       const largePayload = 'x'.repeat(1001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: largePayload,
@@ -135,7 +135,7 @@ describe('checkComplianceViolations', () => {
 
     it('should allow large data transfer with classification', () => {
       const largePayload = 'x'.repeat(1001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: largePayload,
@@ -147,7 +147,7 @@ describe('checkComplianceViolations', () => {
 
     it('should not check classification for GET requests', () => {
       const largePayload = 'x'.repeat(1001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'GET',
         payload: largePayload,
@@ -160,7 +160,7 @@ describe('checkComplianceViolations', () => {
 
   describe('No violations', () => {
     it('should return no violations for clean request', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({ name: 'John', age: 30 }),
         headers: {}
@@ -170,7 +170,7 @@ describe('checkComplianceViolations', () => {
     });
 
     it('should return no violations for empty payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
@@ -181,14 +181,14 @@ describe('checkComplianceViolations', () => {
 });
 
 describe('detectComplianceViolation', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'POST',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should detect critical GDPR violation', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: JSON.stringify({ email: 'user@example.com' }),
       headers: {}
@@ -197,7 +197,7 @@ describe('detectComplianceViolation', () => {
   });
 
   it('should detect critical HIPAA violation', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: JSON.stringify({ medical: 'data' }),
       headers: {}
@@ -206,7 +206,7 @@ describe('detectComplianceViolation', () => {
   });
 
   it('should not detect non-critical violations', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: 'x'.repeat(1001),
       headers: {}
@@ -215,7 +215,7 @@ describe('detectComplianceViolation', () => {
   });
 
   it('should return false for compliant request', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: JSON.stringify({ name: 'John' }),
       headers: {}

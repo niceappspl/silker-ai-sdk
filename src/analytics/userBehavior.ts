@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 import { UserSession } from '../types/sessions';
 
 const userSessions = new Map<string, UserSession>();
@@ -30,7 +30,7 @@ function getUserKey(ip: string, userAgent: string): string {
  * @param event - Zdarzenie do analizy
  * @returns Obiekt z flagą anomalii, wynikiem punktowym i listą powodów
  */
-export function analyzeUserBehavior(event: VibeGuardEvent): { isAnomalous: boolean; score: number; reasons: string[] } {
+export function analyzeUserBehavior(event: SilkerEvent): { isAnomalous: boolean; score: number; reasons: string[] } {
   const reasons: string[] = [];
   let anomalyScore = 0;
 
@@ -144,7 +144,7 @@ export function resetUserSessions() {
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto anomalie w sesji, false w przeciwnym razie
  */
-export function detectSessionAnomalies(event: VibeGuardEvent): boolean {
+export function detectSessionAnomalies(event: SilkerEvent): boolean {
   const behavior = analyzeUserBehavior(event);
 
   if (behavior.isAnomalous) {

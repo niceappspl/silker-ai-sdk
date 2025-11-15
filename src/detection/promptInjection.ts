@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 interface PromptInjectionResult {
   detected: boolean;
@@ -134,7 +134,7 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
   return result;
 }
 
-export function analyzePromptSafety(event: VibeGuardEvent): { safe: boolean; issues: string[] } {
+export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
   const payloadStr = typeof event.payload === 'string' 

@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 const DEFAULT_CREDENTIALS = [
   { user: 'admin', pass: 'admin' },
@@ -27,7 +27,7 @@ export interface AuthenticationIssue {
   description: string;
 }
 
-export function detectAuthenticationFailures(event: VibeGuardEvent): AuthenticationIssue[] {
+export function detectAuthenticationFailures(event: SilkerEvent): AuthenticationIssue[] {
   const issues: AuthenticationIssue[] = [];
   const url = (event.url || '').toLowerCase();
   const payload = event.payload;

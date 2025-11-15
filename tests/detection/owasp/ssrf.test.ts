@@ -1,8 +1,8 @@
 import { detectSsrfAttack } from '../../../src/detection/owasp/ssrf';
-import { VibeGuardEvent } from '../../../src/types';
+import { SilkerEvent } from '../../../src/types';
 
 describe('detectSsrfAttack', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('detectSsrfAttack', () => {
 
   describe('Localhost detection', () => {
     it('should detect localhost in URL', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://localhost:8080/api'
       };
@@ -18,7 +18,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect localhost case-insensitive', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://LOCALHOST:8080/api'
       };
@@ -28,7 +28,7 @@ describe('detectSsrfAttack', () => {
 
   describe('Private IP addresses', () => {
     it('should detect 127.0.0.1', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://127.0.0.1:8080/api'
       };
@@ -36,7 +36,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 0.0.0.0', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://0.0.0.0:8080/api'
       };
@@ -44,7 +44,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 10.x.x.x range', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://10.0.0.1:8080/api'
       };
@@ -52,7 +52,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 172.16-31.x.x range', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://172.16.0.1:8080/api'
       };
@@ -60,7 +60,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 192.168.x.x range', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://192.168.1.1:8080/api'
       };
@@ -68,7 +68,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 169.254.x.x range', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://169.254.1.1:8080/api'
       };
@@ -78,7 +78,7 @@ describe('detectSsrfAttack', () => {
 
   describe('IPv6 addresses', () => {
     it('should detect ::1 (IPv6 localhost)', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://[::1]:8080/api'
       };
@@ -86,7 +86,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect [::1] format', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://[::1]/api'
       };
@@ -94,7 +94,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect fd00: (IPv6 private)', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://[fd00::1]/api'
       };
@@ -104,7 +104,7 @@ describe('detectSsrfAttack', () => {
 
   describe('Cloud metadata endpoints', () => {
     it('should detect metadata.google', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://metadata.google.internal/computeMetadata/v1/'
       };
@@ -112,7 +112,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect 169.254.169.254 (AWS metadata)', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://169.254.169.254/latest/meta-data/'
       };
@@ -120,7 +120,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should detect internal keyword', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'http://internal.api.example.com'
       };
@@ -130,7 +130,7 @@ describe('detectSsrfAttack', () => {
 
   describe('Legitimate URLs', () => {
     it('should allow public URLs', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: 'https://api.example.com/users'
       };
@@ -138,7 +138,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should allow relative URLs', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users'
       };
@@ -146,7 +146,7 @@ describe('detectSsrfAttack', () => {
     });
 
     it('should return false when URL is missing', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: ''
       };

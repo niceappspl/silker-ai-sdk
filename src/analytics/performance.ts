@@ -6,11 +6,11 @@ const SLOW_REQUEST_THRESHOLD = 5000;
 
 /**
  * Zapisuje metryki wydajności żądania.
- * @param event - Zdarzenie VibeGuard
+ * @param event - Zdarzenie Silker
  * @param responseTime - Czas odpowiedzi w milisekundach
  * @param statusCode - Opcjonalny kod statusu HTTP
  */
-export function recordPerformanceMetrics(event: import('../types').VibeGuardEvent, responseTime: number, statusCode?: number): void {
+export function recordPerformanceMetrics(event: import('../types').SilkerEvent, responseTime: number, statusCode?: number): void {
   const metrics: PerformanceMetrics = {
     endpoint: event.url,
     method: event.method,

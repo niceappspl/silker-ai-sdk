@@ -1,8 +1,8 @@
 import { detectIdorAttack } from '../../../src/detection/owasp/idor';
-import { VibeGuardEvent } from '../../../src/types';
+import { SilkerEvent } from '../../../src/types';
 
 describe('detectIdorAttack', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('detectIdorAttack', () => {
 
   describe('User endpoint patterns', () => {
     it('should detect suspiciously large user ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/9999999'
       };
@@ -18,7 +18,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should detect negative user ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/-1'
       };
@@ -26,7 +26,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow normal user ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123'
       };
@@ -34,7 +34,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow small user ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/1'
       };
@@ -44,7 +44,7 @@ describe('detectIdorAttack', () => {
 
   describe('Account endpoint patterns', () => {
     it('should detect suspicious account ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/account/1000000'
       };
@@ -52,7 +52,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow normal account ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/account/456'
       };
@@ -62,7 +62,7 @@ describe('detectIdorAttack', () => {
 
   describe('Profile endpoint patterns', () => {
     it('should detect suspicious profile ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/profile/2000000'
       };
@@ -70,7 +70,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow normal profile ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/profile/789'
       };
@@ -80,7 +80,7 @@ describe('detectIdorAttack', () => {
 
   describe('Data endpoint patterns', () => {
     it('should detect suspicious data ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/data/3000000'
       };
@@ -88,7 +88,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow normal data ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/data/321'
       };
@@ -98,7 +98,7 @@ describe('detectIdorAttack', () => {
 
   describe('Record endpoint patterns', () => {
     it('should detect suspicious record ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/record/4000000'
       };
@@ -106,7 +106,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow normal record ID', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/record/654'
       };
@@ -116,7 +116,7 @@ describe('detectIdorAttack', () => {
 
   describe('ID mismatch in payload', () => {
     it('should detect ID mismatch between URL and payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ id: 456 })
@@ -125,7 +125,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should detect userId mismatch', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ userId: 456 })
@@ -134,7 +134,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should detect accountId mismatch', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/account/123',
         payload: JSON.stringify({ accountId: 456 })
@@ -143,7 +143,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow matching IDs', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ id: 123 })
@@ -152,7 +152,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should allow matching userId', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ userId: 123 })
@@ -163,7 +163,7 @@ describe('detectIdorAttack', () => {
 
   describe('Edge cases', () => {
     it('should return false when URL is missing', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: ''
       };
@@ -171,7 +171,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should handle URL without ID pattern', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users'
       };
@@ -179,7 +179,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should handle case-insensitive URL patterns', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/USER/1000000'
       };
@@ -187,7 +187,7 @@ describe('detectIdorAttack', () => {
     });
 
     it('should handle payload without ID fields', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ name: 'John' })

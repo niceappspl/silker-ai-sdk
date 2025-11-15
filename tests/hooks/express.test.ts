@@ -1,11 +1,11 @@
 import nock from 'nock';
 import { hookExpress, getVibeEmitter } from '../../src/hooks/express';
-import { VibeGuardOptions } from '../../src/types';
+import { SilkerOptions } from '../../src/types';
 
 describe('hookExpress', () => {
-  const mockOptions: VibeGuardOptions = {
+  const mockOptions: SilkerOptions = {
     apiKey: 'test-api-key',
-    endpoint: 'https://test-vibeguard.com/api',
+    endpoint: 'https://test-silker.com/api',
     debug: false
   };
 
@@ -42,7 +42,7 @@ describe('hookExpress', () => {
   });
 
   it('should block requests with anomalies', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: true, alertId: 'alert-123' });
 
@@ -65,14 +65,14 @@ describe('hookExpress', () => {
 
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith({
-      error: 'Request blocked by VibeGuard',
+      error: 'Request blocked by Silker AI',
       alertId: 'alert-123'
     });
     expect(next).not.toHaveBeenCalled();
   });
 
   it('should allow requests when cloud says allow', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: false });
 
@@ -141,7 +141,7 @@ describe('hookExpress', () => {
   });
 
   it('should handle cloud connection failure gracefully', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(500);
 

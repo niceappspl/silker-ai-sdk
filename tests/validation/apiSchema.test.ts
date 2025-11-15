@@ -1,8 +1,8 @@
 import { validateApiSchema, validateOpenApiCompliance, performApiValidation } from '../../src/validation/apiSchema';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('validateApiSchema', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('validateApiSchema', () => {
 
   describe('User/Account endpoints', () => {
     it('should validate required fields for user endpoint', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123',
         payload: JSON.stringify({ id: 123, email: 'user@example.com', name: 'John' })
@@ -20,7 +20,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should detect missing required fields', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user',
         payload: JSON.stringify({ age: 30 })
@@ -31,7 +31,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should validate email format', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user',
         payload: JSON.stringify({ email: 'invalid-email', name: 'John' })
@@ -42,7 +42,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should allow valid email format', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user',
         payload: JSON.stringify({ email: 'user@example.com', name: 'John' })
@@ -52,7 +52,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should check nested data structure', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user',
         payload: JSON.stringify({ data: { id: 123, email: 'user@example.com' } })
@@ -64,7 +64,7 @@ describe('validateApiSchema', () => {
 
   describe('API endpoints', () => {
     it('should validate API response structure', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users',
         payload: JSON.stringify({ data: [] })
@@ -74,7 +74,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should detect invalid API response structure', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users',
         payload: 'not-an-object'
@@ -92,7 +92,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should validate list/search endpoints', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users/list',
         payload: JSON.stringify({ data: [{ id: 1 }, { id: 2 }] })
@@ -102,7 +102,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should detect invalid list endpoint structure', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/users/search',
         payload: JSON.stringify({ data: 'not-an-array' })
@@ -115,7 +115,7 @@ describe('validateApiSchema', () => {
 
   describe('URL parameters', () => {
     it('should validate ID format in URL', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/user/123'
       };
@@ -125,7 +125,7 @@ describe('validateApiSchema', () => {
 
     it('should detect suspicious ID format', () => {
       const longId = '1'.repeat(51);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: `/api/user/${longId}`
       };
@@ -136,7 +136,7 @@ describe('validateApiSchema', () => {
 
     it('should validate query parameters length', () => {
       const longValue = 'x'.repeat(1001);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: `/api/search?q=${longValue}`
       };
@@ -146,7 +146,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should detect SQL patterns in query parameters', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/search?q=SELECT * FROM users'
       };
@@ -158,7 +158,7 @@ describe('validateApiSchema', () => {
 
   describe('Content-Type validation', () => {
     it('should validate Content-Type for JSON payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: JSON.stringify({ name: 'John' }),
@@ -169,7 +169,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should detect missing Content-Type for JSON payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: JSON.stringify({ name: 'John' }),
@@ -181,7 +181,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should not check Content-Type for GET requests', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'GET',
         payload: JSON.stringify({ name: 'John' }),
@@ -194,7 +194,7 @@ describe('validateApiSchema', () => {
 
   describe('Edge cases', () => {
     it('should return valid for empty payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent
       };
       const result = validateApiSchema(event);
@@ -202,7 +202,7 @@ describe('validateApiSchema', () => {
     });
 
     it('should handle invalid JSON gracefully', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: 'invalid-json{'
       };
@@ -214,7 +214,7 @@ describe('validateApiSchema', () => {
 });
 
 describe('validateOpenApiCompliance', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -298,14 +298,14 @@ describe('validateOpenApiCompliance', () => {
 });
 
 describe('performApiValidation', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should return valid for compliant API', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: JSON.stringify({ data: [{ id: 1 }] })
     };
@@ -314,7 +314,7 @@ describe('performApiValidation', () => {
   });
 
   it('should combine schema and OpenAPI validation warnings', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       url: '/api/user',
       payload: JSON.stringify({ email: 'invalid-email', success: 'true' })
@@ -325,7 +325,7 @@ describe('performApiValidation', () => {
   });
 
   it('should handle invalid JSON payload', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       payload: 'invalid-json{'
     };
@@ -335,7 +335,7 @@ describe('performApiValidation', () => {
   });
 
   it('should return valid for empty payload', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent
     };
     const result = performApiValidation(event);

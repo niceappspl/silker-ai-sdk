@@ -1,8 +1,8 @@
 import { detectCsrfAttack } from '../../../src/detection/owasp/csrf';
-import { VibeGuardEvent } from '../../../src/types';
+import { SilkerEvent } from '../../../src/types';
 
 describe('detectCsrfAttack', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('detectCsrfAttack', () => {
 
   describe('POST requests', () => {
     it('should detect missing CSRF token in header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: '/user/update', // URL bez /api/ żeby CSRF był wymagany
@@ -20,7 +20,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow POST with CSRF token in header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: '/user/update',
@@ -31,7 +31,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow POST with CSRF token in alternate header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         headers: {}
@@ -41,7 +41,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow POST with CSRF token in payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: JSON.stringify({ csrf: 'token123', name: 'John' }),
@@ -51,7 +51,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow POST with _token in payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: JSON.stringify({ _token: 'token123' }),
@@ -61,7 +61,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow POST with authenticity_token in payload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         payload: JSON.stringify({ authenticity_token: 'token123' }),
@@ -73,7 +73,7 @@ describe('detectCsrfAttack', () => {
 
   describe('PUT requests', () => {
     it('should detect missing CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'PUT',
         url: '/user/123',
@@ -83,7 +83,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow PUT with CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'PUT',
         url: '/user/123',
@@ -96,7 +96,7 @@ describe('detectCsrfAttack', () => {
 
   describe('PATCH requests', () => {
     it('should detect missing CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'PATCH',
         url: '/user/123',
@@ -106,7 +106,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow PATCH with CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'PATCH',
         url: '/user/123',
@@ -119,7 +119,7 @@ describe('detectCsrfAttack', () => {
 
   describe('DELETE requests', () => {
     it('should detect missing CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/user/123',
@@ -129,7 +129,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow DELETE with CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/user/123',
@@ -142,7 +142,7 @@ describe('detectCsrfAttack', () => {
 
   describe('API endpoints', () => {
     it('should allow POST to API endpoints without CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: '/api/users',
@@ -152,7 +152,7 @@ describe('detectCsrfAttack', () => {
     });
 
     it('should allow PUT to API endpoints without CSRF token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'PUT',
         url: '/api/users/123',
@@ -164,7 +164,7 @@ describe('detectCsrfAttack', () => {
 
   describe('GET requests', () => {
     it('should not check CSRF for GET requests', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'GET',
         headers: {}

@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../../types';
+import { SilkerEvent } from '../../types';
 
 /**
  * Wykrywa potencjalne ataki IDOR (Insecure Direct Object Reference).
@@ -7,7 +7,7 @@ import { VibeGuardEvent } from '../../types';
  * @param payload - Opcjonalny payload żądania
  * @returns true jeśli wykryto potencjalny atak IDOR, false w przeciwnym razie
  */
-export function detectIdorAttack(event: VibeGuardEvent, payload?: any): boolean {
+export function detectIdorAttack(event: SilkerEvent, payload?: any): boolean {
   if (!event.url) return false;
 
   const idorPatterns = [

@@ -1,15 +1,15 @@
 /**
- * Klasa błędu VibeGuard.
+ * Klasa błędu Silker.
  */
-export class VibeGuardError extends Error {
+export class SilkerError extends Error {
   /**
-   * Tworzy nowy błąd VibeGuard.
+   * Tworzy nowy błąd Silker.
    * @param message - Komunikat błędu
    * @param code - Kod błędu
    */
   constructor(message: string, public code: string) {
     super(message);
-    this.name = 'VibeGuardError';
+    this.name = 'SilkerError';
   }
 }
 

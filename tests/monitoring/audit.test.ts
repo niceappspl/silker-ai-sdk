@@ -1,5 +1,5 @@
 import { logAuditEvent, getAuditLogs, getAuditSummary, setGlobalOptions, clearAuditLogs } from '../../src/monitoring/audit';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('logAuditEvent', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('logAuditEvent', () => {
     clearAuditLogs();
   });
 
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     ip: '127.0.0.1',
@@ -65,7 +65,7 @@ describe('getAuditLogs', () => {
   beforeEach(() => {
     clearAuditLogs();
     
-    const baseEvent: VibeGuardEvent = {
+    const baseEvent: SilkerEvent = {
       method: 'GET',
       url: '/api/test',
       ip: '127.0.0.1',
@@ -100,7 +100,7 @@ describe('getAuditLogs', () => {
 
   it('should respect limit parameter', () => {
     for (let i = 0; i < 20; i++) {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         method: 'GET',
         url: `/api/test${i}`,
         ip: '127.0.0.1',
@@ -119,13 +119,13 @@ describe('getAuditLogs', () => {
   });
 
   it('should return most recent logs', () => {
-    const event1: VibeGuardEvent = {
+    const event1: SilkerEvent = {
       method: 'GET',
       url: '/api/test1',
       ip: '127.0.0.1',
       timestamp: Date.now()
     };
-    const event2: VibeGuardEvent = {
+    const event2: SilkerEvent = {
       method: 'GET',
       url: '/api/test2',
       ip: '127.0.0.1',
@@ -144,7 +144,7 @@ describe('getAuditSummary', () => {
   beforeEach(() => {
     clearAuditLogs();
     
-    const baseEvent: VibeGuardEvent = {
+    const baseEvent: SilkerEvent = {
       method: 'GET',
       url: '/api/test',
       ip: '127.0.0.1',

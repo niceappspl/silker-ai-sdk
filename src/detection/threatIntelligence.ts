@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 const knownThreatIPs = new Set([
   '185.220.101.1', '185.220.101.2',
@@ -15,7 +15,7 @@ const knownMaliciousDomains = new Set([
  * @param event - Zdarzenie do sprawdzenia
  * @returns Obiekt z flagą zagrożenia i listą szczegółów
  */
-export function checkThreatIntelligence(event: VibeGuardEvent): { threat: boolean; details: string[] } {
+export function checkThreatIntelligence(event: SilkerEvent): { threat: boolean; details: string[] } {
   const details: string[] = [];
 
   if (event.ip && knownThreatIPs.has(event.ip)) {

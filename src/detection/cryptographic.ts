@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 const WEAK_CIPHERS = [
   'RC4', 'MD5', 'SHA1', 'DES', '3DES', 'RC2',
@@ -14,7 +14,7 @@ export interface CryptographicCheckResult {
   cipherSuite?: string;
 }
 
-export function checkCryptographicFailures(event: VibeGuardEvent): CryptographicCheckResult {
+export function checkCryptographicFailures(event: SilkerEvent): CryptographicCheckResult {
   const issues: string[] = [];
   const headers = event.headers || {};
 

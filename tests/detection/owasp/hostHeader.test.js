@@ -8,7 +8,7 @@ describe('detectHostHeaderInjection', () => {
         timestamp: Date.now()
     };
     beforeEach(() => {
-        delete process.env.VIBEGUARD_ALLOWED_HOSTS;
+        delete process.env.SILKER_ALLOWED_HOSTS;
     });
     it('should detect newline character in host header', () => {
         const headers = { host: 'example.com\ninjected' };
@@ -23,17 +23,17 @@ describe('detectHostHeaderInjection', () => {
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent, headers)).toBe(false);
     });
     it('should allow host from allowed list', () => {
-        process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com,api.example.com';
+        process.env.SILKER_ALLOWED_HOSTS = 'example.com,api.example.com';
         const headers = { host: 'example.com' };
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent, headers)).toBe(false);
     });
     it('should allow host that includes allowed host', () => {
-        process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com';
+        process.env.SILKER_ALLOWED_HOSTS = 'example.com';
         const headers = { host: 'api.example.com' };
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent, headers)).toBe(false);
     });
     it('should detect host not in allowed list', () => {
-        process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com';
+        process.env.SILKER_ALLOWED_HOSTS = 'example.com';
         const headers = { host: 'evil.com' };
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent, headers)).toBe(true);
     });
@@ -50,7 +50,7 @@ describe('detectHostHeaderInjection', () => {
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent)).toBe(false);
     });
     it('should handle multiple allowed hosts', () => {
-        process.env.VIBEGUARD_ALLOWED_HOSTS = 'example.com,test.com,api.example.com';
+        process.env.SILKER_ALLOWED_HOSTS = 'example.com,test.com,api.example.com';
         const headers = { host: 'test.com' };
         expect((0, hostHeader_1.detectHostHeaderInjection)(baseEvent, headers)).toBe(false);
     });

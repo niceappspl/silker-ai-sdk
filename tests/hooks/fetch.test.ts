@@ -1,11 +1,11 @@
 import nock from 'nock';
 import { hookFetch } from '../../src/hooks/fetch';
-import { VibeGuardOptions } from '../../src/types';
+import { SilkerOptions } from '../../src/types';
 
 describe('hookFetch', () => {
-  const mockOptions: VibeGuardOptions = {
+  const mockOptions: SilkerOptions = {
     apiKey: 'test-api-key',
-    endpoint: 'https://test-vibeguard.com/api',
+    endpoint: 'https://test-silker.com/api',
     debug: false
   };
 
@@ -39,7 +39,7 @@ describe('hookFetch', () => {
   });
 
   it('should allow legitimate fetch requests', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: false });
 
@@ -57,7 +57,7 @@ describe('hookFetch', () => {
   });
 
   it('should block requests with SQL injection', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: true, alertId: 'alert-123' });
 
@@ -70,12 +70,12 @@ describe('hookFetch', () => {
 
     expect(response.status).toBe(403);
     const data = await response.json();
-    expect(data.error).toBe('Request blocked by VibeGuard');
+    expect(data.error).toBe('Request blocked by Silker AI');
     expect(data.alertId).toBe('alert-123');
   });
 
   it('should block requests with XSS', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: true, alertId: 'alert-xss' });
 
@@ -90,7 +90,7 @@ describe('hookFetch', () => {
   });
 
   it('should allow requests when cloud says allow', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: false });
 
@@ -110,7 +110,7 @@ describe('hookFetch', () => {
   });
 
   it('should handle cloud connection failure gracefully', async () => {
-    nock('https://test-vibeguard.com')
+    nock('https://test-silker.com')
       .post('/api')
       .reply(500);
 

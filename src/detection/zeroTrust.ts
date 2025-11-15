@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 /**
  * Wykonuje weryfikację zgodności z zasadami zero-trust.
@@ -6,7 +6,7 @@ import { VibeGuardEvent } from '../types';
  * @param event - Zdarzenie do sprawdzenia
  * @returns Obiekt z flagą weryfikacji i listą brakujących wymagań
  */
-export function performZeroTrustCheck(event: VibeGuardEvent): { verified: boolean; requirements: string[] } {
+export function performZeroTrustCheck(event: SilkerEvent): { verified: boolean; requirements: string[] } {
   const requirements: string[] = [];
 
   const authHeaders = ['authorization', 'x-api-key', 'authentication'];
@@ -56,7 +56,7 @@ export function performZeroTrustCheck(event: VibeGuardEvent): { verified: boolea
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto naruszenie zasad zero-trust, false w przeciwnym razie
  */
-export function detectZeroTrustViolation(event: VibeGuardEvent): boolean {
+export function detectZeroTrustViolation(event: SilkerEvent): boolean {
   const zeroTrustCheck = performZeroTrustCheck(event);
 
   if (!zeroTrustCheck.verified) {

@@ -1,4 +1,4 @@
-# Testy VibeGuard SDK
+# Testy Silker SDK
 
 Wszystkie testy są zorganizowane w katalogu `tests/` z tą samą strukturą co `src/`.
 
@@ -60,11 +60,11 @@ Wszystkie testy importują moduły z `src/` używając względnych ścieżek:
 ```typescript
 // Przykład dla tests/detection/compliance.test.ts
 import { checkComplianceViolations } from '../../src/detection/compliance';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 // Przykład dla tests/detection/owasp/csrf.test.ts
 import { detectCsrfAttack } from '../../../src/detection/owasp/csrf';
-import { VibeGuardEvent } from '../../../src/types';
+import { SilkerEvent } from '../../../src/types';
 ```
 
 ## Konfiguracja

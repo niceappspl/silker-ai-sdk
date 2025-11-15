@@ -1,5 +1,5 @@
 /**
- * Odpowiedź z chmury VibeGuard po analizie zdarzenia.
+ * Odpowiedź z chmury Silker po analizie zdarzenia.
  */
 export interface CloudResponse {
   /** Czy żądanie powinno zostać zablokowane */

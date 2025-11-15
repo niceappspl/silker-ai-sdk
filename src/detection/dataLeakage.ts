@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 /**
  * Wykrywa potencjalny wyciek danych wrażliwych.

@@ -1,8 +1,8 @@
 import { validateFileUpload, detectFileUploadAttack } from '../../src/detection/fileUpload';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('validateFileUpload', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'POST',
     url: '/api/upload',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('validateFileUpload', () => {
 
   describe('File size validation', () => {
     it('should detect file exceeding max size', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -28,7 +28,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should allow file within size limit', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -47,7 +47,7 @@ describe('validateFileUpload', () => {
 
   describe('Filename validation', () => {
     it('should detect path traversal in filename', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -65,7 +65,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should detect filename starting with dot', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -82,7 +82,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should detect filename with special characters', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -100,7 +100,7 @@ describe('validateFileUpload', () => {
 
     it('should detect filename too long', () => {
       const longName = 'x'.repeat(256);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -118,7 +118,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should allow valid filename', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -147,7 +147,7 @@ describe('validateFileUpload', () => {
       ];
 
       allowedTypes.forEach(contentType => {
-        const event: VibeGuardEvent = {
+        const event: SilkerEvent = {
           ...baseEvent,
           payload: JSON.stringify({
             file: {
@@ -165,7 +165,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should detect disallowed content type', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -186,7 +186,7 @@ describe('validateFileUpload', () => {
   describe('Magic bytes validation', () => {
     it('should detect executable file signatures', () => {
       const exeSignature = Buffer.from([0x4D, 0x5A]);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -205,7 +205,7 @@ describe('validateFileUpload', () => {
 
     it('should detect ELF executable', () => {
       const elfSignature = Buffer.from([0x7F, 0x45, 0x4C, 0x46]);
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -225,7 +225,7 @@ describe('validateFileUpload', () => {
   describe('Script content detection', () => {
     it('should detect script content in non-script file', () => {
       const scriptContent = Buffer.from('<script>alert("xss")</script>').toString('base64');
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -245,7 +245,7 @@ describe('validateFileUpload', () => {
 
   describe('Multipart form data', () => {
     it('should detect multipart without file info', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({}),
         headers: { 'content-type': 'multipart/form-data' }
@@ -257,7 +257,7 @@ describe('validateFileUpload', () => {
 
   describe('Safe file uploads', () => {
     it('should allow safe image upload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -274,7 +274,7 @@ describe('validateFileUpload', () => {
     });
 
     it('should allow safe PDF upload', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({
           file: {
@@ -293,14 +293,14 @@ describe('validateFileUpload', () => {
 });
 
 describe('detectFileUploadAttack', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should detect file upload attack', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/upload',
@@ -318,7 +318,7 @@ describe('detectFileUploadAttack', () => {
   });
 
   it('should detect file upload via /file endpoint', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/file',
@@ -335,7 +335,7 @@ describe('detectFileUploadAttack', () => {
   });
 
   it('should detect file upload via /media endpoint', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/media',
@@ -352,7 +352,7 @@ describe('detectFileUploadAttack', () => {
   });
 
   it('should detect multipart content type', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/data',
@@ -363,7 +363,7 @@ describe('detectFileUploadAttack', () => {
   });
 
   it('should not detect non-upload requests', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'GET',
       url: '/api/users'
@@ -372,7 +372,7 @@ describe('detectFileUploadAttack', () => {
   });
 
   it('should not detect safe file uploads', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/upload',

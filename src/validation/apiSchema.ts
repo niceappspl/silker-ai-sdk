@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../types';
+import { SilkerEvent } from '../types';
 
 /**
  * Waliduje schemat API dla żądania.
@@ -7,7 +7,7 @@ import { VibeGuardEvent } from '../types';
  * @param payload - Opcjonalny payload do walidacji
  * @returns Obiekt z flagą ważności i listą błędów
  */
-export function validateApiSchema(event: VibeGuardEvent, payload?: any): { valid: boolean; errors: string[] } {
+export function validateApiSchema(event: SilkerEvent, payload?: any): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   let data: any;
@@ -97,7 +97,7 @@ export function validateApiSchema(event: VibeGuardEvent, payload?: any): { valid
  * @param payload - Opcjonalny payload do sprawdzenia
  * @returns Obiekt z flagą zgodności i listą problemów
  */
-export function validateOpenApiCompliance(event: VibeGuardEvent, payload?: any): { compliant: boolean; issues: string[] } {
+export function validateOpenApiCompliance(event: SilkerEvent, payload?: any): { compliant: boolean; issues: string[] } {
   const issues: string[] = [];
 
   if (!payload) return { compliant: true, issues };
@@ -137,7 +137,7 @@ export function validateOpenApiCompliance(event: VibeGuardEvent, payload?: any):
  * @param event - Zdarzenie do walidacji
  * @returns Obiekt z flagą ważności i listą ostrzeżeń
  */
-export function performApiValidation(event: VibeGuardEvent): { valid: boolean; warnings: string[] } {
+export function performApiValidation(event: SilkerEvent): { valid: boolean; warnings: string[] } {
   const warnings: string[] = [];
 
   try {

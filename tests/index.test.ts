@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { initVibeGuard, emitWorkflowEvent, VibeGuardError, sendToCloud } from '../src/index';
+import { initSilker, emitSilkerWorkflowEvent, SilkerError, sendToCloud } from '../src/index';
 
-describe('VibeGuard Agent', () => {
+describe('Silker Agent', () => {
   const mockApiKey = 'test-api-key';
-  const mockEndpoint = 'https://test-vibeguard.com/api';
+  const mockEndpoint = 'https://test-silker.com/api';
 
   beforeEach(() => {
     // Clear rate limiting map between tests
@@ -11,14 +11,14 @@ describe('VibeGuard Agent', () => {
     nock.cleanAll();
   });
 
-  describe('initVibeGuard', () => {
+  describe('initSilker', () => {
     it('should initialize successfully with valid API key', async () => {
       // Mock successful cloud connection for test endpoint
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
-      await expect(initVibeGuard({
+      await expect(initSilker({
         apiKey: mockApiKey,
         endpoint: mockEndpoint,
         debug: true
@@ -28,30 +28,30 @@ describe('VibeGuard Agent', () => {
     });
 
     it('should throw error with missing API key', async () => {
-      await expect(initVibeGuard({ apiKey: '' })).rejects.toThrow(VibeGuardError);
-      await expect(initVibeGuard({ apiKey: '' })).rejects.toThrow('API key required');
+      await expect(initSilker({ apiKey: '' })).rejects.toThrow(SilkerError);
+      await expect(initSilker({ apiKey: '' })).rejects.toThrow('API key required');
     });
 
     it('should throw error when cloud connection fails', async () => {
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(500);
 
-      await expect(initVibeGuard({
+      await expect(initSilker({
         apiKey: mockApiKey,
         endpoint: mockEndpoint
-      })).rejects.toThrow(VibeGuardError);
+      })).rejects.toThrow(SilkerError);
     });
   });
 
   describe('Anomaly Detection', () => {
     beforeEach(async () => {
       // Setup agent for testing
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
-      await initVibeGuard({
+      await initSilker({
         apiKey: mockApiKey,
         endpoint: mockEndpoint
       });
@@ -66,13 +66,13 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response for blocking - rate limiting should trigger this
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
       // Generate 6 requests quickly to trigger rate limit
       for (let i = 0; i < 6; i++) {
-        emitWorkflowEvent(baseEvent);
+        emitSilkerWorkflowEvent(baseEvent);
       }
 
       // Wait for async operations
@@ -88,7 +88,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -107,7 +107,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -141,7 +141,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -159,7 +159,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -177,7 +177,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -201,7 +201,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false }); // Don't block GET with leakage, just warn
 
@@ -223,7 +223,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -246,7 +246,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
@@ -268,7 +268,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
@@ -286,7 +286,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
@@ -312,14 +312,14 @@ describe('VibeGuard Agent', () => {
       }
 
       // Mock cloud responses
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .times(10)
         .reply(200, { block: true });
 
       // Send events with small delays to simulate timing
       for (const event of botEvents) {
-        emitWorkflowEvent(event);
+        emitSilkerWorkflowEvent(event);
         await new Promise(resolve => setTimeout(resolve, 10));
       }
 
@@ -341,14 +341,14 @@ describe('VibeGuard Agent', () => {
       }
 
       // Mock cloud responses
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .times(5)
         .reply(200, { block: true });
 
       // Send all events quickly
       for (const event of rapidEvents) {
-        emitWorkflowEvent(event);
+        emitSilkerWorkflowEvent(event);
       }
 
       // Wait for processing
@@ -364,7 +364,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
@@ -391,7 +391,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud block response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: true });
 
@@ -418,7 +418,7 @@ describe('VibeGuard Agent', () => {
       };
 
       // Mock cloud response
-      nock('https://test-vibeguard.com')
+      nock('https://test-silker.com')
         .post('/api')
         .reply(200, { block: false });
 
@@ -514,11 +514,11 @@ describe('VibeGuard Agent', () => {
         timestamp: Date.now()
       };
 
-      nock('https://test-vibeguard.com', {
+      nock('https://test-silker.com', {
         reqheaders: {
           'authorization': 'Bearer test-api-key',
           'content-type': 'application/json',
-          'x-vibeguard-version': '0.1.0'
+          'x-silker-version': '0.1.0'
         }
       })
         .post('/api', testEvent)

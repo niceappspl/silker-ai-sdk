@@ -1,8 +1,8 @@
 import { performZeroTrustCheck, detectZeroTrustViolation } from '../../src/detection/zeroTrust';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('performZeroTrustCheck', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
@@ -10,7 +10,7 @@ describe('performZeroTrustCheck', () => {
 
   describe('Authentication checks', () => {
     it('should require authentication for non-auth endpoints', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
@@ -20,7 +20,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow requests to login endpoints without auth', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/api/login',
         headers: {}
@@ -30,7 +30,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow requests to auth endpoints without auth', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         url: '/auth/token',
         headers: {}
@@ -40,7 +40,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should verify authorization header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: { authorization: 'Bearer token123' }
       };
@@ -49,7 +49,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should verify x-api-key header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: { 'x-api-key': 'key123' }
       };
@@ -58,7 +58,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should handle case-insensitive auth headers', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: { Authorization: 'Bearer token123' }
       };
@@ -69,7 +69,7 @@ describe('performZeroTrustCheck', () => {
 
   describe('Origin verification', () => {
     it('should require origin for non-GET requests', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: '/user/update', // URL bez /api/ żeby origin był wymagany
@@ -81,7 +81,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow GET requests without origin', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'GET',
         headers: {}
@@ -91,7 +91,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow API endpoints without origin', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         url: '/api/users',
@@ -102,7 +102,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should verify origin header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         headers: { origin: 'https://example.com' }
@@ -112,7 +112,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should verify referer header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         headers: { referer: 'https://example.com' }
@@ -124,7 +124,7 @@ describe('performZeroTrustCheck', () => {
 
   describe('User agent verification', () => {
     it('should require user agent', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
@@ -133,7 +133,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow request with user agent', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         userAgent: 'Mozilla/5.0',
         headers: {}
@@ -145,7 +145,7 @@ describe('performZeroTrustCheck', () => {
 
   describe('Destructive operations', () => {
     it('should require confirmation token for DELETE', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/user/123', // URL bez /api/ żeby confirmation był wymagany
@@ -157,7 +157,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow DELETE with confirmation token', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/api/user/123',
@@ -168,7 +168,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow DELETE with delete confirmation header', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/api/user/123',
@@ -179,7 +179,7 @@ describe('performZeroTrustCheck', () => {
     });
 
     it('should allow DELETE for API endpoints without confirmation', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'DELETE',
         url: '/api/users/123',
@@ -201,7 +201,7 @@ describe('performZeroTrustCheck', () => {
 
     it('should require additional verification outside business hours', () => {
       jest.setSystemTime(new Date('2024-01-01T03:00:00Z'));
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
@@ -211,7 +211,7 @@ describe('performZeroTrustCheck', () => {
 
     it('should allow access during business hours', () => {
       jest.setSystemTime(new Date('2024-01-01T12:00:00Z'));
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
@@ -222,7 +222,7 @@ describe('performZeroTrustCheck', () => {
 
   describe('Fully verified request', () => {
     it('should verify request with all requirements', () => {
-      const event: VibeGuardEvent = {
+      const event: SilkerEvent = {
         ...baseEvent,
         method: 'POST',
         userAgent: 'Mozilla/5.0',
@@ -239,14 +239,14 @@ describe('performZeroTrustCheck', () => {
 });
 
 describe('detectZeroTrustViolation', () => {
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     timestamp: Date.now()
   };
 
   it('should detect missing authentication violation', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       headers: {}
     };
@@ -254,7 +254,7 @@ describe('detectZeroTrustViolation', () => {
   });
 
   it('should detect destructive operation without confirmation', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'DELETE',
       url: '/api/user/123',
@@ -264,7 +264,7 @@ describe('detectZeroTrustViolation', () => {
   });
 
   it('should not detect non-critical violations', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       headers: { authorization: 'Bearer token' }
     };
@@ -272,7 +272,7 @@ describe('detectZeroTrustViolation', () => {
   });
 
   it('should return false for verified request', () => {
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       userAgent: 'Mozilla/5.0',

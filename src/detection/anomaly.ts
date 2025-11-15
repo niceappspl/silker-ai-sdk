@@ -1,4 +1,4 @@
-import { VibeGuardEvent, VibeGuardOptions } from '../types';
+import { SilkerEvent, SilkerOptions } from '../types';
 import { checkRateLimit } from './rateLimit';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { detectDataLeakage } from './dataLeakage';
@@ -16,12 +16,12 @@ import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection, analyzePromptSafety } from './promptInjection';
 
-let globalOptions: VibeGuardOptions | null = null;
+let globalOptions: SilkerOptions | null = null;
 
 /**
  * Sprawdza czy funkcjonalność jest włączona (domyślnie false - wymaga jawnego włączenia).
  */
-function isFeatureEnabled(feature: keyof NonNullable<VibeGuardOptions['features']>): boolean {
+function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>): boolean {
   if (!globalOptions?.features) {
     return false;
   }
@@ -30,9 +30,9 @@ function isFeatureEnabled(feature: keyof NonNullable<VibeGuardOptions['features'
 
 /**
  * Ustawia globalne opcje dla modułu detekcji anomalii.
- * @param options - Opcje konfiguracyjne VibeGuard
+ * @param options - Opcje konfiguracyjne Silker
  */
-export function setGlobalOptions(options: VibeGuardOptions | null) {
+export function setGlobalOptions(options: SilkerOptions | null) {
   globalOptions = options;
 }
 
@@ -43,7 +43,7 @@ export function setGlobalOptions(options: VibeGuardOptions | null) {
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli wykryto anomalie, false w przeciwnym razie
  */
-export function isAnomaly(event: VibeGuardEvent): boolean {
+export function isAnomaly(event: SilkerEvent): boolean {
   const { method, url, payload, ip, headers } = event;
 
   if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {

@@ -1,17 +1,18 @@
 import { EventEmitter } from 'events';
-import { VibeGuardEvent, VibeGuardOptions, CloudResponse } from '../types';
+import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
-import { sendToCloud } from '../cloud';
+import { sendAlertToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
+import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 
 const vibeEmitter = new EventEmitter();
 
 /**
- * Tworzy middleware Express.js dla VibeGuard.
+ * Tworzy middleware Express.js dla Silker.
  * Przechwytuje żądania Express, sprawdza je pod kątem anomalii i blokuje podejrzane żądania.
- * @param options - Opcje konfiguracyjne VibeGuard
+ * @param options - Opcje konfiguracyjne Silker
  * @returns Middleware Express.js
  */
-export function hookExpress(options: VibeGuardOptions) {
+export function hookExpress(options: SilkerOptions) {
   setGlobalOptions(options);
 
   return async (req: any, res: any, next: any) => {
@@ -41,7 +42,7 @@ export function hookExpress(options: VibeGuardOptions) {
       payloadParts.push(JSON.stringify(req.query));
     }
 
-    const event: VibeGuardEvent = {
+    const event: SilkerEvent = {
       method: req.method,
       url: req.originalUrl,
       payload: payloadParts.join(' '),
@@ -61,14 +62,38 @@ export function hookExpress(options: VibeGuardOptions) {
         console.log('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
       }
 
-      const cloudResponse = options.features?.cloudCommunication !== false 
-        ? await sendToCloud(event, options)
-        : null;
+      if (options.features?.cloudCommunication !== false && options.appId) {
+        setGlobalOptionsForThreat(options);
+        
+        const threatInfo = detectThreatType(event);
+        if (threatInfo) {
+          const alertId = await sendAlertToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            options
+          );
+          
+          await sendThreatToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            true,
+            threatInfo.description,
+            options
+          );
+
+          return res.status(403).json({
+            error: 'Request blocked by Silker AI',
+            reason: 'Security threat detected',
+            alertId: alertId || undefined
+          });
+        }
+      }
 
       return res.status(403).json({
         error: 'Request blocked by Silker AI',
-        reason: 'Security threat detected',
-        alertId: cloudResponse?.alertId
+        reason: 'Security threat detected'
       });
     }
 
@@ -77,7 +102,7 @@ export function hookExpress(options: VibeGuardOptions) {
 }
 
 /**
- * Zwraca emiter zdarzeń VibeGuard.
+ * Zwraca emiter zdarzeń Silker.
  * @returns Emiter zdarzeń EventEmitter
  */
 export function getVibeEmitter(): EventEmitter {

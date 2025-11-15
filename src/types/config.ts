@@ -1,5 +1,5 @@
 /**
- * Konfiguracja runtime VibeGuard.
+ * Konfiguracja runtime Silker.
  */
 export interface RuntimeConfig {
   /** Tryb debugowania */
@@ -19,7 +19,7 @@ export interface RuntimeConfig {
 }
 
 /**
- * Status zdrowia systemu VibeGuard.
+ * Status zdrowia systemu Silker.
  */
 export interface HealthStatus {
   /** Ogólny status systemu */
@@ -39,7 +39,7 @@ export interface HealthStatus {
   };
   /** Czas działania w milisekundach */
   uptime: number;
-  /** Wersja VibeGuard */
+  /** Wersja Silker */
   version: string;
 }
 

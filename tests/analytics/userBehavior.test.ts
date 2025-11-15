@@ -1,5 +1,5 @@
 import { analyzeUserBehavior, detectSessionAnomalies, setGlobalOptions, resetUserSessions } from '../../src/analytics/userBehavior';
-import { VibeGuardEvent } from '../../src/types';
+import { SilkerEvent } from '../../src/types';
 
 describe('analyzeUserBehavior', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('analyzeUserBehavior', () => {
     resetUserSessions();
   });
 
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     ip: '192.168.1.1',
@@ -18,7 +18,7 @@ describe('analyzeUserBehavior', () => {
   describe('Bot detection', () => {
     it('should detect bot-like behavior with regular intervals', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       analyzeUserBehavior(event);
       
@@ -34,7 +34,7 @@ describe('analyzeUserBehavior', () => {
 
     it('should not detect normal user behavior', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       analyzeUserBehavior(event);
       
@@ -53,7 +53,7 @@ describe('analyzeUserBehavior', () => {
   describe('Endpoint access patterns', () => {
     it('should detect excessive endpoint access', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       // Tworzymy 11 różnych endpointów z mniej niż 20 requestami
       for (let i = 0; i < 11; i++) {
@@ -70,7 +70,7 @@ describe('analyzeUserBehavior', () => {
   describe('Rapid requests', () => {
     it('should detect rapid fire requests', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       analyzeUserBehavior(event);
       
@@ -92,7 +92,7 @@ describe('analyzeUserBehavior', () => {
       const methods = ['DELETE', 'PUT', 'PATCH'];
       
       methods.forEach((method, i) => {
-        const event: VibeGuardEvent = {
+        const event: SilkerEvent = {
           ...baseEvent,
           method,
           timestamp: baseTime + (i * 1000)
@@ -109,7 +109,7 @@ describe('analyzeUserBehavior', () => {
   describe('Session duration', () => {
     it('should detect long session with few requests', () => {
       const baseTime = Date.now() - (35 * 60 * 1000);
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       analyzeUserBehavior(event);
       
@@ -119,7 +119,7 @@ describe('analyzeUserBehavior', () => {
       analyzeUserBehavior(event);
       
       // Ostatni request z aktualnym czasem - różnica od baseTime będzie > 30min
-      const finalEvent: VibeGuardEvent = { ...baseEvent, timestamp: Date.now() };
+      const finalEvent: SilkerEvent = { ...baseEvent, timestamp: Date.now() };
       const result = analyzeUserBehavior(finalEvent);
       expect(result.reasons.some(r => r.includes('Long session'))).toBe(true);
     });
@@ -128,7 +128,7 @@ describe('analyzeUserBehavior', () => {
   describe('API endpoint access', () => {
     it('should detect excessive API endpoint access', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       for (let i = 0; i < 60; i++) {
         event = { ...baseEvent, url: `/api/endpoint${i}`, timestamp: baseTime + (i * 100) };
@@ -144,7 +144,7 @@ describe('analyzeUserBehavior', () => {
   describe('Normal behavior', () => {
     it('should not flag normal user behavior', () => {
       const baseTime = Date.now();
-      let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+      let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
       
       // Wykonaj kilka requestów z normalnymi odstępami czasowymi (> 3s)
       for (let i = 0; i < 3; i++) {
@@ -166,7 +166,7 @@ describe('detectSessionAnomalies', () => {
     resetUserSessions();
   });
 
-  const baseEvent: VibeGuardEvent = {
+  const baseEvent: SilkerEvent = {
     method: 'GET',
     url: '/api/test',
     ip: '192.168.1.1',
@@ -176,7 +176,7 @@ describe('detectSessionAnomalies', () => {
 
   it('should detect bot-like behavior', () => {
     const baseTime = Date.now();
-    let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+    let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
     
     for (let i = 0; i < 10; i++) {
       event = { ...baseEvent, timestamp: baseTime + (i * 100) };
@@ -189,7 +189,7 @@ describe('detectSessionAnomalies', () => {
 
   it('should not detect anomalies for normal behavior', () => {
     const baseTime = Date.now();
-    let event: VibeGuardEvent = { ...baseEvent, timestamp: baseTime };
+    let event: SilkerEvent = { ...baseEvent, timestamp: baseTime };
     
     // Większe odstępy czasowe (> 2s) żeby uniknąć wykrycia jako bot
     for (let i = 0; i < 3; i++) {

@@ -21,7 +21,7 @@ export function setGlobalOptions(options: { debug?: boolean } | null) {
 }
 
 /**
- * Aktualizuje konfigurację runtime VibeGuard.
+ * Aktualizuje konfigurację runtime Silker.
  * @param updates - Częściowa konfiguracja do zaktualizowania
  * @returns Obiekt z flagą sukcesu i listą zaktualizowanych kluczy
  */
@@ -43,7 +43,7 @@ export function updateRuntimeConfig(updates: Partial<RuntimeConfig>): { success:
 }
 
 /**
- * Pobiera aktualną konfigurację runtime VibeGuard.
+ * Pobiera aktualną konfigurację runtime Silker.
  * @returns Kopia aktualnej konfiguracji runtime
  */
 export function getRuntimeConfig(): RuntimeConfig {

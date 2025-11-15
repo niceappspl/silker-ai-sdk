@@ -1,4 +1,4 @@
-import { VibeGuardEvent } from '../../types';
+import { SilkerEvent } from '../../types';
 
 /**
  * Wykrywa potencjalne ataki Host Header Injection.
@@ -7,7 +7,7 @@ import { VibeGuardEvent } from '../../types';
  * @param headers - Nagłówki HTTP żądania
  * @returns true jeśli wykryto potencjalny atak Host Header Injection, false w przeciwnym razie
  */
-export function detectHostHeaderInjection(event: VibeGuardEvent, headers?: any): boolean {
+export function detectHostHeaderInjection(event: SilkerEvent, headers?: any): boolean {
   if (!headers) return false;
   
   const hostKey = Object.keys(headers).find(key => key.toLowerCase() === 'host');
@@ -18,7 +18,7 @@ export function detectHostHeaderInjection(event: VibeGuardEvent, headers?: any):
       return true;
     }
 
-    const expectedHosts = process.env.VIBEGUARD_ALLOWED_HOSTS?.split(',') || [];
+    const expectedHosts = process.env.SILKER_ALLOWED_HOSTS?.split(',') || [];
     if (expectedHosts.length > 0 && !expectedHosts.some(host => hostHeader.includes(host))) {
       return true;
     }

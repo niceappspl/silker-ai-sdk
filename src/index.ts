@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
-import { SilkerOptions, SilkerFeatures, SilkerEvent, VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent, CloudResponse } from './types';
-import { VibeGuardError } from './types/errors';
+import { SilkerOptions, SilkerFeatures, SilkerEvent } from './types';
+import { SilkerError } from './types/errors';
 import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection';
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
 import { setGlobalOptions as setAuditOptions } from './monitoring/audit';
 import { setGlobalOptions as setConfigOptions } from './config/runtime';
-import { sendToCloud } from './cloud';
+import { sendAlertToDashboard, sendThreatToDashboard } from './cloud/dashboard';
+import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
 import { hookExpress, getVibeEmitter } from './hooks/express';
 import { startProxyMode } from './hooks/proxy';
@@ -33,13 +34,13 @@ function setGlobalOptions(options: SilkerOptions | null) {
  * Weryfikuje połączenie z chmurą, konfiguruje hooki dla fetch i Express,
  * oraz uruchamia tryb proxy jeśli jest włączony.
  * @param options - Opcje konfiguracyjne Silker AI
- * @throws {VibeGuardError} Jeśli brakuje klucza API lub połączenie z chmurą nie powiodło się
+ * @throws {SilkerError} Jeśli brakuje klucza API lub połączenie z chmurą nie powiodło się
  */
 async function initSilker(options: SilkerOptions): Promise<void> {
-  const apiKey = options.apiKey || process.env.SILKER_API_KEY || process.env.VIBEGUARD_API_KEY;
+  const apiKey = options.apiKey || process.env.SILKER_API_KEY;
   
   if (!apiKey) {
-    throw new VibeGuardError(
+    throw new SilkerError(
       'API key required. Provide it via options.apiKey or SILKER_API_KEY environment variable.',
       'MISSING_API_KEY'
     );
@@ -50,18 +51,27 @@ async function initSilker(options: SilkerOptions): Promise<void> {
   setGlobalOptions(options);
 
   (global as any).silkerStartTime = Date.now();
-  (global as any).vibeGuardStartTime = Date.now();
 
-  if (options.features?.cloudCommunication !== false) {
+  if (options.features?.cloudCommunication !== false && options.appId) {
     const testEvent: SilkerEvent = {
       method: 'GET',
       url: '/silker/test',
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      ip: '127.0.0.1',
+      userAgent: 'Silker-AI-SDK/Test',
+      headers: {}
     };
 
-    const response = await sendToCloud(testEvent, options);
-    if (response === null) {
-      throw new VibeGuardError('Failed to connect to Silker AI cloud', 'CONNECTION_FAILED');
+    try {
+      setGlobalOptionsForThreat(options);
+      const threatInfo = detectThreatType(testEvent);
+      if (threatInfo) {
+        await sendAlertToDashboard(testEvent, threatInfo.type, threatInfo.severity, options);
+      }
+    } catch (error) {
+      if (options.debug) {
+        console.log('⚠️ Dashboard connection test failed, but continuing...');
+      }
     }
   }
 
@@ -74,21 +84,39 @@ async function initSilker(options: SilkerOptions): Promise<void> {
   const vibeEmitter = getVibeEmitter();
   vibeEmitter.on('workflow', async (event: SilkerEvent) => {
     if (isAnomaly(event)) {
-      const cloudResponse = options.features?.cloudCommunication !== false 
-        ? await sendToCloud(event, options)
-        : null;
-      if (cloudResponse?.block && options.debug) {
-        console.log('Workflow anomaly blocked:', event.url);
+      if (options.features?.cloudCommunication !== false && options.appId) {
+        setGlobalOptionsForThreat(options);
+        const threatInfo = detectThreatType(event);
+        if (threatInfo) {
+          await sendAlertToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            options
+          );
+          
+          await sendThreatToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity,
+            true,
+            threatInfo.description,
+            options
+          );
+
+          if (options.debug) {
+            console.log('Workflow anomaly detected and reported:', event.url);
+          }
+        }
       }
     }
   });
 
   (global as any).silkerEmitter = vibeEmitter;
-  (global as any).vibeGuardEmitter = vibeEmitter;
 
   if (options.proxyMode) {
-    const targetUrl = process.env.SILKER_TARGET_URL || process.env.VIBEGUARD_TARGET_URL || 'http://localhost:3000';
-    const proxyPort = parseInt(process.env.SILKER_PROXY_PORT || process.env.VIBEGUARD_PROXY_PORT || '8080');
+    const targetUrl = process.env.SILKER_TARGET_URL || 'http://localhost:3000';
+    const proxyPort = parseInt(process.env.SILKER_PROXY_PORT || '8080');
     startProxyMode(options, targetUrl, proxyPort);
   }
 }
@@ -102,13 +130,6 @@ function emitSilkerWorkflowEvent(event: Omit<SilkerEvent, 'timestamp'>) {
   vibeEmitter.emit('workflow', { ...event, timestamp: Date.now() });
 }
 
-export async function initVibeGuard(options: VibeGuardOptions): Promise<void> {
-  return initSilker(options);
-}
-
-export function emitWorkflowEvent(event: Omit<VibeGuardEvent, 'timestamp'>) {
-  return emitSilkerWorkflowEvent(event);
-}
 
 export const middleware = hookExpress;
 
@@ -116,7 +137,6 @@ const SilkerAI = {
   init: initSilker,
   emitWorkflowEvent: emitSilkerWorkflowEvent,
   middleware: hookExpress,
-  sendToCloud,
   getPerformanceReport,
   recordPerformanceMetrics,
   getAuditLogs,
@@ -135,7 +155,6 @@ export default SilkerAI;
 export {
   initSilker,
   emitSilkerWorkflowEvent,
-  sendToCloud,
   getPerformanceReport,
   recordPerformanceMetrics,
   getAuditLogs,
@@ -147,14 +166,11 @@ export {
   performApiValidation,
   validateSecurityHeaders,
   analyzeUserBehavior,
-  VibeGuardError
+  SilkerError
 };
 
 export type {
   SilkerOptions,
   SilkerFeatures,
   SilkerEvent,
-  CloudResponse
 };
-
-export type { VibeGuardOptions, VibeGuardFeatures, VibeGuardEvent };
