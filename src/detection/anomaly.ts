@@ -19,13 +19,13 @@ import { detectPromptInjection, analyzePromptSafety } from './promptInjection';
 let globalOptions: VibeGuardOptions | null = null;
 
 /**
- * Sprawdza czy funkcjonalność jest włączona (domyślnie true).
+ * Sprawdza czy funkcjonalność jest włączona (domyślnie false - wymaga jawnego włączenia).
  */
 function isFeatureEnabled(feature: keyof NonNullable<VibeGuardOptions['features']>): boolean {
   if (!globalOptions?.features) {
-    return true;
+    return false;
   }
-  return globalOptions.features[feature] !== false;
+  return globalOptions.features[feature] === true;
 }
 
 /**
@@ -47,6 +47,9 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
   const { method, url, payload, ip, headers } = event;
 
   if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
+    if (globalOptions?.debug) {
+      console.log('🚫 BLOCKED: Rate limit exceeded');
+    }
     return true;
   }
 
@@ -59,6 +62,9 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
 
       for (const pattern of sqliPatterns) {
         if (pattern.test(payload)) {
+          if (globalOptions?.debug) {
+            console.log('🚫 BLOCKED: SQL injection pattern detected:', pattern);
+          }
           return true;
         }
       }
@@ -66,14 +72,21 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
 
     if (isFeatureEnabled('xssDetection')) {
       const xssPatterns = [
-        /<script[^>]*>.*?<\/script>/i,
+        /<script[^>]*>/i,
+        /<\/script>/i,
         /javascript:/i,
         /on\w+\s*=/i,
-        /<iframe[^>]*>/i
+        /<iframe[^>]*>/i,
+        /<svg[^>]*>/i,
+        /<embed[^>]*>/i,
+        /<object[^>]*>/i
       ];
 
       for (const pattern of xssPatterns) {
         if (pattern.test(payload)) {
+          if (globalOptions?.debug) {
+            console.log('🚫 BLOCKED: XSS pattern detected:', pattern);
+          }
           return true;
         }
       }
@@ -84,8 +97,17 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
     return false;
   }
 
-  if (isFeatureEnabled('pathTraversalDetection') && (url.includes('../') || url.includes('..\\'))) {
-    return true;
+  if (isFeatureEnabled('pathTraversalDetection')) {
+    const pathTraversalPatterns = ['../', '..\\'];
+    const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
+    const payloadHasTraversal = payload && pathTraversalPatterns.some(pattern => payload.includes(pattern));
+    
+    if (urlHasTraversal || payloadHasTraversal) {
+      if (globalOptions?.debug) {
+        console.log('🚫 BLOCKED: Path traversal detected');
+      }
+      return true;
+    }
   }
 
   if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
@@ -171,7 +193,13 @@ export function isAnomaly(event: VibeGuardEvent): boolean {
       if (globalOptions?.debug) {
         console.log('🚨 Data leakage detected:', leakageCheck.findings);
       }
-      if (event.method === 'POST') {
+      const hasCriticalLeak = leakageCheck.findings.some((finding: string) => 
+        finding.includes('credit card') || 
+        finding.includes('SSN:') ||
+        finding.includes('API key:')
+      );
+      
+      if (event.method === 'GET' || hasCriticalLeak) {
         return true;
       }
     }

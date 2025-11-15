@@ -15,10 +15,36 @@ export function hookExpress(options: VibeGuardOptions) {
   setGlobalOptions(options);
 
   return async (req: any, res: any, next: any) => {
+    const allData: any = {
+      ...req.body,
+      ...req.query,
+      ...req.params
+    };
+    
+    const payloadParts: string[] = [];
+    
+    if (req.body && Object.keys(req.body).length > 0) {
+      Object.values(req.body).forEach(value => {
+        if (typeof value === 'string') {
+          payloadParts.push(value);
+        }
+      });
+      payloadParts.push(JSON.stringify(req.body));
+    }
+    
+    if (req.query && Object.keys(req.query).length > 0) {
+      Object.values(req.query).forEach(value => {
+        if (typeof value === 'string') {
+          payloadParts.push(value);
+        }
+      });
+      payloadParts.push(JSON.stringify(req.query));
+    }
+
     const event: VibeGuardEvent = {
       method: req.method,
       url: req.originalUrl,
-      payload: JSON.stringify(req.body || {}),
+      payload: payloadParts.join(' '),
       ip: req.ip || req.connection.remoteAddress,
       timestamp: Date.now(),
       userAgent: req.get('User-Agent'),
@@ -31,20 +57,19 @@ export function hookExpress(options: VibeGuardOptions) {
 
     const anomaly = isAnomaly(event);
     if (anomaly) {
+      if (options.debug) {
+        console.log('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
+      }
+
       const cloudResponse = options.features?.cloudCommunication !== false 
         ? await sendToCloud(event, options)
         : null;
 
-      if (cloudResponse?.block) {
-        if (options.debug) {
-          console.log('🚫 Express middleware blocking request');
-        }
-
-        return res.status(403).json({
-          error: 'Request blocked by VibeGuard',
-          alertId: cloudResponse.alertId
-        });
-      }
+      return res.status(403).json({
+        error: 'Request blocked by Silker AI',
+        reason: 'Security threat detected',
+        alertId: cloudResponse?.alertId
+      });
     }
 
     next();
