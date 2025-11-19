@@ -70,8 +70,19 @@ export interface SilkerOptions {
   debug?: boolean;
   /** Włącza tryb proxy HTTP */
   proxyMode?: boolean;
+  /**
+   * Opcjonalny identyfikator użytkownika/sesji
+   */
+  tokenId?: string;
+
+  /**
+   * URL endpointu dashboardu (np. https://dash.silker.ai)
+   */
+  dashboardUrl?: string;
   /** Funkcjonalności do włączania/wyłączania (domyślnie wszystkie włączone) */
   features?: SilkerFeatures;
+  /** Czy przepuszczać żądania w przypadku błędu wewnętrznego (domyślnie true) */
+  failOpen?: boolean;
+  /** Maksymalny rozmiar payloadu w bajtach (domyślnie 50KB) */
+  maxPayloadSize?: number;
 }
-
-

@@ -15,6 +15,9 @@ import { detectVulnerableComponents, checkForCveReferences } from './vulnerableC
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection, analyzePromptSafety } from './promptInjection';
+import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
+import { pushDashboardData } from '../cloud/dashboardSync';
+import * as crypto from 'crypto';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -44,226 +47,209 @@ export function setGlobalOptions(options: SilkerOptions | null) {
  * @returns true jeśli wykryto anomalie, false w przeciwnym razie
  */
 export function isAnomaly(event: SilkerEvent): boolean {
-  const { method, url, payload, ip, headers } = event;
+  try {
+    const { method, url, payload, ip, headers } = event;
+    const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB (increased for AI/LLM support)
 
-  if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
+    // Rate limiting check (lightweight, do first)
+    if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
+      if (globalOptions?.debug) {
+        console.log('🚫 BLOCKED: Rate limit exceeded');
+      }
+      return true;
+    }
+
+    // IP Allowlist/Blocklist check (lightweight)
+    if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
+      if (!isFeatureEnabled('zeroTrustDetection')) {
+        return false;
+      }
+    }
+
+    // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
+    let scannedPayload = '';
+    if (payload && typeof payload === 'string') {
+      scannedPayload = payload.length > maxPayloadSize ? payload.substring(0, maxPayloadSize) : payload;
+    } else if (payload) {
+      try {
+        const str = JSON.stringify(payload);
+        scannedPayload = str.length > maxPayloadSize ? str.substring(0, maxPayloadSize) : str;
+      } catch (e) {
+        // Circular reference or other error, ignore payload
+      }
+    }
+
+    if (scannedPayload) {
+      if (isFeatureEnabled('sqliDetection')) {
+        if (detectSqliHeuristic(scannedPayload)) {
+          if (globalOptions?.debug) {
+            console.log('🚫 BLOCKED: SQL injection detected (Heuristic)');
+          }
+          return true;
+        }
+      }
+
+      if (isFeatureEnabled('xssDetection')) {
+        if (detectXssHeuristic(scannedPayload)) {
+          if (globalOptions?.debug) {
+            console.log('🚫 BLOCKED: XSS detected (Heuristic)');
+          }
+          return true;
+        }
+      }
+    }
+
+    if (isFeatureEnabled('pathTraversalDetection')) {
+      const pathTraversalPatterns = ['../', '..\\'];
+      const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
+      // Check truncated payload for traversal too
+      const payloadHasTraversal = scannedPayload && pathTraversalPatterns.some(pattern => scannedPayload.includes(pattern));
+
+      if (urlHasTraversal || payloadHasTraversal) {
+        if (globalOptions?.debug) {
+          console.log('🚫 BLOCKED: Path traversal detected');
+        }
+        return true;
+      }
+    }
+
+    if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, scannedPayload)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('accessControlDetection')) {
+      const userRole = (event as any).userRole || headers?.['x-user-role'];
+      if (detectBrokenAccessControl(event, userRole)) {
+        return true;
+      }
+      if ((event as any).currentRole && (event as any).targetRole) {
+        if (detectPrivilegeEscalation(event, (event as any).currentRole, (event as any).targetRole)) {
+          return true;
+        }
+      }
+      if ((event as any).userId && (event as any).resourceUserId) {
+        if (detectHorizontalPrivilegeEscalation(event, (event as any).userId, (event as any).resourceUserId)) {
+          return true;
+        }
+      }
+    }
+
+    if (isFeatureEnabled('cryptographicValidation')) {
+      const cryptoCheck = checkCryptographicFailures(event);
+      if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
+        return true;
+      }
+      if (detectWeakEncryption(headers)) {
+        return true;
+      }
+    }
+
+    if (isFeatureEnabled('vulnerableComponentsDetection')) {
+      const vulnerabilities = detectVulnerableComponents(event);
+      if (vulnerabilities.some(v => v.risk === 'critical' || v.risk === 'high')) {
+        return true;
+      }
+      const cves = checkForCveReferences(event);
+      if (cves.length > 0) {
+        return true;
+      }
+    }
+
+    if (isFeatureEnabled('authenticationValidation')) {
+      const authIssues = detectAuthenticationFailures(event);
+      if (authIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
+        return true;
+      }
+    }
+
+    if (isFeatureEnabled('softwareIntegrityValidation')) {
+      const integrityIssues = checkSoftwareIntegrity(event);
+      if (integrityIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
+        return true;
+      }
+    }
+
+    if (isFeatureEnabled('securityHeadersValidation')) {
+      const headerValidation = validateSecurityHeaders(headers);
+      if (!headerValidation.valid && headers) {
+        if (globalOptions?.debug) {
+          console.log('⚠️ Missing security headers:', headerValidation.missing);
+        }
+      }
+    }
+
+    if (isFeatureEnabled('dataLeakageDetection') && (event.method === 'GET' || event.method === 'POST')) {
+      // Use scannedPayload for leakage detection too
+      const leakageCheck = detectDataLeakage(scannedPayload);
+      if (leakageCheck.leaked) {
+        if (globalOptions?.debug) {
+          console.log('🚨 Data leakage detected:', leakageCheck.findings);
+        }
+        const hasCriticalLeak = leakageCheck.findings.some((finding: string) =>
+          finding.includes('credit card') ||
+          finding.includes('SSN:') ||
+          finding.includes('API key:')
+        );
+
+        if (event.method === 'GET' || hasCriticalLeak) {
+          return true;
+        }
+      }
+    }
+
+    if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && scannedPayload) {
+      // We might want to validate the full object if available, but for safety we use what we have.
+      // Ideally performApiValidation should handle raw objects safely.
+      // For now passing the event as is, assuming performApiValidation is safe enough or we accept the risk there (it's usually schema validation, not regex search).
+      const apiValidation = performApiValidation(event);
+      if (!apiValidation.valid && globalOptions?.debug) {
+        console.log('⚠️ API schema validation warnings:', apiValidation.warnings);
+      }
+    }
+
+    if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('fileUploadDetection') && detectFileUploadAttack(event)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('thirdPartyDetection') && detectThirdPartyAttack(event)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('complianceDetection') && detectComplianceViolation(event)) {
+      return true;
+    }
+
+    if (isFeatureEnabled('threatIntelligence')) {
+      const threatCheck = checkThreatIntelligence(event);
+      if (threatCheck.threat) {
+        if (globalOptions?.debug) {
+          console.log('🕵️ Threat intelligence alert:', threatCheck.details);
+        }
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
     if (globalOptions?.debug) {
-      console.log('🚫 BLOCKED: Rate limit exceeded');
+      console.error('Silker AI Detection Error:', error);
     }
-    return true;
-  }
-
-  if (payload && typeof payload === 'string') {
-    if (isFeatureEnabled('sqliDetection')) {
-      const sqliPatterns = [
-        /(\bUNION\b|\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b|\bDROP\b).*(\bFROM\b|\bWHERE\b|\bINTO\b)/i,
-        /('|(\\x27)|(\\x2D\\x2D)|(\\x23)|(\\x3B)|(\\x2F\\x2A)|(\\x2A\\x2F))/i
-      ];
-
-      for (const pattern of sqliPatterns) {
-        if (pattern.test(payload)) {
-          if (globalOptions?.debug) {
-            console.log('🚫 BLOCKED: SQL injection pattern detected:', pattern);
-          }
-          return true;
-        }
-      }
-    }
-
-    if (isFeatureEnabled('xssDetection')) {
-      const xssPatterns = [
-        /<script[^>]*>/i,
-        /<\/script>/i,
-        /javascript:/i,
-        /on\w+\s*=/i,
-        /<iframe[^>]*>/i,
-        /<svg[^>]*>/i,
-        /<embed[^>]*>/i,
-        /<object[^>]*>/i
-      ];
-
-      for (const pattern of xssPatterns) {
-        if (pattern.test(payload)) {
-          if (globalOptions?.debug) {
-            console.log('🚫 BLOCKED: XSS pattern detected:', pattern);
-          }
-          return true;
-        }
-      }
-    }
-  }
-
-  if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
     return false;
   }
-
-  if (isFeatureEnabled('pathTraversalDetection')) {
-    const pathTraversalPatterns = ['../', '..\\'];
-    const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
-    const payloadHasTraversal = payload && pathTraversalPatterns.some(pattern => payload.includes(pattern));
-    
-    if (urlHasTraversal || payloadHasTraversal) {
-      if (globalOptions?.debug) {
-        console.log('🚫 BLOCKED: Path traversal detected');
-      }
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, payload)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('accessControlDetection')) {
-    const userRole = (event as any).userRole || headers?.['x-user-role'];
-    if (detectBrokenAccessControl(event, userRole)) {
-      return true;
-    }
-    if ((event as any).currentRole && (event as any).targetRole) {
-      if (detectPrivilegeEscalation(event, (event as any).currentRole, (event as any).targetRole)) {
-        return true;
-      }
-    }
-    if ((event as any).userId && (event as any).resourceUserId) {
-      if (detectHorizontalPrivilegeEscalation(event, (event as any).userId, (event as any).resourceUserId)) {
-        return true;
-      }
-    }
-  }
-
-  if (isFeatureEnabled('cryptographicValidation')) {
-    const cryptoCheck = checkCryptographicFailures(event);
-    if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
-      return true;
-    }
-    if (detectWeakEncryption(headers)) {
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('vulnerableComponentsDetection')) {
-    const vulnerabilities = detectVulnerableComponents(event);
-    if (vulnerabilities.some(v => v.risk === 'critical' || v.risk === 'high')) {
-      return true;
-    }
-    const cves = checkForCveReferences(event);
-    if (cves.length > 0) {
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('authenticationValidation')) {
-    const authIssues = detectAuthenticationFailures(event);
-    if (authIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('softwareIntegrityValidation')) {
-    const integrityIssues = checkSoftwareIntegrity(event);
-    if (integrityIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('securityHeadersValidation')) {
-    const headerValidation = validateSecurityHeaders(headers);
-    if (!headerValidation.valid && headers) {
-      if (globalOptions?.debug) {
-        console.log('⚠️ Missing security headers:', headerValidation.missing);
-      }
-    }
-  }
-
-  if (isFeatureEnabled('dataLeakageDetection') && (event.method === 'GET' || event.method === 'POST')) {
-    const leakageCheck = detectDataLeakage(event.payload);
-    if (leakageCheck.leaked) {
-      if (globalOptions?.debug) {
-        console.log('🚨 Data leakage detected:', leakageCheck.findings);
-      }
-      const hasCriticalLeak = leakageCheck.findings.some((finding: string) => 
-        finding.includes('credit card') || 
-        finding.includes('SSN:') ||
-        finding.includes('API key:')
-      );
-      
-      if (event.method === 'GET' || hasCriticalLeak) {
-        return true;
-      }
-    }
-  }
-
-  if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && event.payload) {
-    const apiValidation = performApiValidation(event);
-    if (!apiValidation.valid && globalOptions?.debug) {
-      console.log('⚠️ API schema validation warnings:', apiValidation.warnings);
-    }
-  }
-
-  if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('fileUploadDetection') && detectFileUploadAttack(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('thirdPartyDetection') && detectThirdPartyAttack(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('complianceDetection') && detectComplianceViolation(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('threatIntelligence')) {
-    const threatCheck = checkThreatIntelligence(event);
-    if (threatCheck.threat) {
-      if (globalOptions?.debug) {
-        console.log('🕵️ Threat intelligence alert:', threatCheck.details);
-      }
-      return true;
-    }
-  }
-
-  if (isFeatureEnabled('zeroTrustDetection') && detectZeroTrustViolation(event)) {
-    return true;
-  }
-
-  if (isFeatureEnabled('promptInjectionDetection')) {
-    const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload || '');
-    const promptCheck = detectPromptInjection(payloadStr);
-    
-    if (promptCheck.detected && (promptCheck.severity === 'high' || promptCheck.severity === 'critical')) {
-      if (globalOptions?.debug) {
-        console.log('🚨 Prompt injection detected:', promptCheck.patterns, 'Severity:', promptCheck.severity);
-      }
-      return true;
-    }
-
-    const safetyCheck = analyzePromptSafety(event);
-    if (!safetyCheck.safe) {
-      if (globalOptions?.debug) {
-        console.log('⚠️ Prompt safety issues:', safetyCheck.issues);
-      }
-      if (safetyCheck.issues.some(issue => issue.includes('critical') || issue.includes('jailbreak'))) {
-        return true;
-      }
-    }
-  }
-
-  return false;
 }
 

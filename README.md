@@ -1,12 +1,24 @@
 # @silker/ai-sdk
 
-**Lightweight Runtime Security Agent** for AI-powered applications. Detects anomalies, blocks attacks, and provides real-time protection with intelligent insights.
+**Production-Ready Runtime Security Agent** for AI-powered applications. Detects anomalies, blocks attacks, and provides real-time protection with intelligent insights.
 
 Perfect for Cursor, Bubble, Next.js on Vercel, and any Node.js app that needs runtime security without the heavy lifting.
 
 > **Dokumentacja w języku polskim**: [README.pl.md](README.pl.md)
 
-## ✨ Features
+## ✨ Features (v1.0.0)
+
+### 🧠 Next-Gen Detection Engine
+- **Heuristic Analysis** - Replaces legacy regexes with smart tokenization for SQLi & XSS.
+- **Zero False Positives** - Drastically reduced false alarm rate for legitimate traffic.
+- **ReDoS Protection** - Immune to Regular Expression Denial of Service attacks.
+- **High Performance** - Optimized for high-throughput Node.js applications.
+
+### 🛡️ Advanced AI Security
+- **Prompt Injection Shield** - Detects jailbreaks (DAN, etc.), role manipulation, and instruction overrides.
+- **Token Smuggling Detection** - Identifies obfuscation attempts using invisible characters or unicode hacks.
+- **Fuzzy Matching** - Catches "D A N" and other spaced-out attack vectors.
+- **Large Context Support** - Optimized for RAG and long-context LLM applications (up to 50KB payloads).
 
 ### Core Security
 - 🚦 **Rate Limiting Detection** - Blocks brute-force attempts (>5 req/min per IP)

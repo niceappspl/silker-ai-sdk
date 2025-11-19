@@ -1,11 +1,11 @@
 {
   "name": "@silker/ai-sdk",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && esbuild src/index.ts --bundle --minify --sourcemap --platform=node --target=node14 --outfile=dist/index.js",
+    "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

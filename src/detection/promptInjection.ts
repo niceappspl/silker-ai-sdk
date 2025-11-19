@@ -85,6 +85,62 @@ const MULTILINGUAL_ATTACKS = [
   /oublier/gi,
 ];
 
+/**
+ * Detects token smuggling attempts by analyzing character distribution and unusual patterns.
+ * Attackers often use invisible characters or weird unicode to bypass filters.
+ */
+function detectTokenSmuggling(payload: string): { detected: boolean; score: number } {
+  let score = 0;
+
+  // Check for invisible characters (zero-width spaces, etc.)
+  const invisibleChars = /[\u200B-\u200D\uFEFF\u00A0]/g;
+  const invisibleMatch = payload.match(invisibleChars);
+  if (invisibleMatch && invisibleMatch.length > 5) {
+    score += 10;
+  }
+
+  // Check for excessive use of rare unicode blocks (often used for obfuscation)
+  // This is a heuristic: if > 30% of chars are non-ASCII and non-standard punctuation
+  const nonAscii = payload.replace(/[\x00-\x7F]/g, '').length;
+  if (payload.length > 50 && (nonAscii / payload.length) > 0.3) {
+    score += 5;
+  }
+
+  return {
+    detected: score > 0,
+    score
+  };
+}
+
+/**
+ * Detects obfuscated jailbreak keywords using fuzzy matching logic (simplified).
+ * Catches things like "D A N", "D-A-N", "D.A.N".
+ */
+function detectObfuscatedKeywords(payload: string): { detected: boolean; keywords: string[] } {
+  const keywords = ['DAN', 'JAILBREAK', 'SYSTEM', 'IGNORE'];
+  const detected: string[] = [];
+
+  // Normalize: remove spaces, dashes, dots, underscores
+  const normalized = payload.toUpperCase().replace(/[\s\-\._]/g, '');
+
+  for (const keyword of keywords) {
+    if (normalized.includes(keyword)) {
+      // Verify it's not a false positive by checking original spacing
+      // If the original had spaces between every char of the keyword, it's likely an attack
+      // e.g. "D A N" -> "DAN"
+      const regex = new RegExp(keyword.split('').join('[\\s\\-\\._]+'), 'i');
+      if (regex.test(payload)) {
+        detected.push(keyword);
+      }
+    }
+  }
+
+  return {
+    detected: detected.length > 0,
+    keywords: detected
+  };
+}
+
 export function detectPromptInjection(payload?: string): PromptInjectionResult {
   const result: PromptInjectionResult = {
     detected: false,
@@ -121,6 +177,21 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     }
   }
 
+  // Advanced Checks
+  const smuggling = detectTokenSmuggling(payload);
+  if (smuggling.detected) {
+    result.detected = true;
+    result.patterns.push('Token Smuggling / Obfuscation');
+    result.score += smuggling.score;
+  }
+
+  const obfuscated = detectObfuscatedKeywords(payload);
+  if (obfuscated.detected) {
+    result.detected = true;
+    result.patterns.push(`Obfuscated Keywords: ${obfuscated.keywords.join(', ')}`);
+    result.score += 15; // High weight for deliberate obfuscation
+  }
+
   if (result.score >= 20) {
     result.severity = 'critical';
   } else if (result.score >= 15) {
@@ -137,8 +208,8 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
 export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
-  const payloadStr = typeof event.payload === 'string' 
-    ? event.payload 
+  const payloadStr = typeof event.payload === 'string'
+    ? event.payload
     : JSON.stringify(event.payload || '');
 
   const injectionCheck = detectPromptInjection(payloadStr);
@@ -155,7 +226,7 @@ export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues
     }
   }
 
-  const suspiciousLength = payloadStr.length > 10000;
+  const suspiciousLength = payloadStr.length > 50000; // Increased limit for AI workloads
   if (suspiciousLength) {
     issues.push(`Unusually large payload: ${payloadStr.length} characters`);
   }
@@ -166,7 +237,7 @@ export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues
   }
 
   const excessiveNewlines = (payloadStr.match(/\n/g) || []).length;
-  if (excessiveNewlines > 100) {
+  if (excessiveNewlines > 200) { // Increased tolerance
     issues.push(`Excessive newlines: ${excessiveNewlines} (possible delimiter injection)`);
   }
 
@@ -197,4 +268,3 @@ export function detectJailbreak(payload?: string): boolean {
 
   return false;
 }
-

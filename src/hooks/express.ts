@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
-import { sendAlertToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
+import { pushDashboardData } from '../cloud/dashboardSync';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 
 const vibeEmitter = new EventEmitter();
@@ -15,15 +15,18 @@ const vibeEmitter = new EventEmitter();
 export function hookExpress(options: SilkerOptions) {
   setGlobalOptions(options);
 
+  console.log('🛡️ Silker middleware initialized with dashboardUrl:', options.dashboardUrl);
+
   return async (req: any, res: any, next: any) => {
+    console.log('🔍 Silker middleware processing request:', req.method, req.originalUrl);
     const allData: any = {
       ...req.body,
       ...req.query,
       ...req.params
     };
-    
+
     const payloadParts: string[] = [];
-    
+
     if (req.body && Object.keys(req.body).length > 0) {
       Object.values(req.body).forEach(value => {
         if (typeof value === 'string') {
@@ -32,7 +35,7 @@ export function hookExpress(options: SilkerOptions) {
       });
       payloadParts.push(JSON.stringify(req.body));
     }
-    
+
     if (req.query && Object.keys(req.query).length > 0) {
       Object.values(req.query).forEach(value => {
         if (typeof value === 'string') {
@@ -62,31 +65,36 @@ export function hookExpress(options: SilkerOptions) {
         console.log('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
       }
 
-      if (options.features?.cloudCommunication !== false && options.appId) {
+      if (options.features?.cloudCommunication !== false && options.dashboardUrl) {
         setGlobalOptionsForThreat(options);
-        
+
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
-          const alertId = await sendAlertToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity,
-            options
-          );
-          
-          await sendThreatToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity,
-            true,
-            threatInfo.description,
-            options
-          );
+          // Send alert to dashboard using new sync mechanism
+          pushDashboardData(options, {
+            recentAlerts: [{
+              // Use UUID for ID to be compatible with Supabase UUID type
+              id: require('crypto').randomUUID(),
+              type: threatInfo.type,
+              severity: threatInfo.severity,
+              ip: event.ip || 'unknown',
+              endpoint: event.url || '/',
+              method: event.method || 'UNKNOWN',
+              userAgent: event.userAgent || 'unknown',
+              timestamp: new Date().toISOString(),
+              createdAt: new Date(),
+              details: threatInfo.description
+            }]
+          });
+
+          if (options.debug) {
+            console.log('📤 Alert sent to dashboard:', threatInfo.type);
+          }
 
           return res.status(403).json({
             error: 'Request blocked by Silker AI',
             reason: 'Security threat detected',
-            alertId: alertId || undefined
+            type: threatInfo.type
           });
         }
       }
