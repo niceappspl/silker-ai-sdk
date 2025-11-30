@@ -85,4 +85,6 @@ export interface SilkerOptions {
   failOpen?: boolean;
   /** Maksymalny rozmiar payloadu w bajtach (domyślnie 50KB) */
   maxPayloadSize?: number;
+  /** Custom logger implementation */
+  logger?: any;
 }

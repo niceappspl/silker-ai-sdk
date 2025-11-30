@@ -1,8 +1,19 @@
 import { SilkerEvent, SilkerOptions } from '../types';
-import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection } from './owasp';
+import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { detectPromptInjection } from './promptInjection';
 import { checkRateLimit } from './rateLimit';
 import { detectDataLeakage } from './dataLeakage';
+import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
+import { detectFileUploadAttack } from './fileUpload';
+import { detectThirdPartyAttack } from './thirdParty';
+import { detectComplianceViolation } from './compliance';
+import { checkThreatIntelligence } from './threatIntelligence';
+import { detectZeroTrustViolation } from './zeroTrust';
+import { detectSessionAnomalies } from '../analytics/userBehavior';
+import { checkCryptographicFailures, detectWeakEncryption } from './cryptographic';
+import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
+import { detectAuthenticationFailures } from './authentication';
+import { checkSoftwareIntegrity } from './softwareIntegrity';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -37,46 +48,29 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
 
   const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload || '');
 
+  // 1. SQL Injection
   if (globalOptions.features.sqliDetection) {
-    const sqliPatterns = [
-      /(\bUNION\b|\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b|\bDROP\b).*(\bFROM\b|\bWHERE\b|\bINTO\b)/i,
-      /('|(\\x27)|(\\x2D\\x2D)|(\\x23)|(\\x3B)|(\\x2F\\x2A)|(\\x2A\\x2F))/i
-    ];
-
-    for (const pattern of sqliPatterns) {
-      if (pattern.test(payloadStr)) {
+    if (detectSqliHeuristic(payloadStr)) {
         return {
           type: 'SQL Injection',
           severity: 'critical',
           description: `SQL injection pattern detected in ${url}`
         };
-      }
     }
   }
 
+  // 2. XSS
   if (globalOptions.features.xssDetection) {
-    const xssPatterns = [
-      /<script[^>]*>/i,
-      /<\/script>/i,
-      /javascript:/i,
-      /on\w+\s*=/i,
-      /<iframe[^>]*>/i,
-      /<svg[^>]*>/i,
-      /<embed[^>]*>/i,
-      /<object[^>]*>/i
-    ];
-
-    for (const pattern of xssPatterns) {
-      if (pattern.test(payloadStr)) {
+    if (detectXssHeuristic(payloadStr)) {
         return {
           type: 'XSS',
           severity: 'high',
           description: `Cross-site scripting attempt detected in ${url}`
         };
-      }
     }
   }
 
+  // 3. Path Traversal
   if (globalOptions.features.pathTraversalDetection) {
     const pathTraversalPatterns = ['../', '..\\'];
     const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
@@ -91,6 +85,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
+  // 4. Prompt Injection
   if (globalOptions.features.promptInjectionDetection) {
     const promptPatterns = [
       /ignore\s+(all\s+)?previous\s+instructions/i,
@@ -111,6 +106,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
+  // 5. Rate Limiting
   if (isFeatureEnabled('rateLimit') && ip) {
     if (checkRateLimit(event)) {
       return {
@@ -121,6 +117,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
+  // 6. CSRF
   if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
     return {
       type: 'CSRF',
@@ -129,6 +126,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
+  // 7. SSRF
   if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
     return {
       type: 'SSRF',
@@ -137,6 +135,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
+  // 8. IDOR
   if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, payloadStr)) {
     return {
       type: 'IDOR',
@@ -145,6 +144,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
+  // 9. Host Header Injection
   if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
     return {
       type: 'Host Header Injection',
@@ -153,6 +153,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
+  // 10. Data Leakage
   if (isFeatureEnabled('dataLeakageDetection')) {
     const leakageCheck = detectDataLeakage(payloadStr);
     if (leakageCheck.leaked) {
@@ -164,10 +165,143 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
+  // 11. File Upload
+  if (isFeatureEnabled('fileUploadDetection') && detectFileUploadAttack(event)) {
+    return {
+      type: 'File Upload Attack',
+      severity: 'high',
+      description: `Malicious file upload attempt detected in ${url}`
+    };
+  }
+
+  // 12. Third Party / Supply Chain
+  if (isFeatureEnabled('thirdPartyDetection') && detectThirdPartyAttack(event)) {
+    return {
+        type: 'Supply Chain Attack',
+        severity: 'critical',
+        description: `Suspicious third-party integration activity detected`
+    };
+  }
+
+  // 13. Compliance
+  if (isFeatureEnabled('complianceDetection') && detectComplianceViolation(event)) {
+      return {
+          type: 'Compliance Violation',
+          severity: 'medium',
+          description: `Compliance policy violation detected (GDPR/HIPAA/PCI)`
+      };
+  }
+
+  // 14. Threat Intelligence
+  if (isFeatureEnabled('threatIntelligence')) {
+      const threatCheck = checkThreatIntelligence(event);
+      if (threatCheck.threat) {
+          return {
+              type: 'Known Threat',
+              severity: 'critical',
+              description: `Known threat detected: ${threatCheck.details}`
+          };
+      }
+  }
+
+  // 15. Zero Trust
+  if (isFeatureEnabled('zeroTrustDetection') && detectZeroTrustViolation(event)) {
+      return {
+          type: 'Zero Trust Violation',
+          severity: 'high',
+          description: `Zero trust policy violation detected`
+      };
+  }
+
+  // 16. Session Anomalies
+  if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
+      return {
+          type: 'Session Anomaly',
+          severity: 'high',
+          description: `Abnormal session behavior detected`
+      };
+  }
+
+  // 17. Cryptographic Failures
+  if (isFeatureEnabled('cryptographicValidation')) {
+    const cryptoCheck = checkCryptographicFailures(event);
+    if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
+        return {
+            type: 'Cryptographic Failure',
+            severity: 'high',
+            description: `Cleartext transmission of sensitive data detected`
+        };
+    }
+    if (detectWeakEncryption(headers)) {
+        return {
+            type: 'Weak Encryption',
+            severity: 'medium',
+            description: `Weak encryption protocols detected`
+        };
+    }
+  }
+
+  // 18. Vulnerable Components
+  if (isFeatureEnabled('vulnerableComponentsDetection')) {
+    const vulnerabilities = detectVulnerableComponents(event);
+    if (vulnerabilities.some(v => v.risk === 'critical' || v.risk === 'high')) {
+        return {
+            type: 'Vulnerable Component',
+            severity: 'high',
+            description: `Use of known vulnerable component detected`
+        };
+    }
+    const cves = checkForCveReferences(event);
+    if (cves.length > 0) {
+        return {
+            type: 'CVE Exploit Attempt',
+            severity: 'critical',
+            description: `Potential CVE exploitation attempt detected: ${cves.join(', ')}`
+        };
+    }
+  }
+
+  // 19. Authentication Failures
+  if (isFeatureEnabled('authenticationValidation')) {
+      const authIssues = detectAuthenticationFailures(event);
+      const severeIssue = authIssues.find(issue => issue.severity === 'critical' || issue.severity === 'high');
+      if (severeIssue) {
+          return {
+              type: 'Authentication Failure',
+              severity: severeIssue.severity,
+              description: severeIssue.description
+          };
+      }
+  }
+
+  // 20. Software Integrity
+  if (isFeatureEnabled('softwareIntegrityValidation')) {
+      const integrityIssues = checkSoftwareIntegrity(event);
+      const severeIssue = integrityIssues.find(issue => issue.severity === 'critical' || issue.severity === 'high');
+      if (severeIssue) {
+          return {
+              type: 'Integrity Violation',
+              severity: severeIssue.severity,
+              description: severeIssue.description
+          };
+      }
+  }
+  
+  // 21. Access Control
+  if (isFeatureEnabled('accessControlDetection')) {
+      const userRole = (event as any).userRole || headers?.['x-user-role'];
+      if (detectBrokenAccessControl(event, userRole)) {
+        return {
+            type: 'Broken Access Control',
+            severity: 'high',
+            description: 'Unauthorized access attempt detected'
+        };
+      }
+  }
+
   return {
     type: 'Security Anomaly',
     severity: 'medium',
     description: `Security threat detected in ${url}`
   };
 }
-

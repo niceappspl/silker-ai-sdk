@@ -3,6 +3,7 @@ import { isAnomaly, setGlobalOptions } from '../detection';
 import { sendAlertToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { logAuditEvent } from '../monitoring/audit';
+import { createLogger } from '../utils/logger';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -14,6 +15,7 @@ let globalOptions: SilkerOptions | null = null;
 export function hookFetch(options: SilkerOptions) {
   globalOptions = options;
   setGlobalOptions(options);
+  const logger = createLogger(options);
 
   const originalFetch = global.fetch;
 
@@ -34,9 +36,7 @@ export function hookFetch(options: SilkerOptions) {
     };
 
     if (isAnomaly(event)) {
-      if (options.debug) {
-        console.log('🚨 Anomaly detected, blocking request');
-      }
+      logger.debug('🚨 Anomaly detected, blocking request');
 
       const isAuditEnabled = options.features?.auditLogging !== false;
       if (isAuditEnabled) {

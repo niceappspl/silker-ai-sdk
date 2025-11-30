@@ -56,6 +56,7 @@ Perfect for Cursor, Bubble, Next.js on Vercel, and any Node.js app that needs ru
 - 🎣 **Auto-Hooks** - Seamless integration with fetch, Express, and custom workflows
 - 🔒 **Data Sanitization** - Automatic masking of sensitive data before sending
 - ⚡ **Self-contained** - ~63KB gzipped, all dependencies bundled
+- 🤐 **Silent by Default** - Won't pollute your production logs unless configured
 
 ## Installation
 
@@ -181,7 +182,7 @@ import SilkerAI from '@silker/ai-sdk';
 // Initialize with your API key from environment variable
 await SilkerAI.init({
   apiKey: process.env.SILKER_API_KEY!,
-  debug: true // Optional: Enable debug logging
+  // debug: true // Uncomment to enable verbose logging (default: silent)
 });
 
 // That's it! Your app is now protected
@@ -352,6 +353,15 @@ interface SilkerOptions {
   debug?: boolean;         // Optional: Enable console logging
   proxyMode?: boolean;     // Optional: Enable proxy mode for CNAME setups
   features?: SilkerFeatures; // Optional: Enable/disable specific features
+  maxPayloadSize?: number; // Optional: Limit payload size for scanning (bytes), default 50KB
+  logger?: Logger;         // Optional: Provide custom logger implementation
+}
+
+interface Logger {
+    info(message: string, ...args: any[]): void;
+    warn(message: string, ...args: any[]): void;
+    error(message: string, ...args: any[]): void;
+    debug(message: string, ...args: any[]): void;
 }
 
 interface SilkerFeatures {

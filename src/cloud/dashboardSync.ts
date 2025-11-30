@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { SilkerOptions } from '../types';
+import { createLogger } from '../utils/logger';
 
 /**
  * Sends alert data to the Silker Dashboard.
@@ -10,8 +11,10 @@ export async function pushDashboardData(
     options: SilkerOptions | null,
     data: any
 ) {
+    const logger = options ? createLogger(options) : null;
+
     if (options?.debug) {
-        console.log('🔍 pushDashboardData called with:', {
+        logger?.debug('🔍 pushDashboardData called with:', {
             hasDashboardUrl: !!options?.dashboardUrl,
             hasApiKey: !!options?.apiKey,
             dashboardUrl: options?.dashboardUrl,
@@ -21,7 +24,7 @@ export async function pushDashboardData(
 
     if (!options?.dashboardUrl || !options?.apiKey) {
         if (options?.debug) {
-            console.log('⚠️ Skipping dashboard push - missing dashboardUrl or apiKey');
+            logger?.warn('⚠️ Skipping dashboard push - missing dashboardUrl or apiKey');
         }
         return;
     }
@@ -33,8 +36,9 @@ export async function pushDashboardData(
     };
 
     if (options.debug) {
-        console.log('📤 Sending to dashboard:', `${options.dashboardUrl}/api/dashboard/sync`);
-        console.log('📦 Payload:', JSON.stringify(payload, null, 2));
+        logger?.debug('📤 Sending to dashboard:', `${options.dashboardUrl}/api/dashboard/sync`);
+        // Avoid logging full payload in production unless absolutely necessary debug
+        logger?.debug('📦 Payload keys:', Object.keys(payload));
     }
 
     try {
@@ -46,13 +50,9 @@ export async function pushDashboardData(
             },
             timeout: 5000 // 5s timeout
         }).catch(err => {
-            if (options.debug) {
-                console.error('❌ Failed to push data to dashboard:', err.message);
-            }
+             logger?.error('❌ Failed to push data to dashboard:', err.message);
         });
     } catch (error) {
-        if (options.debug) {
-            console.error('❌ Failed to initiate dashboard push:', error);
-        }
+         logger?.error('❌ Failed to initiate dashboard push:', error);
     }
 }

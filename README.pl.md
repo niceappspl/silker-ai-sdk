@@ -42,6 +42,7 @@ Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji 
 - 🎣 **Auto-Haki** - Bezproblemowa integracja z fetch, Express i niestandardowymi workflow
 - 🔒 **Sanityzacja Danych** - Automatyczne maskowanie wrażliwych danych przed wysłaniem
 - ⚡ **Samowystarczalny** - ~63KB spakowane gzip, wszystkie zależności włączone
+- 🤐 **Cichy Domyślnie** - Nie zaśmieca logów produkcyjnych, chyba że skonfigurowany
 
 ## Instalacja
 
@@ -155,7 +156,7 @@ import SilkerAI from '@silker/ai-sdk';
 // Zainicjalizuj z kluczem API ze zmiennej środowiskowej
 await SilkerAI.init({
   apiKey: process.env.SILKER_API_KEY!,
-  debug: true // Opcjonalne: Włącz logowanie debug
+  // debug: true // Odkomentuj, aby włączyć szczegółowe logowanie (domyślnie: ciche)
 });
 
 // To wszystko! Twoja aplikacja jest teraz chroniona
@@ -326,6 +327,15 @@ interface SilkerOptions {
   debug?: boolean;         // Opcjonalne: Włącz logowanie do konsoli
   proxyMode?: boolean;     // Opcjonalne: Włącz tryb proxy dla konfiguracji CNAME
   features?: SilkerFeatures; // Opcjonalne: Włącz/wyłącz konkretne funkcjonalności
+  maxPayloadSize?: number; // Opcjonalne: Limit rozmiaru payloadu do skanowania (bajty), domyślnie 50KB
+  logger?: Logger;         // Opcjonalne: Własna implementacja loggera
+}
+
+interface Logger {
+    info(message: string, ...args: any[]): void;
+    warn(message: string, ...args: any[]): void;
+    error(message: string, ...args: any[]): void;
+    debug(message: string, ...args: any[]): void;
 }
 
 interface SilkerFeatures {

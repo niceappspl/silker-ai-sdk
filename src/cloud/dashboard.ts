@@ -1,5 +1,6 @@
 import { SilkerEvent, SilkerOptions } from '../types';
 import { telemetry } from './telemetry';
+import { createLogger } from '../utils/logger';
 
 /**
  * Wysyła alert do dashboardu Silker AI.
@@ -24,15 +25,19 @@ export function sendAlertToDashboard(
       severity,
       ip: event.ip || 'unknown',
       endpoint: event.url || '/',
+      method: event.method || 'UNKNOWN',
+      headers: event.headers || {},
+      body: event.payload || '',
+      query: event.url.split('?')[1] || '',
+      user_agent: event.userAgent || 'unknown',
       timestamp: new Date(event.timestamp || Date.now()).toISOString(),
       app_id: options.appId
     };
 
     telemetry.push('alert', '/api/dashboard/alerts', alertData);
   } catch (error) {
-    if (options.debug) {
-      console.error('🚨 Failed to queue alert:', error);
-    }
+    const logger = createLogger(options);
+    logger.error('🚨 Failed to queue alert:', error);
   }
 }
 
@@ -63,14 +68,20 @@ export function sendThreatToDashboard(
       severity,
       blocked,
       description,
+      ip: event.ip || 'unknown',
+      endpoint: event.url || '/',
+      method: event.method || 'UNKNOWN',
+      headers: event.headers || {},
+      body: event.payload || '',
+      query: event.url.split('?')[1] || '',
+      user_agent: event.userAgent || 'unknown',
       app_id: options.appId
     };
 
     telemetry.push('threat', '/api/threats', threatData);
   } catch (error) {
-    if (options.debug) {
-      console.error('🚨 Failed to queue threat:', error);
-    }
+    const logger = createLogger(options);
+    logger.error('🚨 Failed to queue threat:', error);
   }
 }
 
@@ -104,8 +115,7 @@ export function sendRequestToDashboard(
 
     telemetry.push('request', '/api/requests', requestData);
   } catch (error) {
-    if (options.debug) {
-      console.error('🚨 Failed to queue request:', error);
-    }
+    const logger = createLogger(options);
+    logger.error('🚨 Failed to queue request:', error);
   }
 }

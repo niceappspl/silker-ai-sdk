@@ -5,7 +5,7 @@ import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection'
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
 import { setGlobalOptions as setAuditOptions } from './monitoring/audit';
 import { setGlobalOptions as setConfigOptions } from './config/runtime';
-import { sendAlertToDashboard, sendThreatToDashboard } from './cloud/dashboard';
+import { sendAlertToDashboard, sendThreatToDashboard, sendRequestToDashboard } from './cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
 import { hookExpress, getVibeEmitter } from './hooks/express';
@@ -17,6 +17,7 @@ import { performHealthCheck } from './monitoring/health';
 import { performApiValidation } from './validation/apiSchema';
 import { validateSecurityHeaders } from './validation/securityHeaders';
 import { analyzeUserBehavior } from './analytics/userBehavior';
+import { createLogger } from './utils/logger';
 
 /**
  * Ustawia globalne opcje dla wszystkich modułów Silker AI.
@@ -30,6 +31,31 @@ function setGlobalOptions(options: SilkerOptions | null) {
 }
 
 /**
+ * Waliduje opcje konfiguracyjne Silker AI.
+ * @param options - Opcje do walidacji
+ * @throws {SilkerError} Jeśli opcje są niepoprawne
+ */
+function validateOptions(options: SilkerOptions): void {
+    if (!options || typeof options !== 'object') {
+        throw new SilkerError('SilkerOptions are required and must be an object', 'INVALID_OPTIONS');
+    }
+
+    if (options.maxPayloadSize !== undefined) {
+        if (typeof options.maxPayloadSize !== 'number' || options.maxPayloadSize < 0) {
+            // Don't throw, just warn and correct to default to avoid crashing app on minor config error
+             console.warn('⚠️ [Silker SDK] Invalid maxPayloadSize provided. Using default (50KB).');
+             delete options.maxPayloadSize; // Will fall back to default in logic
+        }
+    }
+
+    if (options.debug !== undefined && typeof options.debug !== 'boolean') {
+        console.warn('⚠️ [Silker SDK] Invalid debug option provided. Disabling debug mode.');
+        options.debug = false;
+    }
+}
+
+
+/**
  * Inicjalizuje Silker AI z podanymi opcjami.
  * Weryfikuje połączenie z chmurą, konfiguruje hooki dla fetch i Express,
  * oraz uruchamia tryb proxy jeśli jest włączony.
@@ -37,6 +63,9 @@ function setGlobalOptions(options: SilkerOptions | null) {
  * @throws {SilkerError} Jeśli brakuje klucza API lub połączenie z chmurą nie powiodło się
  */
 async function initSilker(options: SilkerOptions): Promise<void> {
+  validateOptions(options);
+
+  const logger = createLogger(options);
   const apiKey = options.apiKey || process.env.SILKER_API_KEY;
   
   if (!apiKey) {
@@ -44,6 +73,11 @@ async function initSilker(options: SilkerOptions): Promise<void> {
       'API key required. Provide it via options.apiKey or SILKER_API_KEY environment variable.',
       'MISSING_API_KEY'
     );
+  }
+
+  // Ensure maxPayloadSize has a safe default if not provided or deleted by validation
+  if (!options.maxPayloadSize) {
+      options.maxPayloadSize = 51200; // 50KB
   }
 
   const optionsWithApiKey = { ...options, apiKey };
@@ -69,19 +103,24 @@ async function initSilker(options: SilkerOptions): Promise<void> {
         await sendAlertToDashboard(testEvent, threatInfo.type, threatInfo.severity, options);
       }
     } catch (error) {
-      if (options.debug) {
-        console.log('⚠️ Dashboard connection test failed, but continuing...');
-      }
+      logger.warn('⚠️ Dashboard connection test failed, but continuing...');
     }
   }
 
-  if (options.debug) {
-    console.log('Silker AI initialized successfully');
-  }
+  logger.info('Silker AI initialized successfully');
 
   hookFetch(options);
 
   const vibeEmitter = getVibeEmitter();
+  vibeEmitter.on('request', async (event: SilkerEvent) => {
+    // Send request to dashboard
+    if (options.features?.cloudCommunication !== false && options.appId) {
+      // Default response values if not provided in event (since middleware might not capture response end yet)
+      // TODO: Implement response capture in middleware
+      sendRequestToDashboard(event, 200, 0, options);
+    }
+  });
+
   vibeEmitter.on('workflow', async (event: SilkerEvent) => {
     if (isAnomaly(event)) {
       if (options.features?.cloudCommunication !== false && options.appId) {
@@ -104,9 +143,7 @@ async function initSilker(options: SilkerOptions): Promise<void> {
             options
           );
 
-          if (options.debug) {
-            console.log('Workflow anomaly detected and reported:', event.url);
-          }
+          logger.debug('Workflow anomaly detected and reported:', event.url);
         }
       }
     }

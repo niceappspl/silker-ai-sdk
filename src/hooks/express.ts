@@ -2,9 +2,11 @@ import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
-import { sendThreatToDashboard } from '../cloud/dashboard';
+import { sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
+import { createLogger } from '../utils/logger';
 
 const vibeEmitter = new EventEmitter();
+let isListenerRegistered = false;
 
 /**
  * Tworzy middleware Express.js dla Silker.
@@ -14,92 +16,114 @@ const vibeEmitter = new EventEmitter();
  */
 export function hookExpress(options: SilkerOptions) {
   setGlobalOptions(options);
+  const logger = createLogger(options);
 
-  console.log('🛡️ Silker middleware initialized with dashboardUrl:', options.dashboardUrl);
+  if (!isListenerRegistered) {
+    // Listener usunięty stąd, bo wysyłamy teraz w res.on('finish')
+    // vibeEmitter.on('request', ...) - logic moved to finish handler
+    isListenerRegistered = true;
+  }
+
+  logger.info('🛡️ Silker middleware initialized with dashboardUrl:', options.dashboardUrl);
 
   return async (req: any, res: any, next: any) => {
-    console.log('🔍 Silker middleware processing request:', req.method, req.originalUrl);
-    const allData: any = {
-      ...req.body,
-      ...req.query,
-      ...req.params
-    };
+    try {
+        logger.debug('🔍 Silker middleware processing request:', req.method, req.originalUrl);
+        
+        // Limit payload size for analysis to avoid blocking event loop
+        const MAX_ANALYSIS_SIZE = 10240; // 10KB
 
-    const payloadParts: string[] = [];
+        const payloadParts: string[] = [];
 
-    if (req.body && Object.keys(req.body).length > 0) {
-      Object.values(req.body).forEach(value => {
-        if (typeof value === 'string') {
-          payloadParts.push(value);
-        }
-      });
-      payloadParts.push(JSON.stringify(req.body));
-    }
+        // Helper to safely add string content
+        const addSafeContent = (obj: any) => {
+            if (!obj) return;
+            try {
+                const str = JSON.stringify(obj);
+                if (str.length > MAX_ANALYSIS_SIZE) {
+                    payloadParts.push(str.substring(0, MAX_ANALYSIS_SIZE));
+                } else {
+                    payloadParts.push(str);
+                }
+            } catch (e) {
+                // Ignore circular structure errors
+            }
+        };
 
-    if (req.query && Object.keys(req.query).length > 0) {
-      Object.values(req.query).forEach(value => {
-        if (typeof value === 'string') {
-          payloadParts.push(value);
-        }
-      });
-      payloadParts.push(JSON.stringify(req.query));
-    }
+        if (req.body) addSafeContent(req.body);
+        if (req.query) addSafeContent(req.query);
 
-    const event: SilkerEvent = {
-      method: req.method,
-      url: req.originalUrl,
-      payload: payloadParts.join(' '),
-      ip: req.ip || req.connection.remoteAddress,
-      timestamp: Date.now(),
-      userAgent: req.get('User-Agent'),
-      headers: req.headers as Record<string, string>
-    };
+        const event: SilkerEvent = {
+          method: req.method,
+          url: req.originalUrl,
+          payload: payloadParts.join(' '),
+          ip: req.ip || req.connection.remoteAddress,
+          timestamp: Date.now(),
+          userAgent: req.get('User-Agent'),
+          headers: req.headers as Record<string, string>
+        };
 
-    (global as any).request = req;
+        (global as any).request = req;
 
-    vibeEmitter.emit('request', event);
+        // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu
+        const start = Date.now();
+        
+        res.on('finish', () => {
+          try {
+              const duration = Date.now() - start;
+              // Aktualizujemy event o rzeczywiste dane
+              // const completedEvent = { ...event, statusCode: res.statusCode, duration }; // unused
+              
+              if (options.features?.cloudCommunication !== false && options.appId) {
+                sendRequestToDashboard(event, res.statusCode, duration, options);
+              }
+          } catch (err) {
+              logger.error('Error in response finish handler:', err);
+          }
+        });
 
-    const anomaly = isAnomaly(event);
-    if (anomaly) {
-      if (options.debug) {
-        console.log('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
-      }
+        const anomaly = isAnomaly(event);
+        if (anomaly) {
+          logger.debug('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
 
-      if (options.features?.cloudCommunication !== false && options.dashboardUrl) {
-        setGlobalOptionsForThreat(options);
+          if (options.features?.cloudCommunication !== false && options.dashboardUrl) {
+            setGlobalOptionsForThreat(options);
 
-        const threatInfo = detectThreatType(event);
-        if (threatInfo) {
-          // Send alert to dashboard using new sync mechanism
-          // Send alert to dashboard using unified telemetry
-          sendThreatToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
-            true, // blocked
-            threatInfo.description,
-            options
-          );
+            const threatInfo = detectThreatType(event);
+            if (threatInfo) {
+              // Send alert to dashboard using unified telemetry
+              sendThreatToDashboard(
+                event,
+                threatInfo.type,
+                threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
+                true, // blocked
+                threatInfo.description,
+                options
+              );
 
-          if (options.debug) {
-            console.log('📤 Alert sent to dashboard:', threatInfo.type);
+              logger.debug('📤 Alert sent to dashboard:', threatInfo.type);
+
+              return res.status(403).json({
+                error: 'Request blocked by Silker AI',
+                reason: 'Security threat detected',
+                type: threatInfo.type
+              });
+            }
           }
 
           return res.status(403).json({
             error: 'Request blocked by Silker AI',
-            reason: 'Security threat detected',
-            type: threatInfo.type
+            reason: 'Security threat detected'
           });
         }
-      }
 
-      return res.status(403).json({
-        error: 'Request blocked by Silker AI',
-        reason: 'Security threat detected'
-      });
+        next();
+    } catch (error) {
+        logger.error('🚨 Silker middleware error:', error);
+        // Always fail open to protect user application unless explicitly configured otherwise
+        // If user wants strict mode, they should have a way, but MVP goal is "never crash"
+        next();
     }
-
-    next();
   };
 }
 
@@ -110,4 +134,3 @@ export function hookExpress(options: SilkerOptions) {
 export function getVibeEmitter(): EventEmitter {
   return vibeEmitter;
 }
-

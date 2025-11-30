@@ -4,6 +4,7 @@ import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
 import { sendAlertToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
+import { createLogger } from '../utils/logger';
 
 /**
  * Uruchamia serwer proxy HTTP z monitorowaniem bezpieczeństwa Silker.
@@ -15,6 +16,7 @@ import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threat
  */
 export function startProxyMode(options: SilkerOptions, targetUrl: string, port: number = 8080) {
   setGlobalOptions(options);
+  const logger = createLogger(options);
 
   const proxy = httpProxy.createProxyServer({});
 
@@ -30,9 +32,7 @@ export function startProxyMode(options: SilkerOptions, targetUrl: string, port: 
 
     const anomaly = isAnomaly(event);
     if (anomaly) {
-      if (options.debug) {
-        console.log('🚫 Proxy mode blocking request');
-      }
+      logger.debug('🚫 Proxy mode blocking request');
 
       if (options.features?.cloudCommunication !== false && options.appId) {
         setGlobalOptionsForThreat(options);
@@ -76,9 +76,7 @@ export function startProxyMode(options: SilkerOptions, targetUrl: string, port: 
   });
 
   server.listen(port, () => {
-    if (options.debug) {
-      console.log(`🌐 Silker proxy running on port ${port}, forwarding to ${targetUrl}`);
-    }
+    logger.info(`🌐 Silker proxy running on port ${port}, forwarding to ${targetUrl}`);
   });
 
   return server;
