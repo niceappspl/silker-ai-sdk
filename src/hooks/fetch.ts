@@ -17,7 +17,7 @@ export function hookFetch(options: SilkerOptions) {
 
   const originalFetch = global.fetch;
 
-  global.fetch = async function(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  global.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     const method = init?.method || 'GET';
 
@@ -47,14 +47,14 @@ export function hookFetch(options: SilkerOptions) {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
-          const alertId = await sendAlertToDashboard(
+          sendAlertToDashboard(
             event,
             threatInfo.type,
             threatInfo.severity,
             options
           );
-          
-          await sendThreatToDashboard(
+
+          sendThreatToDashboard(
             event,
             threatInfo.type,
             threatInfo.severity,
@@ -70,7 +70,7 @@ export function hookFetch(options: SilkerOptions) {
           return new Response(JSON.stringify({
             error: 'Request blocked by Silker AI',
             reason: 'Security threat detected',
-            alertId: alertId || undefined
+
           }), {
             status: 403,
             headers: { 'Content-Type': 'application/json' }

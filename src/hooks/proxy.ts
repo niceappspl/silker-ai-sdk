@@ -38,14 +38,14 @@ export function startProxyMode(options: SilkerOptions, targetUrl: string, port: 
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
-          const alertId = await sendAlertToDashboard(
+          sendAlertToDashboard(
             event,
             threatInfo.type,
             threatInfo.severity,
             options
           );
-          
-          await sendThreatToDashboard(
+
+          sendThreatToDashboard(
             event,
             threatInfo.type,
             threatInfo.severity,
@@ -58,7 +58,7 @@ export function startProxyMode(options: SilkerOptions, targetUrl: string, port: 
           res.end(JSON.stringify({
             error: 'Request blocked by Silker AI',
             reason: 'Security threat detected',
-            alertId: alertId || undefined
+
           }));
           return;
         }

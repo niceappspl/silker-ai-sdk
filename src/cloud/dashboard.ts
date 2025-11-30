@@ -1,28 +1,23 @@
-import axios from 'axios';
 import { SilkerEvent, SilkerOptions } from '../types';
+import { telemetry } from './telemetry';
 
 /**
  * Wysyła alert do dashboardu Silker AI.
+ * Działa w tle, nie blokuje wątku głównego.
+ * 
  * @param event - Zdarzenie które wywołało alert
  * @param threatType - Typ zagrożenia (np. "SQL Injection", "XSS")
  * @param severity - Poziom zagrożenia
  * @param options - Opcje konfiguracyjne Silker
- * @returns ID alertu lub null w przypadku błędu
  */
-export async function sendAlertToDashboard(
+export function sendAlertToDashboard(
   event: SilkerEvent,
   threatType: string,
   severity: 'critical' | 'high' | 'medium' | 'low',
   options: SilkerOptions
-): Promise<string | null> {
+): void {
   try {
-    const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-    let dashboardEndpoint = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://api.silkerai.com');
-    if (dashboardEndpoint.includes('/api')) {
-      dashboardEndpoint = dashboardEndpoint.replace('/api', '');
-    }
-    dashboardEndpoint = dashboardEndpoint.replace(/\/$/, '');
-    const alertEndpoint = `${dashboardEndpoint}/api/dashboard/alerts`;
+    telemetry.configure(options);
 
     const alertData = {
       type: threatType,
@@ -33,49 +28,35 @@ export async function sendAlertToDashboard(
       app_id: options.appId
     };
 
-    const response = await axios.post(alertEndpoint, alertData, {
-      headers: {
-        'x-api-key': options.apiKey,
-        'Content-Type': 'application/json'
-      },
-      timeout: 5000
-    });
-
-    return response.data?.data?.id || null;
+    telemetry.push('alert', '/api/dashboard/alerts', alertData);
   } catch (error) {
     if (options.debug) {
-      console.log('🚨 Failed to send alert to dashboard:', (error as Error).message);
+      console.error('🚨 Failed to queue alert:', error);
     }
-    return null;
   }
 }
 
 /**
  * Wysyła threat do dashboardu Silker AI.
+ * Działa w tle, nie blokuje wątku głównego.
+ * 
  * @param event - Zdarzenie które wywołało threat
  * @param threatType - Typ zagrożenia
  * @param severity - Poziom zagrożenia
  * @param blocked - Czy threat został zablokowany
  * @param description - Opis threatu
  * @param options - Opcje konfiguracyjne Silker
- * @returns ID threatu lub null w przypadku błędu
  */
-export async function sendThreatToDashboard(
+export function sendThreatToDashboard(
   event: SilkerEvent,
   threatType: string,
   severity: 'critical' | 'high' | 'medium' | 'low',
   blocked: boolean,
   description: string,
   options: SilkerOptions
-): Promise<string | null> {
+): void {
   try {
-    const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-    let dashboardEndpoint = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://api.silkerai.com');
-    if (dashboardEndpoint.includes('/api')) {
-      dashboardEndpoint = dashboardEndpoint.replace('/api', '');
-    }
-    dashboardEndpoint = dashboardEndpoint.replace(/\/$/, '');
-    const threatEndpoint = `${dashboardEndpoint}/api/threats`;
+    telemetry.configure(options);
 
     const threatData = {
       type: threatType,
@@ -85,45 +66,31 @@ export async function sendThreatToDashboard(
       app_id: options.appId
     };
 
-    const response = await axios.post(threatEndpoint, threatData, {
-      headers: {
-        'x-api-key': options.apiKey,
-        'Content-Type': 'application/json'
-      },
-      timeout: 5000
-    });
-
-    return response.data?.data?.id || null;
+    telemetry.push('threat', '/api/threats', threatData);
   } catch (error) {
     if (options.debug) {
-      console.log('🚨 Failed to send threat to dashboard:', (error as Error).message);
+      console.error('🚨 Failed to queue threat:', error);
     }
-    return null;
   }
 }
 
 /**
  * Wysyła request do dashboardu Silker AI dla analityki.
+ * Działa w tle, nie blokuje wątku głównego.
+ * 
  * @param event - Zdarzenie requestu
  * @param statusCode - Kod statusu HTTP
  * @param responseTime - Czas odpowiedzi w ms
  * @param options - Opcje konfiguracyjne Silker
- * @returns ID requestu lub null w przypadku błędu
  */
-export async function sendRequestToDashboard(
+export function sendRequestToDashboard(
   event: SilkerEvent,
   statusCode: number,
   responseTime: number,
   options: SilkerOptions
-): Promise<string | null> {
+): void {
   try {
-    const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-    let dashboardEndpoint = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://api.silkerai.com');
-    if (dashboardEndpoint.includes('/api')) {
-      dashboardEndpoint = dashboardEndpoint.replace('/api', '');
-    }
-    dashboardEndpoint = dashboardEndpoint.replace(/\/$/, '');
-    const requestEndpoint = `${dashboardEndpoint}/api/requests`;
+    telemetry.configure(options);
 
     const requestData = {
       endpoint: event.url || '/',
@@ -135,20 +102,10 @@ export async function sendRequestToDashboard(
       app_id: options.appId
     };
 
-    const response = await axios.post(requestEndpoint, requestData, {
-      headers: {
-        'x-api-key': options.apiKey,
-        'Content-Type': 'application/json'
-      },
-      timeout: 5000
-    });
-
-    return response.data?.data?.id || null;
+    telemetry.push('request', '/api/requests', requestData);
   } catch (error) {
     if (options.debug) {
-      console.log('🚨 Failed to send request to dashboard:', (error as Error).message);
+      console.error('🚨 Failed to queue request:', error);
     }
-    return null;
   }
 }
-

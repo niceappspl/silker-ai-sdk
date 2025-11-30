@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
-import { pushDashboardData } from '../cloud/dashboardSync';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
+import { sendThreatToDashboard } from '../cloud/dashboard';
 
 const vibeEmitter = new EventEmitter();
 
@@ -71,21 +71,15 @@ export function hookExpress(options: SilkerOptions) {
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
           // Send alert to dashboard using new sync mechanism
-          pushDashboardData(options, {
-            recentAlerts: [{
-              // Use UUID for ID to be compatible with Supabase UUID type
-              id: require('crypto').randomUUID(),
-              type: threatInfo.type,
-              severity: threatInfo.severity,
-              ip: event.ip || 'unknown',
-              endpoint: event.url || '/',
-              method: event.method || 'UNKNOWN',
-              userAgent: event.userAgent || 'unknown',
-              timestamp: new Date().toISOString(),
-              createdAt: new Date(),
-              details: threatInfo.description
-            }]
-          });
+          // Send alert to dashboard using unified telemetry
+          sendThreatToDashboard(
+            event,
+            threatInfo.type,
+            threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
+            true, // blocked
+            threatInfo.description,
+            options
+          );
 
           if (options.debug) {
             console.log('📤 Alert sent to dashboard:', threatInfo.type);
