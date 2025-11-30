@@ -139,6 +139,8 @@ export function resetUserSessions() {
   userSessions.clear();
 }
 
+import { createLogger } from '../utils/logger';
+
 /**
  * Wykrywa anomalie w sesji użytkownika.
  * @param event - Zdarzenie do sprawdzenia
@@ -149,7 +151,8 @@ export function detectSessionAnomalies(event: SilkerEvent): boolean {
 
   if (behavior.isAnomalous) {
     if (globalOptions?.debug) {
-      console.log('🚨 User behavior anomaly detected:', {
+      const logger = createLogger(globalOptions as any); // Cast as it expects full SilkerOptions but only needs debug
+      logger.debug('🚨 User behavior anomaly detected:', {
         score: behavior.score,
         reasons: behavior.reasons,
         ip: event.ip,

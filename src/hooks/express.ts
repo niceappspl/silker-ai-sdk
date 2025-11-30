@@ -2,8 +2,15 @@ import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
-import { sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
+import { getPerformanceReport, recordPerformanceMetrics } from '../analytics/performance';
+import { getAuditLogs, getAuditSummary, logAuditEvent } from '../monitoring/audit';
+import { getRuntimeConfig, updateRuntimeConfig } from '../config';
+import { performHealthCheck } from '../monitoring/health';
+import { performApiValidation } from '../validation/apiSchema';
+import { validateSecurityHeaders } from '../validation/securityHeaders';
+import { analyzeUserBehavior } from '../analytics/userBehavior';
 import { createLogger } from '../utils/logger';
+import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 
 const vibeEmitter = new EventEmitter();
 let isListenerRegistered = false;
@@ -74,6 +81,9 @@ export function hookExpress(options: SilkerOptions) {
               // Aktualizujemy event o rzeczywiste dane
               // const completedEvent = { ...event, statusCode: res.statusCode, duration }; // unused
               
+              // Record performance metrics locally for health checks
+              recordPerformanceMetrics(event, duration, res.statusCode);
+
               if (options.features?.cloudCommunication !== false && options.appId) {
                 sendRequestToDashboard(event, res.statusCode, duration, options);
               }
