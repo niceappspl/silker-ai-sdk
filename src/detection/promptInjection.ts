@@ -88,6 +88,9 @@ const MULTILINGUAL_ATTACKS = [
 /**
  * Detects token smuggling attempts by analyzing character distribution and unusual patterns.
  * Attackers often use invisible characters or weird unicode to bypass filters.
+ * 
+ * @param payload - The string payload to analyze
+ * @returns Object containing detection status and score
  */
 function detectTokenSmuggling(payload: string): { detected: boolean; score: number } {
   let score = 0;
@@ -115,6 +118,9 @@ function detectTokenSmuggling(payload: string): { detected: boolean; score: numb
 /**
  * Detects obfuscated jailbreak keywords using fuzzy matching logic (simplified).
  * Catches things like "D A N", "D-A-N", "D.A.N".
+ * 
+ * @param payload - The string payload to analyze
+ * @returns Object containing detection status and detected keywords
  */
 function detectObfuscatedKeywords(payload: string): { detected: boolean; keywords: string[] } {
   const keywords = ['DAN', 'JAILBREAK', 'SYSTEM', 'IGNORE'];
@@ -141,6 +147,13 @@ function detectObfuscatedKeywords(payload: string): { detected: boolean; keyword
   };
 }
 
+/**
+ * Main function to detect various forms of prompt injection attacks.
+ * Combines pattern matching, heuristics, and anomaly detection.
+ * 
+ * @param payload - The payload to check (string)
+ * @returns Detailed injection result with severity score
+ */
 export function detectPromptInjection(payload?: string): PromptInjectionResult {
   const result: PromptInjectionResult = {
     detected: false,
@@ -205,6 +218,13 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
   return result;
 }
 
+/**
+ * Analyzes payload for safety issues beyond just injection (e.g. length, repetition).
+ * Used for general AI endpoint protection.
+ * 
+ * @param event - The full SilkerEvent
+ * @returns Object indicating safety and specific issues found
+ */
 export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
@@ -247,6 +267,14 @@ export function analyzePromptSafety(event: SilkerEvent): { safe: boolean; issues
   };
 }
 
+/**
+ * Legacy function for backwards compatibility. 
+ * Detects basic jailbreak attempts.
+ * 
+ * @param payload - The payload to check
+ * @deprecated Use detectPromptInjection instead for comprehensive analysis
+ * @returns boolean true if jailbreak detected
+ */
 export function detectJailbreak(payload?: string): boolean {
   if (!payload || typeof payload !== 'string') {
     return false;

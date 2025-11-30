@@ -49,4 +49,3 @@ export function updateRuntimeConfig(updates: Partial<RuntimeConfig>): { success:
 export function getRuntimeConfig(): RuntimeConfig {
   return { ...runtimeConfig };
 }
-

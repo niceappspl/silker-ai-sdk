@@ -14,15 +14,19 @@ export function detectHostHeaderInjection(event: SilkerEvent, headers?: any): bo
   const hostHeader = hostKey ? headers[hostKey] : undefined;
   
   if (hostHeader) {
+    if (typeof hostHeader !== 'string') return true; // Host header must be a string
+
     if (hostHeader.includes('\n') || hostHeader.includes('\r')) {
       return true;
     }
 
-    const expectedHosts = process.env.SILKER_ALLOWED_HOSTS?.split(',') || [];
-    if (expectedHosts.length > 0 && !expectedHosts.some(host => hostHeader.includes(host))) {
-      return true;
+    const allowedHosts = process.env.SILKER_ALLOWED_HOSTS?.split(',') || [];
+    if (allowedHosts.length > 0) {
+        const cleanHost = hostHeader.split(':')[0]; // Remove port if present
+        if (!allowedHosts.some(allowed => cleanHost === allowed || hostHeader === allowed)) {
+            return true;
+        }
     }
   }
   return false;
 }
-

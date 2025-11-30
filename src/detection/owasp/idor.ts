@@ -27,10 +27,22 @@ export function detectIdorAttack(event: SilkerEvent, payload?: any): boolean {
         return true;
       }
 
-      if (payload && typeof payload === 'object') {
-        const payloadId = payload.id || payload.userId || payload.accountId;
-        if (payloadId && payloadId !== id) {
-          return true;
+      if (payload) {
+        // Check if payload is a JSON string we need to parse, or an object
+        let payloadObj = payload;
+        if (typeof payload === 'string') {
+            try {
+                payloadObj = JSON.parse(payload);
+            } catch(e) {
+                // ignore parsing errors
+            }
+        }
+
+        if (typeof payloadObj === 'object') {
+            const payloadId = payloadObj.id || payloadObj.userId || payloadObj.accountId;
+            if (payloadId && payloadId !== id) {
+            return true;
+            }
         }
       }
     }
@@ -38,4 +50,3 @@ export function detectIdorAttack(event: SilkerEvent, payload?: any): boolean {
 
   return false;
 }
-

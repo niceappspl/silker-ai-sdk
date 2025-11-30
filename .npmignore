@@ -1,0 +1,10 @@
+src/
+tests/
+scripts/
+jest.config.js
+tsconfig.json
+.gitignore
+.cursorignore
+api-spec.yaml
+ARCHITECTURE.md
+

@@ -38,10 +38,14 @@ export function detectBrokenAccessControl(event: SilkerEvent, userRole?: string,
 
   if (SENSITIVE_OPERATIONS.includes(method)) {
     if (!userRole || userRole === 'guest' || userRole === 'anonymous') {
+      // Allow sensitive operations only if they are on user-specific paths (checked elsewhere)
+      // This is a broad rule, might be too aggressive. 
+      // Refining: Only flag if NO userRole is present (unauthenticated) or explicit guest
       return true;
     }
   }
 
+  // DELETE requires authorization
   if (method === 'DELETE' && !userRole) {
     return true;
   }
@@ -60,16 +64,23 @@ export function detectPrivilegeEscalation(event: SilkerEvent, currentRole?: stri
     return true;
   }
 
-  if (event.payload && typeof event.payload === 'object') {
-    const roleChangePatterns = ['role', 'permission', 'access_level', 'privilege'];
-    for (const pattern of roleChangePatterns) {
-      if (event.payload[pattern] && event.payload[pattern] !== currentRole) {
-        const newRole = event.payload[pattern].toLowerCase();
-        const newRoleIndex = roleHierarchy.indexOf(newRole);
-        if (newRoleIndex > currentIndex) {
-          return true;
+  if (event.payload) {
+    let payloadObj = event.payload;
+    if (typeof event.payload === 'string') {
+        try { payloadObj = JSON.parse(event.payload); } catch(e) {}
+    }
+
+    if (typeof payloadObj === 'object') {
+        const roleChangePatterns = ['role', 'permission', 'access_level', 'privilege'];
+        for (const pattern of roleChangePatterns) {
+        if (payloadObj[pattern] && payloadObj[pattern] !== currentRole) {
+            const newRole = String(payloadObj[pattern]).toLowerCase();
+            const newRoleIndex = roleHierarchy.indexOf(newRole);
+            if (newRoleIndex > currentIndex) {
+            return true;
+            }
         }
-      }
+        }
     }
   }
 
@@ -86,10 +97,17 @@ export function detectHorizontalPrivilegeEscalation(event: SilkerEvent, userId?:
     return true;
   }
 
-  if (event.payload && typeof event.payload === 'object') {
-    const payloadUserId = event.payload.userId || event.payload.id || event.payload.user_id;
-    if (payloadUserId && payloadUserId !== userId) {
-      return true;
+  if (event.payload) {
+    let payloadObj = event.payload;
+    if (typeof event.payload === 'string') {
+        try { payloadObj = JSON.parse(event.payload); } catch(e) {}
+    }
+
+    if (typeof payloadObj === 'object') {
+        const payloadUserId = payloadObj.userId || payloadObj.id || payloadObj.user_id;
+        if (payloadUserId && String(payloadUserId) !== userId) {
+            return true;
+        }
     }
   }
 
@@ -130,4 +148,3 @@ function extractUserIdFromUrl(url: string): string | null {
 
   return null;
 }
-

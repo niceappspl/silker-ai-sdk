@@ -17,5 +17,3 @@ export interface SilkerEvent {
   /** Opcjonalne nagłówki HTTP */
   headers?: Record<string, string>;
 }
-
-

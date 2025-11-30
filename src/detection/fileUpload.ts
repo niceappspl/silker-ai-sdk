@@ -16,6 +16,7 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
   let content: Buffer | string = '';
 
   try {
+    // Attempt to parse payload if it's a string JSON, usually from middleware
     const payload = event.payload ? JSON.parse(event.payload) : {};
 
     if (payload.file || payload.files) {
@@ -26,6 +27,7 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
       content = fileData?.content || fileData?.data || '';
     }
 
+    // Check for multipart uploads without actual file metadata (often bypass attempt)
     const contentTypeHeader = event.headers?.['content-type'] || event.headers?.['Content-Type'] || '';
     if (contentTypeHeader.includes('multipart/form-data')) {
       if (!filename && !contentType) {
@@ -33,18 +35,20 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
       }
     }
 
+    // Size validation (10MB hard limit for analysis)
     const maxSize = 10 * 1024 * 1024;
     if (size > maxSize) {
       issues.push(`File size ${size} bytes exceeds maximum allowed size ${maxSize} bytes`);
     }
 
+    // Filename validation
     if (filename) {
       const dangerousPatterns = [
-        /\.\./,
-        /^[.-]/,
-        /[<>:"|?*]/,
-        /[\x00-\x1f]/,
-        /com[1-9]|lpt[1-9]|con|prn|aux|nul/i,
+        /\.\./, // Path traversal
+        /^[.-]/, // Hidden files or starting with dash
+        /[<>:"|?*]/, // Windows reserved chars
+        /[\x00-\x1f]/, // Control chars
+        /com[1-9]|lpt[1-9]|con|prn|aux|nul/i, // Windows reserved names
       ];
 
       for (const pattern of dangerousPatterns) {
@@ -59,6 +63,7 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
       }
     }
 
+    // Content-Type validation
     if (contentType) {
       const allowedTypes = [
         'image/jpeg', 'image/png', 'image/gif', 'image/webp',
@@ -73,15 +78,16 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
       }
     }
 
+    // Magic Bytes & Content Analysis
     if (content && typeof content === 'string') {
       const buffer = Buffer.from(content, 'base64');
       const magicBytes = buffer.slice(0, 8);
 
       const exeSignatures = [
-        Buffer.from([0x4D, 0x5A]),
-        Buffer.from([0x7F, 0x45, 0x4C, 0x46]),
-        Buffer.from([0x23, 0x21]),
-        Buffer.from([0xCA, 0xFE, 0xBA, 0xBE]),
+        Buffer.from([0x4D, 0x5A]), // MZ (DOS/PE)
+        Buffer.from([0x7F, 0x45, 0x4C, 0x46]), // ELF (Linux)
+        Buffer.from([0x23, 0x21]), // #! (Shebang)
+        Buffer.from([0xCA, 0xFE, 0xBA, 0xBE]), // Java Class
       ];
 
       for (const signature of exeSignatures) {
@@ -91,19 +97,22 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
         }
       }
 
+      // Check for scripts in non-script files (XSS via file upload)
       if (!contentType.includes('html') && !contentType.includes('text')) {
-        const contentStr = buffer.toString('utf8', 0, 100);
+        const contentStr = buffer.toString('utf8', 0, 100); // Check first 100 chars
         if (contentStr.includes('<script') || contentStr.includes('javascript:') || contentStr.includes('onload=')) {
           issues.push('Script content detected in non-script file');
         }
       }
     }
 
+    // Double check path traversal
     if (filename.includes('../') || filename.includes('..\\')) {
       issues.push('Path traversal detected in filename');
     }
 
   } catch (error) {
+    // Fail open or closed? For security, we should probably flag it.
     issues.push('File upload validation failed');
   }
 
@@ -120,6 +129,7 @@ export function detectFileUploadAttack(event: SilkerEvent): boolean {
   const url = event.url.toLowerCase();
   const method = event.method;
 
+  // Heuristic to identify file upload endpoints
   if (method === 'POST' &&
       (url.includes('/upload') || url.includes('/file') || url.includes('/media') ||
        event.headers?.['content-type']?.includes('multipart'))) {
@@ -133,4 +143,3 @@ export function detectFileUploadAttack(event: SilkerEvent): boolean {
 
   return false;
 }
-

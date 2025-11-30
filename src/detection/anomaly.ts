@@ -14,10 +14,9 @@ import { checkCryptographicFailures, detectWeakEncryption } from './cryptographi
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
-import { detectPromptInjection, analyzePromptSafety } from './promptInjection';
+import { detectPromptInjection } from './promptInjection';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
-import { pushDashboardData } from '../cloud/dashboardSync';
-import * as crypto from 'crypto';
+import { createLogger } from '../utils/logger';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -47,15 +46,15 @@ export function setGlobalOptions(options: SilkerOptions | null) {
  * @returns true jeśli wykryto anomalie, false w przeciwnym razie
  */
 export function isAnomaly(event: SilkerEvent): boolean {
+  const logger = globalOptions ? createLogger(globalOptions) : null;
+
   try {
     const { method, url, payload, ip, headers } = event;
-    const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB (increased for AI/LLM support)
+    const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB
 
     // Rate limiting check (lightweight, do first)
     if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
-      if (globalOptions?.debug) {
-        console.log('🚫 BLOCKED: Rate limit exceeded');
-      }
+      logger?.debug('🚫 BLOCKED: Rate limit exceeded');
       return true;
     }
 
@@ -82,19 +81,23 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {
         if (detectSqliHeuristic(scannedPayload)) {
-          if (globalOptions?.debug) {
-            console.log('🚫 BLOCKED: SQL injection detected (Heuristic)');
-          }
+          logger?.debug('🚫 BLOCKED: SQL injection detected (Heuristic)');
           return true;
         }
       }
 
       if (isFeatureEnabled('xssDetection')) {
         if (detectXssHeuristic(scannedPayload)) {
-          if (globalOptions?.debug) {
-            console.log('🚫 BLOCKED: XSS detected (Heuristic)');
-          }
+          logger?.debug('🚫 BLOCKED: XSS detected (Heuristic)');
           return true;
+        }
+      }
+
+      if (isFeatureEnabled('promptInjectionDetection')) {
+        const injection = detectPromptInjection(scannedPayload);
+        if (injection.detected && (injection.severity === 'high' || injection.severity === 'critical')) {
+            logger?.debug('🚫 BLOCKED: Prompt Injection detected');
+            return true;
         }
       }
     }
@@ -106,9 +109,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
       const payloadHasTraversal = scannedPayload && pathTraversalPatterns.some(pattern => scannedPayload.includes(pattern));
 
       if (urlHasTraversal || payloadHasTraversal) {
-        if (globalOptions?.debug) {
-          console.log('🚫 BLOCKED: Path traversal detected');
-        }
+        logger?.debug('🚫 BLOCKED: Path traversal detected');
         return true;
       }
     }
@@ -184,9 +185,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (isFeatureEnabled('securityHeadersValidation')) {
       const headerValidation = validateSecurityHeaders(headers);
       if (!headerValidation.valid && headers) {
-        if (globalOptions?.debug) {
-          console.log('⚠️ Missing security headers:', headerValidation.missing);
-        }
+        logger?.debug('⚠️ Missing security headers:', headerValidation.missing);
       }
     }
 
@@ -194,9 +193,8 @@ export function isAnomaly(event: SilkerEvent): boolean {
       // Use scannedPayload for leakage detection too
       const leakageCheck = detectDataLeakage(scannedPayload);
       if (leakageCheck.leaked) {
-        if (globalOptions?.debug) {
-          console.log('🚨 Data leakage detected:', leakageCheck.findings);
-        }
+        logger?.debug('🚨 Data leakage detected:', leakageCheck.findings);
+        
         const hasCriticalLeak = leakageCheck.findings.some((finding: string) =>
           finding.includes('credit card') ||
           finding.includes('SSN:') ||
@@ -210,12 +208,9 @@ export function isAnomaly(event: SilkerEvent): boolean {
     }
 
     if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && scannedPayload) {
-      // We might want to validate the full object if available, but for safety we use what we have.
-      // Ideally performApiValidation should handle raw objects safely.
-      // For now passing the event as is, assuming performApiValidation is safe enough or we accept the risk there (it's usually schema validation, not regex search).
       const apiValidation = performApiValidation(event);
-      if (!apiValidation.valid && globalOptions?.debug) {
-        console.log('⚠️ API schema validation warnings:', apiValidation.warnings);
+      if (!apiValidation.valid) {
+        logger?.debug('⚠️ API schema validation warnings:', apiValidation.warnings);
       }
     }
 
@@ -238,18 +233,13 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (isFeatureEnabled('threatIntelligence')) {
       const threatCheck = checkThreatIntelligence(event);
       if (threatCheck.threat) {
-        if (globalOptions?.debug) {
-          console.log('🕵️ Threat intelligence alert:', threatCheck.details);
-        }
+        logger?.debug('🕵️ Threat intelligence alert:', threatCheck.details);
         return true;
       }
     }
     return false;
   } catch (error) {
-    if (globalOptions?.debug) {
-      console.error('Silker AI Detection Error:', error);
-    }
+    logger?.error('Silker AI Detection Error:', error);
     return false;
   }
 }
-

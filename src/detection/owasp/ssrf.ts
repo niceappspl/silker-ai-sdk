@@ -34,4 +34,3 @@ export function detectSsrfAttack(event: SilkerEvent): boolean {
 
   return false;
 }
-
