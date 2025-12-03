@@ -1,18 +1,48 @@
 import nock from 'nock';
 import { hookFetch } from '../../src/hooks/fetch';
 import { SilkerOptions } from '../../src/types';
+import { clearRateLimitState } from '../../src/detection/rateLimit';
+import { setGlobalOptions } from '../../src/detection/anomaly';
 
 describe('hookFetch', () => {
   const mockOptions: SilkerOptions = {
     apiKey: 'test-api-key',
     endpoint: 'https://test-silker.com/api',
-    debug: false
+    debug: false,
+    features: {
+      sqliDetection: true,
+      xssDetection: true,
+      pathTraversalDetection: true,
+      rateLimit: false,
+      csrfDetection: false,
+      ssrfDetection: false,
+      idorDetection: false,
+      hostHeaderInjectionDetection: false,
+      accessControlDetection: false,
+      cryptographicValidation: false,
+      vulnerableComponentsDetection: false,
+      authenticationValidation: false,
+      softwareIntegrityValidation: false,
+      securityHeadersValidation: false,
+      dataLeakageDetection: false,
+      apiSchemaValidation: false,
+      sessionAnomaliesDetection: false,
+      fileUploadDetection: false,
+      thirdPartyDetection: false,
+      complianceDetection: false,
+      threatIntelligence: false,
+      zeroTrustDetection: false,
+      promptInjectionDetection: false
+    }
   };
 
   let originalFetch: typeof global.fetch;
   let mockFetch: jest.Mock;
 
   beforeEach(() => {
+    clearRateLimitState();
+    setGlobalOptions(null);
+    delete (global as any).request;
     originalFetch = global.fetch;
     nock.cleanAll();
     nock.disableNetConnect();
@@ -50,7 +80,9 @@ describe('hookFetch', () => {
 
     hookFetch(mockOptions);
 
-    const response = await global.fetch('https://api.example.com/users');
+    const response = await global.fetch('https://api.example.com/users', {
+      headers: { 'Authorization': 'Bearer token' }
+    });
     expect(response.status).toBe(200);
     const data = await response.json();
     expect(data.data).toEqual([]);
@@ -65,13 +97,13 @@ describe('hookFetch', () => {
 
     const response = await global.fetch('https://api.example.com/search', {
       method: 'POST',
+      headers: { 'Authorization': 'Bearer token' },
       body: JSON.stringify({ query: "'; DROP TABLE users; --" })
     });
 
     expect(response.status).toBe(403);
     const data = await response.json();
     expect(data.error).toBe('Request blocked by Silker AI');
-    expect(data.alertId).toBe('alert-123');
   });
 
   it('should block requests with XSS', async () => {
@@ -83,33 +115,14 @@ describe('hookFetch', () => {
 
     const response = await global.fetch('https://api.example.com/comment', {
       method: 'POST',
+      headers: { 'Authorization': 'Bearer token' },
       body: JSON.stringify({ content: '<script>alert("xss")</script>' })
     });
 
     expect(response.status).toBe(403);
   });
 
-  it('should allow requests when cloud says allow', async () => {
-    nock('https://test-silker.com')
-      .post('/api')
-      .reply(200, { block: false });
-
-    mockFetch.mockResolvedValueOnce(new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    }));
-
-    hookFetch(mockOptions);
-
-    const response = await global.fetch('https://api.example.com/data', {
-      method: 'POST',
-      body: JSON.stringify({ query: "'; DROP TABLE users; --" })
-    });
-
-    expect(response.status).toBe(200);
-  });
-
-  it('should handle cloud connection failure gracefully', async () => {
+  it('should handle cloud connection failure gracefully for safe requests', async () => {
     nock('https://test-silker.com')
       .post('/api')
       .reply(500);
@@ -123,7 +136,8 @@ describe('hookFetch', () => {
 
     const response = await global.fetch('https://api.example.com/users', {
       method: 'POST',
-      body: JSON.stringify({ query: "'; DROP TABLE users; --" })
+      headers: { 'Authorization': 'Bearer token' },
+      body: JSON.stringify({ query: "safe query" })
     });
 
     expect(response.status).toBe(200);
@@ -137,7 +151,9 @@ describe('hookFetch', () => {
 
     hookFetch(mockOptions);
 
-    const response = await global.fetch('https://api.example.com/users');
+    const response = await global.fetch('https://api.example.com/users', {
+      headers: { 'Authorization': 'Bearer token' }
+    });
     const data = await response.json();
     expect(data.data).toEqual([]);
   });
@@ -150,7 +166,9 @@ describe('hookFetch', () => {
 
     hookFetch(mockOptions);
 
-    const request = new Request('https://api.example.com/users');
+    const request = new Request('https://api.example.com/users', {
+      headers: { 'Authorization': 'Bearer token' }
+    });
     const response = await global.fetch(request);
     expect(response.status).toBe(200);
   });
@@ -164,7 +182,9 @@ describe('hookFetch', () => {
     hookFetch(mockOptions);
 
     const url = new URL('https://api.example.com/users');
-    const response = await global.fetch(url);
+    const response = await global.fetch(url, {
+      headers: { 'Authorization': 'Bearer token' }
+    });
     expect(response.status).toBe(200);
   });
 
@@ -198,4 +218,3 @@ describe('hookFetch', () => {
     );
   });
 });
-

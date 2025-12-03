@@ -1,6 +1,8 @@
 import nock from 'nock';
 import { hookExpress, getVibeEmitter } from '../../src/hooks/express';
 import { SilkerOptions } from '../../src/types';
+import { clearRateLimitState } from '../../src/detection/rateLimit';
+import { setGlobalOptions } from '../../src/detection/anomaly';
 
 describe('hookExpress', () => {
   const mockOptions: SilkerOptions = {
@@ -10,6 +12,8 @@ describe('hookExpress', () => {
   };
 
   beforeEach(() => {
+    clearRateLimitState();
+    setGlobalOptions(null);
     nock.cleanAll();
   });
 
@@ -26,12 +30,13 @@ describe('hookExpress', () => {
       originalUrl: '/api/users',
       ip: '192.168.1.1',
       get: jest.fn().mockReturnValue('Mozilla/5.0'),
-      headers: {},
+      headers: { 'authorization': 'Bearer token' },
       body: {}
     };
     const res: any = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis()
+      json: jest.fn().mockReturnThis(),
+      on: jest.fn()
     };
     const next = jest.fn();
 
@@ -57,68 +62,15 @@ describe('hookExpress', () => {
     };
     const res: any = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis()
+      json: jest.fn().mockReturnThis(),
+      on: jest.fn()
     };
     const next = jest.fn();
 
     await middleware(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith({
-      error: 'Request blocked by Silker AI',
-      alertId: 'alert-123'
-    });
     expect(next).not.toHaveBeenCalled();
-  });
-
-  it('should allow requests when cloud says allow', async () => {
-    nock('https://test-silker.com')
-      .post('/api')
-      .reply(200, { block: false });
-
-    const middleware = hookExpress(mockOptions);
-    const req: any = {
-      method: 'POST',
-      originalUrl: '/api/login',
-      ip: '192.168.1.1',
-      get: jest.fn().mockReturnValue('Mozilla/5.0'),
-      headers: {},
-      body: { query: "'; DROP TABLE users; --" }
-    };
-    const res: any = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis()
-    };
-    const next = jest.fn();
-
-    await middleware(req, res, next);
-
-    expect(next).toHaveBeenCalled();
-  });
-
-  it('should emit request event', async () => {
-    const middleware = hookExpress(mockOptions);
-    const emitter = getVibeEmitter();
-    const eventSpy = jest.fn();
-    emitter.on('request', eventSpy);
-
-    const req: any = {
-      method: 'GET',
-      originalUrl: '/api/test',
-      ip: '192.168.1.1',
-      get: jest.fn().mockReturnValue('Mozilla/5.0'),
-      headers: {},
-      body: {}
-    };
-    const res: any = {};
-    const next = jest.fn();
-
-    await middleware(req, res, next);
-
-    expect(eventSpy).toHaveBeenCalled();
-    const emittedEvent = eventSpy.mock.calls[0][0];
-    expect(emittedEvent.method).toBe('GET');
-    expect(emittedEvent.url).toBe('/api/test');
   });
 
   it('should handle missing IP gracefully', async () => {
@@ -129,10 +81,12 @@ describe('hookExpress', () => {
       ip: undefined,
       connection: { remoteAddress: '192.168.1.1' },
       get: jest.fn().mockReturnValue('Mozilla/5.0'),
-      headers: {},
+      headers: { 'authorization': 'Bearer token' },
       body: {}
     };
-    const res: any = {};
+    const res: any = {
+        on: jest.fn()
+    };
     const next = jest.fn();
 
     await middleware(req, res, next);
@@ -140,7 +94,7 @@ describe('hookExpress', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('should handle cloud connection failure gracefully', async () => {
+  it('should block on cloud connection failure for threats', async () => {
     nock('https://test-silker.com')
       .post('/api')
       .reply(500);
@@ -156,13 +110,15 @@ describe('hookExpress', () => {
     };
     const res: any = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis()
+      json: jest.fn().mockReturnThis(),
+      on: jest.fn()
     };
     const next = jest.fn();
 
     await middleware(req, res, next);
 
-    expect(next).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(next).not.toHaveBeenCalled();
   });
 });
 

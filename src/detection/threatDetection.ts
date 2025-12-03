@@ -22,10 +22,10 @@ export function setGlobalOptionsForThreat(options: SilkerOptions | null) {
 }
 
 function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>): boolean {
-  if (!globalOptions?.features) {
-    return false;
+  if (!globalOptions || !globalOptions.features) {
+    return true; // Default enabled if options or features missing
   }
-  return globalOptions.features[feature] === true;
+  return globalOptions.features[feature] !== false;
 }
 
 export interface ThreatInfo {
@@ -42,14 +42,10 @@ export interface ThreatInfo {
 export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   const { method, url, payload, ip, headers } = event;
 
-  if (!globalOptions?.features) {
-    return null;
-  }
-
   const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload || '');
 
   // 1. SQL Injection
-  if (globalOptions.features.sqliDetection) {
+  if (isFeatureEnabled('sqliDetection')) {
     if (detectSqliHeuristic(payloadStr)) {
         return {
           type: 'SQL Injection',
@@ -60,7 +56,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   }
 
   // 2. XSS
-  if (globalOptions.features.xssDetection) {
+  if (isFeatureEnabled('xssDetection')) {
     if (detectXssHeuristic(payloadStr)) {
         return {
           type: 'XSS',
@@ -71,7 +67,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   }
 
   // 3. Path Traversal
-  if (globalOptions.features.pathTraversalDetection) {
+  if (isFeatureEnabled('pathTraversalDetection')) {
     const pathTraversalPatterns = ['../', '..\\'];
     const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
     const payloadHasTraversal = payloadStr && pathTraversalPatterns.some(pattern => payloadStr.includes(pattern));
@@ -86,7 +82,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   }
 
   // 4. Prompt Injection
-  if (globalOptions.features.promptInjectionDetection) {
+  if (isFeatureEnabled('promptInjectionDetection')) {
     const promptPatterns = [
       /ignore\s+(all\s+)?previous\s+instructions/i,
       /print\s+everything\s+above/i,
@@ -299,6 +295,8 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
       }
   }
 
+  // If no specific threat type was identified but isAnomaly returned true (logic mismatch fallback)
+  // Ideally we should catch everything above.
   return {
     type: 'Security Anomaly',
     severity: 'medium',

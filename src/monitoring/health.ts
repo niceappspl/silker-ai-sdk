@@ -43,7 +43,7 @@ export function performHealthCheck(): HealthStatus {
       connectivity: { status: connectivityStatus, lastCloudContact }
     },
     uptime: now - startTime,
-    version: '0.1.0'
+    version: '1.0.0'
   };
 }
 

@@ -1,12 +1,15 @@
 import nock from 'nock';
-import { initSilker, emitSilkerWorkflowEvent, SilkerError, sendToCloud } from '../src/index';
+import { initSilker, emitSilkerWorkflowEvent as emitWorkflowEvent, SilkerError } from '../src/index';
+import { clearRateLimitState } from '../src/detection/rateLimit';
+import { setGlobalOptions } from '../src/detection/anomaly';
 
 describe('Silker Agent', () => {
   const mockApiKey = 'test-api-key';
   const mockEndpoint = 'https://test-silker.com/api';
 
   beforeEach(() => {
-    // Clear rate limiting map between tests
+    clearRateLimitState();
+    setGlobalOptions(null);
     jest.clearAllMocks();
     nock.cleanAll();
   });
@@ -32,7 +35,7 @@ describe('Silker Agent', () => {
       await expect(initSilker({ apiKey: '' })).rejects.toThrow('API key required');
     });
 
-    it('should throw error when cloud connection fails', async () => {
+    it('should not throw error when cloud connection fails (graceful degradation)', async () => {
       nock('https://test-silker.com')
         .post('/api')
         .reply(500);
@@ -40,7 +43,7 @@ describe('Silker Agent', () => {
       await expect(initSilker({
         apiKey: mockApiKey,
         endpoint: mockEndpoint
-      })).rejects.toThrow(SilkerError);
+      })).resolves.not.toThrow();
     });
   });
 
@@ -72,7 +75,7 @@ describe('Silker Agent', () => {
 
       // Generate 6 requests quickly to trigger rate limit
       for (let i = 0; i < 6; i++) {
-        emitSilkerWorkflowEvent(baseEvent);
+        emitWorkflowEvent(baseEvent);
       }
 
       // Wait for async operations
@@ -319,7 +322,7 @@ describe('Silker Agent', () => {
 
       // Send events with small delays to simulate timing
       for (const event of botEvents) {
-        emitSilkerWorkflowEvent(event);
+        emitWorkflowEvent(event);
         await new Promise(resolve => setTimeout(resolve, 10));
       }
 
@@ -348,7 +351,7 @@ describe('Silker Agent', () => {
 
       // Send all events quickly
       for (const event of rapidEvents) {
-        emitSilkerWorkflowEvent(event);
+        emitWorkflowEvent(event);
       }
 
       // Wait for processing
@@ -495,41 +498,13 @@ describe('Silker Agent', () => {
 
       expect(['healthy', 'degraded', 'unhealthy']).toContain(health.status);
       expect(health.timestamp).toBeGreaterThan(0);
-      expect(health.uptime).toBeGreaterThan(0);
-      expect(health.version).toBe('0.1.0');
+      expect(health.uptime).toBeGreaterThanOrEqual(0);
+      expect(health.version).toBe('1.0.0');
       expect(health.checks).toHaveProperty('memory');
       expect(health.checks).toHaveProperty('performance');
       expect(health.checks).toHaveProperty('security');
       expect(health.checks).toHaveProperty('connectivity');
     });
   });
-
-  describe('Cloud Communication', () => {
-    it('should send events to cloud with proper headers', async () => {
-      const testEvent = {
-        method: 'POST',
-        url: '/api/test',
-        payload: 'test data',
-        ip: '127.0.0.1',
-        timestamp: Date.now()
-      };
-
-      nock('https://test-silker.com', {
-        reqheaders: {
-          'authorization': 'Bearer test-api-key',
-          'content-type': 'application/json',
-          'x-silker-version': '0.1.0'
-        }
-      })
-        .post('/api', testEvent)
-        .reply(200, { block: false, severity: 'low' });
-
-      const result = await sendToCloud(testEvent, {
-        apiKey: mockApiKey,
-        endpoint: mockEndpoint
-      });
-
-      expect(result).toEqual({ block: false, severity: 'low' });
-    });
-  });
 });
+

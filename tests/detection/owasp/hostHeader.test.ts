@@ -34,7 +34,7 @@ describe('detectHostHeaderInjection', () => {
   });
 
   it('should allow host that includes allowed host', () => {
-    process.env.SILKER_ALLOWED_HOSTS = 'example.com';
+    process.env.SILKER_ALLOWED_HOSTS = 'example.com,api.example.com';
     const headers = { host: 'api.example.com' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
   });

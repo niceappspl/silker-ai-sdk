@@ -212,7 +212,7 @@ describe('Prompt Injection Detection', () => {
       const event: SilkerEvent = {
         method: 'POST',
         url: '/api/chat',
-        payload: 'a'.repeat(15000),
+        payload: 'a'.repeat(50001),
         timestamp: Date.now(),
       };
 
@@ -239,7 +239,7 @@ describe('Prompt Injection Detection', () => {
       const event: SilkerEvent = {
         method: 'POST',
         url: '/api/chat',
-        payload: '\n'.repeat(150),
+        payload: '\n'.repeat(201),
         timestamp: Date.now(),
       };
 

@@ -30,10 +30,10 @@ describe('sanitizeSensitiveData', () => {
       expect(result).not.toContain('abc123');
     });
 
-    it('should not mask short values', () => {
+    it('should mask short values that look like passwords', () => {
       const input = '{"password":"abc"}';
       const result = sanitizeSensitiveData(input);
-      expect(result).toContain('abc');
+      expect(result).toContain('***MASKED***');
     });
 
     it('should handle empty string', () => {

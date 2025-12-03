@@ -21,13 +21,16 @@ import { createLogger } from '../utils/logger';
 let globalOptions: SilkerOptions | null = null;
 
 /**
- * Sprawdza czy funkcjonalność jest włączona (domyślnie false - wymaga jawnego włączenia).
+ * Sprawdza czy funkcjonalność jest włączona (domyślnie true - włączona).
  */
 function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>): boolean {
-  if (!globalOptions?.features) {
-    return false;
+  if (!globalOptions) {
+    return true;
   }
-  return globalOptions.features[feature] === true;
+  if (!globalOptions.features) {
+    return true;
+  }
+  return globalOptions.features[feature] !== false;
 }
 
 /**

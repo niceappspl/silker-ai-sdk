@@ -30,7 +30,9 @@ export function hookFetch(options: SilkerOptions) {
     const event: SilkerEvent = {
       method,
       url,
-      payload: init?.body ? JSON.stringify(init.body) : undefined,
+      payload: init?.body
+        ? (typeof init.body === 'string' ? init.body : JSON.stringify(init.body))
+        : undefined,
       ip,
       timestamp: start,
       userAgent: (init?.headers as any)?.['User-Agent'],

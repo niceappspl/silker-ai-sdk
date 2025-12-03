@@ -16,7 +16,12 @@ export function detectCsrfAttack(event: SilkerEvent, headers?: any): boolean {
       event.payload.includes('authenticity_token')
     );
 
-    if (!csrfToken && !hasCsrfInBody && !event.url.includes('/api/')) {
+    const isApiRequest = event.url.includes('/api/') || 
+                        event.url.startsWith('api.') || 
+                        event.url.includes('//api.') ||
+                        event.url.endsWith('.json');
+
+    if (!csrfToken && !hasCsrfInBody && !isApiRequest) {
       return true;
     }
   }

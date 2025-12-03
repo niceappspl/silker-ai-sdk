@@ -5,7 +5,7 @@ interface RoleMapping {
 }
 
 const ADMIN_PATHS = ['/admin', '/administrator', '/manage', '/dashboard', '/control'];
-const PRIVILEGED_PATHS = ['/api/admin', '/api/users', '/api/settings', '/api/config'];
+const PRIVILEGED_PATHS = ['/api/admin', '/api/settings', '/api/config'];
 const SENSITIVE_OPERATIONS = ['DELETE', 'PUT', 'PATCH'];
 
 const DEFAULT_ROLE_MAPPING: RoleMapping = {

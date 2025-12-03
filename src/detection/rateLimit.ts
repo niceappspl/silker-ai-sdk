@@ -3,6 +3,13 @@ import { SilkerEvent } from '../types';
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 /**
+ * Czyści stan rate limitera. Używane głównie w testach.
+ */
+export function clearRateLimitState(): void {
+  rateLimitMap.clear();
+}
+
+/**
  * Sprawdza czy żądanie przekracza limit szybkości (rate limit).
  * Używa okna czasowego 1 minuty z limitem 5 żądań na IP.
  * Automatycznie czyści wygasłe wpisy z mapy.
