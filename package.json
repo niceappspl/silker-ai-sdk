@@ -1,5 +1,5 @@
 {
-  "name": "@silker/ai-sdk",
+  "name": "@silker-ai/ai-sdk",
   "version": "1.0.0",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
