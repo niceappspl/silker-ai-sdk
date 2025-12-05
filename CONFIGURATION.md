@@ -8,7 +8,11 @@ Complete configuration reference for `@silker-ai/agent` v1.0.2+
 
 - [Quick Start](#quick-start)
 - [Main Options](#main-options)
-- [Security Features](#security-features)
+- [Security Features Detail](#security-features-detail)
+  - [Core Security](#core-security)
+  - [OWASP Top 10](#owasp-top-10)
+  - [Advanced Security](#advanced-security)
+  - [Monitoring](#monitoring)
 - [Complete Examples](#complete-examples)
 - [Environment Setup](#environment-setup)
 
@@ -27,7 +31,7 @@ app.use(middleware({
 }));
 ```
 
-**This is all you need to get started.** All security features are enabled by default.
+**This is all you need to get started.** All 25 security features are enabled by default.
 
 ---
 
@@ -44,86 +48,74 @@ app.use(middleware({
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `appId` | `string` | `undefined` | Application ID for dashboard grouping |
-| `endpoint` | `string` | Auto | API endpoint URL (see defaults below) |
-| `debug` | `boolean` | `false` | Enable detailed console logging |
-| `maxPayloadSize` | `number` | `51200` | Maximum payload size to scan (bytes) |
-| `features` | `object` | All enabled | Feature toggles (see below) |
-
-### Endpoint Defaults
-
-The SDK automatically selects the correct endpoint:
-
-- **Development** (`NODE_ENV=development`): `http://localhost:3000`
-- **Production**: `https://api.silkerai.com`
-- **Custom**: Set explicitly via `endpoint` option
+| `endpoint` | `string` | Auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://api.silkerai.com` prod) |
+| `debug` | `boolean` | `false` | Enable detailed console logging for debugging |
+| `maxPayloadSize` | `number` | `51200` | Maximum payload size to scan in bytes (50KB default) |
+| `features` | `object` | All true | Feature toggles object to disable specific checks |
 
 ---
 
-## Security Features
+## Security Features Detail
 
-All features are **enabled by default** (opt-out model). Set to `false` to disable.
+All features are **enabled by default** (`true`). To disable a feature, set it to `false` in the configuration object.
 
-### Core Security (5 features)
+### Core Security
 
-```typescript
-features: {
-  rateLimit: true,                      // Rate limiting (5 req/min per IP)
-  sqliDetection: true,                  // SQL Injection detection
-  xssDetection: true,                   // Cross-Site Scripting (XSS) detection
-  pathTraversalDetection: true,         // Directory traversal attacks
-  promptInjectionDetection: true,       // AI/LLM prompt injection
-}
-```
+Essential protection against common web attacks.
 
-### OWASP Top 10 (10 features)
+| Feature | Key | Description | Default |
+|---------|-----|-------------|---------|
+| **Rate Limiting** | `rateLimit` | Protects against brute-force and DoS attacks by limiting requests (5 req/min per IP). Uses sliding window algorithm. | `true` |
+| **SQL Injection** | `sqliDetection` | Detects and blocks SQL injection patterns in query parameters, body, and headers using heuristic analysis. | `true` |
+| **XSS Protection** | `xssDetection` | Prevents Cross-Site Scripting (XSS) attacks by detecting malicious scripts in input data. | `true` |
+| **Path Traversal** | `pathTraversalDetection` | Blocks attempts to access unauthorized files via directory traversal (e.g., `../etc/passwd`). | `true` |
+| **Prompt Injection** | `promptInjectionDetection` | **AI/LLM Specific:** Detects attempts to manipulate LLM behavior via malicious prompts (jailbreaks, context leaks). | `true` |
 
-```typescript
-features: {
-  accessControlDetection: true,         // A01: Broken Access Control
-  cryptographicValidation: true,        // A02: Cryptographic Failures
-  // sqliDetection (covered in Core)    // A03: Injection
-  securityHeadersValidation: true,      // A04: Insecure Design + A05: Security Misconfiguration
-  vulnerableComponentsDetection: true,  // A06: Vulnerable Components
-  authenticationValidation: true,       // A07: Authentication Failures
-  softwareIntegrityValidation: true,    // A08: Software Integrity Failures
-  auditLogging: true,                   // A09: Logging & Monitoring Failures
-  ssrfDetection: true,                  // A10: Server-Side Request Forgery
-}
-```
+### OWASP Top 10
 
-### Advanced Security (12 features)
+Comprehensive coverage of the OWASP Top 10 web application security risks.
 
-```typescript
-features: {
-  csrfDetection: true,                  // Cross-Site Request Forgery
-  idorDetection: true,                  // Insecure Direct Object References
-  hostHeaderInjectionDetection: true,   // Host header manipulation
-  dataLeakageDetection: true,           // API keys, PII, credit cards, SSN
-  sessionAnomaliesDetection: true,      // Unusual session behavior & bot detection
-  apiSchemaValidation: true,            // API schema & OpenAPI compliance
-  fileUploadDetection: true,            // Malicious file uploads & malware
-  thirdPartyDetection: true,            // Risky external integrations
-  complianceDetection: true,            // GDPR, HIPAA violations
-  threatIntelligence: true,             // Known malicious IPs/patterns
-  zeroTrustDetection: true,             // Zero-trust policy enforcement
-  cloudCommunication: true,             // Send events to cloud backend
-}
-```
+| Feature | Key | Description | Default |
+|---------|-----|-------------|---------|
+| **Broken Access Control** | `accessControlDetection` | Detects privilege escalation attempts and unauthorized resource access. | `true` |
+| **Cryptographic Failures** | `cryptographicValidation` | Checks for weak encryption usage and exposure of sensitive data in transit. | `true` |
+| **Security Headers** | `securityHeadersValidation` | Validates security headers (CSP, HSTS, X-Frame-Options) to prevent misconfigurations. | `true` |
+| **Vulnerable Components** | `vulnerableComponentsDetection` | Identifies usage of known vulnerable dependencies or components. | `true` |
+| **Auth Failures** | `authenticationValidation` | Detects weak authentication mechanisms and brute-force attempts. | `true` |
+| **Integrity Failures** | `softwareIntegrityValidation` | Verifies integrity of software updates and critical data flows. | `true` |
+| **Logging Failures** | `auditLogging` | Ensures critical security events are logged for audit trails. | `true` |
+| **SSRF** | `ssrfDetection` | Server-Side Request Forgery prevention - blocks requests to internal networks/localhost. | `true` |
+| **Injection** | *Covered by `sqliDetection`* | (See Core Security) | `true` |
 
-### Feature Summary
+### Advanced Security
 
-| Category | Count | Default |
-|----------|-------|---------|
-| **Core Security** | 5 | All enabled |
-| **OWASP Top 10** | 10 | All enabled |
-| **Advanced Security** | 12 | All enabled |
-| **Total** | **25 features** | **All enabled** |
+Specialized protection for modern applications and APIs.
+
+| Feature | Key | Description | Default |
+|---------|-----|-------------|---------|
+| **CSRF** | `csrfDetection` | Cross-Site Request Forgery protection. Verifies Origin/Referer headers for state-changing requests. | `true` |
+| **IDOR** | `idorDetection` | Insecure Direct Object Reference detection. Checks for unauthorized access to objects via IDs. | `true` |
+| **Host Header Injection** | `hostHeaderInjectionDetection` | Prevents attacks that manipulate the Host header to poison caches or reset passwords. | `true` |
+| **Data Leakage** | `dataLeakageDetection` | Scans outgoing responses for sensitive data (API keys, Credit Cards, SSN, PII). | `true` |
+| **Session Anomalies** | `sessionAnomaliesDetection` | Behavioral analysis to detect session hijacking and unusual user patterns. | `true` |
+| **API Validation** | `apiSchemaValidation` | Validates requests against expected API schemas and structures. | `true` |
+| **File Upload** | `fileUploadDetection` | Scans uploaded files for malware and validates file types/extensions. | `true` |
+| **Third Party** | `thirdPartyDetection` | Monitors and validates interactions with third-party APIs and services. | `true` |
+| **Compliance** | `complianceDetection` | Checks for violations of GDPR, HIPAA, and other regulatory requirements. | `true` |
+| **Threat Intel** | `threatIntelligence` | Checks IPs and signatures against global threat intelligence feeds. | `true` |
+| **Zero Trust** | `zeroTrustDetection` | Enforces strict verification for every request, assuming no trust by default. | `true` |
+
+### Monitoring
+
+| Feature | Key | Description | Default |
+|---------|-----|-------------|---------|
+| **Cloud Communication** | `cloudCommunication` | Sends sanitized security events to Silker Cloud for analysis and dashboard reporting. | `true` |
 
 ---
 
 ## Complete Examples
 
-### 1. Express.js (Recommended)
+### 1. Full Configuration (Explicit)
 
 ```typescript
 import express from 'express';
@@ -132,17 +124,25 @@ import { middleware } from '@silker-ai/agent';
 const app = express();
 
 app.use(middleware({
+  // Required
   apiKey: process.env.SILKER_API_KEY!,
+  
+  // Optional Main Options
   appId: 'd6bd4319-5aa9-49c8-b760-b4dfce661cbc',
   endpoint: 'https://api.silkerai.com',
   debug: false,
-  maxPayloadSize: 51200,
+  maxPayloadSize: 51200, // 50KB
+
+  // Feature Toggles (All default to true)
   features: {
+    // Core
     rateLimit: true,
     sqliDetection: true,
     xssDetection: true,
     pathTraversalDetection: true,
     promptInjectionDetection: true,
+
+    // OWASP
     accessControlDetection: true,
     cryptographicValidation: true,
     securityHeadersValidation: true,
@@ -151,6 +151,8 @@ app.use(middleware({
     softwareIntegrityValidation: true,
     auditLogging: true,
     ssrfDetection: true,
+
+    // Advanced
     csrfDetection: true,
     idorDetection: true,
     hostHeaderInjectionDetection: true,
@@ -162,116 +164,62 @@ app.use(middleware({
     complianceDetection: true,
     threatIntelligence: true,
     zeroTrustDetection: true,
-    cloudCommunication: true,
+    cloudCommunication: true
   }
 }));
 
 app.listen(3000);
 ```
 
-### 2. Next.js App Router
+### 2. Development Mode
 
-Create `middleware.ts` in your project root:
-
-```typescript
-import { middleware } from '@silker-ai/agent';
-
-export const config = {
-  matcher: '/api/:path*'
-};
-
-export default middleware({
-  apiKey: process.env.SILKER_API_KEY!,
-  appId: process.env.SILKER_APP_ID!,
-  debug: process.env.NODE_ENV === 'development',
-  features: {
-    // All features enabled by default
-    // Disable specific features if needed:
-    // threatIntelligence: false,
-  }
-});
-```
-
-### 3. Production-Optimized
-
-```typescript
-app.use(middleware({
-  apiKey: process.env.SILKER_API_KEY!,
-  appId: process.env.SILKER_APP_ID!,
-  endpoint: process.env.SILKER_ENDPOINT || 'https://api.silkerai.com',
-  debug: false,
-  maxPayloadSize: 102400, // 100KB
-  features: {
-    // Core protection - always enabled
-    rateLimit: true,
-    sqliDetection: true,
-    xssDetection: true,
-    pathTraversalDetection: true,
-    promptInjectionDetection: true,
-    
-    // OWASP Top 10 - enabled
-    accessControlDetection: true,
-    cryptographicValidation: true,
-    securityHeadersValidation: true,
-    ssrfDetection: true,
-    csrfDetection: true,
-    idorDetection: true,
-    
-    // Advanced - enabled for production
-    dataLeakageDetection: true,
-    threatIntelligence: true,
-    cloudCommunication: true,
-    auditLogging: true,
-    
-    // Optional - disable if not needed
-    fileUploadDetection: false,
-    thirdPartyDetection: false,
-    complianceDetection: false,
-  }
-}));
-```
-
-### 4. Development Mode
+Optimized for local development with verbose logging.
 
 ```typescript
 app.use(middleware({
   apiKey: process.env.SILKER_API_KEY!,
   appId: 'dev-app',
-  endpoint: 'http://localhost:3000',
-  debug: true, // Enable detailed logging
-  maxPayloadSize: 51200,
+  endpoint: 'http://localhost:3000', // Local backend
+  debug: true,                       // Verbose logging
   features: {
-    // Enable only essential features for faster development
-    rateLimit: true,
-    sqliDetection: true,
-    xssDetection: true,
-    pathTraversalDetection: true,
-    
-    // Disable heavy features
+    // Disable heavy features for faster dev loop
     threatIntelligence: false,
     sessionAnomaliesDetection: false,
-    apiSchemaValidation: false,
-    cloudCommunication: false,
+    apiSchemaValidation: false
   }
 }));
 ```
 
-### 5. Selective Protection
+### 3. Production Mode
 
-Enable only specific security features:
+Optimized for security and performance.
 
 ```typescript
 app.use(middleware({
   apiKey: process.env.SILKER_API_KEY!,
-  appId: 'api-gateway',
+  appId: 'prod-app',
+  endpoint: 'https://api.silkerai.com',
+  debug: false,
+  maxPayloadSize: 102400, // 100KB
+  // All features enabled by default
+}));
+```
+
+### 4. Selective Protection (API Gateway)
+
+Enabling only specific checks for a gateway service.
+
+```typescript
+app.use(middleware({
+  apiKey: process.env.SILKER_API_KEY!,
+  appId: 'gateway',
   features: {
-    // Disable all by default
+    // Enable only these
     rateLimit: true,
     sqliDetection: true,
     xssDetection: true,
-    csrfDetection: true,
     
-    // Everything else disabled
+    // Disable everything else
     pathTraversalDetection: false,
     promptInjectionDetection: false,
     accessControlDetection: false,
@@ -282,6 +230,7 @@ app.use(middleware({
     softwareIntegrityValidation: false,
     auditLogging: false,
     ssrfDetection: false,
+    csrfDetection: false,
     idorDetection: false,
     hostHeaderInjectionDetection: false,
     dataLeakageDetection: false,
@@ -292,7 +241,7 @@ app.use(middleware({
     complianceDetection: false,
     threatIntelligence: false,
     zeroTrustDetection: false,
-    cloudCommunication: false,
+    cloudCommunication: false
   }
 }));
 ```
@@ -321,24 +270,6 @@ SILKER_ENDPOINT=https://api.silkerai.com
 NODE_ENV=production
 ```
 
-### Example .env.development
-
-```bash
-SILKER_API_KEY=sk_dev_test_key
-SILKER_APP_ID=dev-app-001
-SILKER_ENDPOINT=http://localhost:3000
-NODE_ENV=development
-```
-
-### Example .env.production
-
-```bash
-SILKER_API_KEY=sk_prod_live_key
-SILKER_APP_ID=prod-app-001
-SILKER_ENDPOINT=https://api.silkerai.com
-NODE_ENV=production
-```
-
 ---
 
 ## TypeScript Support
@@ -360,53 +291,6 @@ const config: SilkerOptions = {
 };
 
 app.use(middleware(config));
-```
-
----
-
-## Feature Defaults Reference
-
-**All features are enabled by default.** You only need to specify features you want to **disable**.
-
-```typescript
-// This:
-app.use(middleware({
-  apiKey: 'sk_...'
-}));
-
-// Is equivalent to:
-app.use(middleware({
-  apiKey: 'sk_...',
-  debug: false,
-  maxPayloadSize: 51200,
-  features: {
-    rateLimit: true,
-    sqliDetection: true,
-    xssDetection: true,
-    pathTraversalDetection: true,
-    promptInjectionDetection: true,
-    accessControlDetection: true,
-    cryptographicValidation: true,
-    securityHeadersValidation: true,
-    vulnerableComponentsDetection: true,
-    authenticationValidation: true,
-    softwareIntegrityValidation: true,
-    auditLogging: true,
-    ssrfDetection: true,
-    csrfDetection: true,
-    idorDetection: true,
-    hostHeaderInjectionDetection: true,
-    dataLeakageDetection: true,
-    sessionAnomaliesDetection: true,
-    apiSchemaValidation: true,
-    fileUploadDetection: true,
-    thirdPartyDetection: true,
-    complianceDetection: true,
-    threatIntelligence: true,
-    zeroTrustDetection: true,
-    cloudCommunication: true,
-  }
-}));
 ```
 
 ---
