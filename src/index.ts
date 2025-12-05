@@ -9,7 +9,6 @@ import { sendAlertToDashboard, sendThreatToDashboard, sendRequestToDashboard } f
 import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
 import { hookExpress, getVibeEmitter } from './hooks/express';
-import { startProxyMode } from './hooks/proxy';
 import { getPerformanceReport, recordPerformanceMetrics } from './analytics/performance';
 import { getAuditLogs, getAuditSummary, logAuditEvent } from './monitoring/audit';
 import { getRuntimeConfig, updateRuntimeConfig } from './config';
@@ -150,12 +149,6 @@ async function initSilker(options: SilkerOptions): Promise<void> {
   });
 
   (global as any).silkerEmitter = vibeEmitter;
-
-  if (options.proxyMode) {
-    const targetUrl = process.env.SILKER_TARGET_URL || 'http://localhost:3000';
-    const proxyPort = parseInt(process.env.SILKER_PROXY_PORT || '8080');
-    startProxyMode(options, targetUrl, proxyPort);
-  }
 }
 
 /**

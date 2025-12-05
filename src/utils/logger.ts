@@ -25,10 +25,6 @@ class DefaultLogger implements Logger {
 export const defaultLogger = new DefaultLogger();
 
 export function createLogger(options: SilkerOptions): Logger {
-    if (options.logger) {
-        return options.logger;
-    }
-
     return {
         info: (message: string, ...args: any[]) => {
             if (options.debug) {
@@ -43,7 +39,7 @@ export function createLogger(options: SilkerOptions): Logger {
         },
         debug: (message: string, ...args: any[]) => {
             if (options.debug) {
-                console.log(message, ...args); // Debug level using log or debug
+                console.log(message, ...args);
             }
         }
     };

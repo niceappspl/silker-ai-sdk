@@ -31,7 +31,7 @@ export function hookExpress(options: SilkerOptions) {
     isListenerRegistered = true;
   }
 
-  logger.info('🛡️ Silker middleware initialized with dashboardUrl:', options.dashboardUrl);
+  logger.info('🛡️ Silker middleware initialized');
 
   return async (req: any, res: any, next: any) => {
     try {
@@ -96,7 +96,7 @@ export function hookExpress(options: SilkerOptions) {
         if (anomaly) {
           logger.debug('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
 
-          if (options.features?.cloudCommunication !== false && options.dashboardUrl) {
+          if (options.features?.cloudCommunication !== false && options.appId) {
             setGlobalOptionsForThreat(options);
 
             const threatInfo = detectThreatType(event);

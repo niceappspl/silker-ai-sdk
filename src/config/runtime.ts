@@ -2,7 +2,6 @@ import { RuntimeConfig } from '../types';
 
 let runtimeConfig: RuntimeConfig = {
   debug: false,
-  proxyMode: false,
   rateLimitThreshold: 5,
   slowRequestThreshold: 5000,
   enableAuditLogging: true,

@@ -4,8 +4,6 @@
 export interface RuntimeConfig {
   /** Tryb debugowania */
   debug: boolean;
-  /** Tryb proxy */
-  proxyMode: boolean;
   /** Próg limitu szybkości (żądań na minutę) */
   rateLimitThreshold: number;
   /** Próg wolnego żądania w milisekundach */

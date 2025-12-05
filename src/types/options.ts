@@ -38,8 +38,6 @@ export interface SilkerFeatures {
   zeroTrustDetection?: boolean;
   /** Logowanie audytu */
   auditLogging?: boolean;
-  /** Monitorowanie wydajności */
-  performanceMonitoring?: boolean;
   /** Komunikacja z chmurą */
   cloudCommunication?: boolean;
   /** Wykrywanie broken access control */
@@ -68,23 +66,8 @@ export interface SilkerOptions {
   endpoint?: string;
   /** Włącza tryb debugowania z dodatkowymi logami */
   debug?: boolean;
-  /** Włącza tryb proxy HTTP */
-  proxyMode?: boolean;
-  /**
-   * Opcjonalny identyfikator użytkownika/sesji
-   */
-  tokenId?: string;
-
-  /**
-   * URL endpointu dashboardu (np. https://dash.silker.ai)
-   */
-  dashboardUrl?: string;
   /** Funkcjonalności do włączania/wyłączania (domyślnie wszystkie włączone) */
   features?: SilkerFeatures;
-  /** Czy przepuszczać żądania w przypadku błędu wewnętrznego (domyślnie true) */
-  failOpen?: boolean;
   /** Maksymalny rozmiar payloadu w bajtach (domyślnie 50KB) */
   maxPayloadSize?: number;
-  /** Custom logger implementation */
-  logger?: any;
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@silker-ai/ai-sdk",
-  "version": "1.0.1",
+  "name": "@silker-ai/agent",
+  "version": "1.0.2",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,7 +25,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "https://github.com/silker/ai-sdk.git"
+    "url": "https://github.com/silker/agent.git"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -47,6 +47,8 @@
   "files": [
     "dist",
     "README.md",
+    "CONFIGURATION.md",
+    "CHANGELOG.md",
     "LICENSE"
   ]
 }

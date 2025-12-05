@@ -5,7 +5,6 @@ describe('getRuntimeConfig', () => {
     const config = getRuntimeConfig();
     expect(config).toBeDefined();
     expect(typeof config.debug).toBe('boolean');
-    expect(typeof config.proxyMode).toBe('boolean');
     expect(typeof config.rateLimitThreshold).toBe('number');
     expect(typeof config.slowRequestThreshold).toBe('number');
     expect(typeof config.enableAuditLogging).toBe('boolean');
