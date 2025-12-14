@@ -72,11 +72,14 @@ export function isAnomaly(event: SilkerEvent): boolean {
     console.log('🔴 Rate limit check passed');
 
     // IP Allowlist/Blocklist check (lightweight)
-    if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
-      if (!isFeatureEnabled('zeroTrustDetection')) {
-        return false;
-      }
-    }
+    // NOTE: Localhost IPs should still be scanned for attacks, don't skip detection
+    // Only skip if this is explicitly a trusted internal network in production
+    // For now, we scan everything regardless of IP
+    // if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
+    //   if (!isFeatureEnabled('zeroTrustDetection')) {
+    //     return false;
+    //   }
+    // }
 
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
