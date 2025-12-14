@@ -55,7 +55,9 @@ export function isAnomaly(event: SilkerEvent): boolean {
   console.log('🔴 isAnomaly() CALLED with payload:', event.payload?.substring(0, 100));
 
   try {
+    console.log('🔴 About to destructure event...');
     const { method, url, payload, ip, headers } = event;
+    console.log('🔴 Destructured successfully, payload type:', typeof payload);
     const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB
 
     // Rate limiting check (lightweight, do first)
