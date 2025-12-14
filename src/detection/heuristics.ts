@@ -96,6 +96,11 @@ export function detectSqliHeuristic(input: string): boolean {
 
     const tokens = tokenize(input);
 
+    // Always log first 20 tokens on Vercel for debugging
+    if (process.env.VERCEL || process.env.SILKER_DEBUG === 'true') {
+        console.log('[SQLi Heuristic] Input length:', input.length, 'Tokens:', tokens.slice(0, 20).map(t => t.value).join(' | '));
+    }
+
     for (let i = 0; i < tokens.length; i++) {
         const t = tokens[i];
         const next = tokens[i + 1];

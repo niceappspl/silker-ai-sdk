@@ -70,6 +70,9 @@ export function hookExpress(options: SilkerOptions) {
           headers: req.headers as Record<string, string>
         };
 
+        // DEBUG: Log payload to see what SDK receives
+        console.log('🔍 [SDK Internal] Payload sent to isAnomaly():', event.payload.substring(0, 200));
+
         (global as any).request = req;
 
         // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu
@@ -96,12 +99,14 @@ export function hookExpress(options: SilkerOptions) {
         if (anomaly) {
           logger.debug('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
 
+          // Send alert to dashboard in background (fire-and-forget)
+          // This MUST NOT block the response
           if (options.features?.cloudCommunication !== false && options.appId) {
             setGlobalOptionsForThreat(options);
 
             const threatInfo = detectThreatType(event);
             if (threatInfo) {
-              // Send alert to dashboard using unified telemetry
+              // Fire-and-forget: send to dashboard without waiting
               sendThreatToDashboard(
                 event,
                 threatInfo.type,
@@ -109,10 +114,11 @@ export function hookExpress(options: SilkerOptions) {
                 true, // blocked
                 threatInfo.description,
                 options
-              );
+              ).catch(err => {
+                logger.debug('⚠️ Failed to send threat to dashboard (non-blocking):', err.message);
+              });
 
-              logger.debug('📤 Alert sent to dashboard:', threatInfo.type);
-
+              // Block immediately, don't wait for dashboard
               return res.status(403).json({
                 error: 'Request blocked by Silker AI',
                 reason: 'Security threat detected',
@@ -121,6 +127,7 @@ export function hookExpress(options: SilkerOptions) {
             }
           }
 
+          // Block even if cloud communication is disabled
           return res.status(403).json({
             error: 'Request blocked by Silker AI',
             reason: 'Security threat detected'

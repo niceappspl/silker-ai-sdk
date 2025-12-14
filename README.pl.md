@@ -2,7 +2,7 @@
 
 **Lekki Agent Bezpieczeństwa Runtime** dla aplikacji opartych na AI. Wykrywa anomalie, blokuje ataki i zapewnia ochronę w czasie rzeczywistym z inteligentnymi informacjami.
 
-Doskonale nadaje się dla Cursor, Bubble, Next.js na Vercel i każdej aplikacji Node.js, która potrzebuje bezpieczeństwa runtime bez dużego nakładu pracy.
+Doskonale nadaje się dla Next.js na Vercel i każdej aplikacji Node.js, która potrzebuje bezpieczeństwa runtime bez dużego nakładu pracy.
 
 ## ✨ Funkcje
 

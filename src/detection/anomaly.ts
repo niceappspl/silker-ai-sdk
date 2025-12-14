@@ -70,6 +70,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
 
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
+    
     if (payload && typeof payload === 'string') {
       scannedPayload = payload.length > maxPayloadSize ? payload.substring(0, maxPayloadSize) : payload;
     } else if (payload) {
@@ -84,7 +85,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {
         if (detectSqliHeuristic(scannedPayload)) {
-          logger?.debug('🚫 BLOCKED: SQL injection detected (Heuristic)');
+          logger?.debug('🚫 BLOCKED: SQL injection detected');
           return true;
         }
       }

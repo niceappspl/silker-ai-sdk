@@ -11,12 +11,12 @@ import { createLogger } from '../utils/logger';
  * @param severity - Poziom zagrożenia
  * @param options - Opcje konfiguracyjne Silker
  */
-export function sendAlertToDashboard(
+export async function sendAlertToDashboard(
   event: SilkerEvent,
   threatType: string,
   severity: 'critical' | 'high' | 'medium' | 'low',
   options: SilkerOptions
-): void {
+): Promise<void> {
   try {
     telemetry.configure(options);
 
@@ -34,7 +34,7 @@ export function sendAlertToDashboard(
       app_id: options.appId
     };
 
-    telemetry.push('alert', '/api/dashboard/alerts', alertData);
+    await telemetry.push('alert', '/api/dashboard/alerts', alertData);
   } catch (error) {
     const logger = createLogger(options);
     logger.error('🚨 Failed to queue alert:', error);
@@ -52,14 +52,14 @@ export function sendAlertToDashboard(
  * @param description - Opis threatu
  * @param options - Opcje konfiguracyjne Silker
  */
-export function sendThreatToDashboard(
+export async function sendThreatToDashboard(
   event: SilkerEvent,
   threatType: string,
   severity: 'critical' | 'high' | 'medium' | 'low',
   blocked: boolean,
   description: string,
   options: SilkerOptions
-): void {
+): Promise<void> {
   try {
     telemetry.configure(options);
 
@@ -78,7 +78,7 @@ export function sendThreatToDashboard(
       app_id: options.appId
     };
 
-    telemetry.push('threat', '/api/threats', threatData);
+    await telemetry.push('threat', '/api/threats', threatData);
   } catch (error) {
     const logger = createLogger(options);
     logger.error('🚨 Failed to queue threat:', error);
@@ -94,12 +94,12 @@ export function sendThreatToDashboard(
  * @param responseTime - Czas odpowiedzi w ms
  * @param options - Opcje konfiguracyjne Silker
  */
-export function sendRequestToDashboard(
+export async function sendRequestToDashboard(
   event: SilkerEvent,
   statusCode: number,
   responseTime: number,
   options: SilkerOptions
-): void {
+): Promise<void> {
   try {
     telemetry.configure(options);
 
@@ -113,7 +113,7 @@ export function sendRequestToDashboard(
       app_id: options.appId
     };
 
-    telemetry.push('request', '/api/requests', requestData);
+    await telemetry.push('request', '/api/requests', requestData);
   } catch (error) {
     const logger = createLogger(options);
     logger.error('🚨 Failed to queue request:', error);

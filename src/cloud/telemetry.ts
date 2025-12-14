@@ -17,12 +17,19 @@ class TelemetryClient {
     private flushInterval: NodeJS.Timeout | null = null;
     private options: SilkerOptions | null = null;
     private logger: Logger | null = null;
-    private readonly FLUSH_DELAY = 5000; // 5 seconds
-    private readonly MAX_BATCH_SIZE = 50;
+    private FLUSH_DELAY = 5000; // 5 seconds
+    private MAX_BATCH_SIZE = 50;
     private isFlushing = false;
     private readonly MAX_QUEUE_SIZE = 1000; // Prevent memory leaks
 
-    constructor() { }
+    constructor() {
+        // Detect serverless environment (Vercel, AWS Lambda, etc.)
+        // In these environments, we need to flush immediately as the process may freeze
+        if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY) {
+            this.MAX_BATCH_SIZE = 1;
+            this.FLUSH_DELAY = 0;
+        }
+    }
 
     /**
      * Configures the telemetry client with Silker options.
@@ -47,8 +54,9 @@ class TelemetryClient {
     /**
      * Adds an item to the telemetry queue.
      * Data is automatically sanitized.
+     * Returns a promise that resolves when the data is flushed (if immediate flush is triggered).
      */
-    public push(type: TelemetryType, endpoint: string, data: any) {
+    public async push(type: TelemetryType, endpoint: string, data: any): Promise<void> {
         // Prevent infinite queue growth if backend is unreachable
         if (this.queue.length >= this.MAX_QUEUE_SIZE) {
             // Drop oldest items (FIFO) to make space
@@ -69,9 +77,9 @@ class TelemetryClient {
             timestamp: Date.now()
         });
 
-        // If queue is too large, flush immediately
+        // If queue is too large or we're in serverless mode (batch size 1), flush immediately
         if (this.queue.length >= this.MAX_BATCH_SIZE) {
-            this.flush();
+            await this.flush();
         }
     }
 
@@ -85,7 +93,7 @@ class TelemetryClient {
 
         try {
             const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://api.silkerai.com');
+            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://silkerai.com');
 
             // Normalize URL - remove /api suffix if present
             if (baseUrl.includes('/api')) {
@@ -101,7 +109,7 @@ class TelemetryClient {
                     'Content-Type': 'application/json',
                     'x-silker-client-version': '1.0.0'
                 },
-                timeout: 10000 // Increased timeout for batch
+                timeout: 3000 // 3 seconds - must be fast for Vercel serverless
             });
 
             this.logger?.debug(`[Silker SDK] Flushed batch of ${batch.length} items. Status: ${response.status}`);
@@ -110,6 +118,16 @@ class TelemetryClient {
             this.queue.splice(0, batch.length);
 
         } catch (error: any) {
+            // Log detailed error information
+            this.logger?.error('🚨 [Silker SDK] Flush error details:', {
+                message: error.message,
+                code: error.code,
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                data: error.response?.data,
+                url: error.config?.url
+            });
+
             const isRetryable = !error.response || // Network error
                                error.code === 'ECONNRESET' || 
                                error.code === 'ETIMEDOUT' || 
@@ -124,7 +142,7 @@ class TelemetryClient {
                 return;
             }
 
-            this.logger?.error('🚨 [Silker SDK] Failed to flush telemetry batch:', (error as Error).message);
+            this.logger?.error('🚨 [Silker SDK] Failed to flush telemetry batch after retries');
             // If max retries reached or non-retryable error (e.g. 401), drop the batch to unblock queue
             this.queue.splice(0, batch.length);
         } finally {
