@@ -44,7 +44,7 @@ export function performZeroTrustCheck(event: SilkerEvent): { verified: boolean; 
 
   const now = new Date();
   const hour = now.getHours();
-  if (hour < 6 || hour > 22) {
+  if (hour < 6 || hour > 23) {
     requirements.push('Access outside normal business hours requires additional verification');
   }
 
