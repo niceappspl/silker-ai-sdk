@@ -74,16 +74,25 @@ export function isAnomaly(event: SilkerEvent): boolean {
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
     
+    console.log('🔴 Preparing scannedPayload, raw payload type:', typeof payload, 'length:', payload?.length);
+    
     if (payload && typeof payload === 'string') {
       scannedPayload = payload.length > maxPayloadSize ? payload.substring(0, maxPayloadSize) : payload;
+      console.log('🔴 scannedPayload from string, length:', scannedPayload.length);
     } else if (payload) {
       try {
         const str = JSON.stringify(payload);
         scannedPayload = str.length > maxPayloadSize ? str.substring(0, maxPayloadSize) : str;
+        console.log('🔴 scannedPayload from JSON.stringify, length:', scannedPayload.length);
       } catch (e) {
         // Circular reference or other error, ignore payload
+        console.log('🔴 Failed to stringify payload');
       }
+    } else {
+      console.log('🔴 payload is falsy');
     }
+
+    console.log('🔴 Final scannedPayload length:', scannedPayload.length, 'Will check SQL?', scannedPayload.length > 0);
 
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {
