@@ -51,6 +51,9 @@ export function setGlobalOptions(options: SilkerOptions | null) {
 export function isAnomaly(event: SilkerEvent): boolean {
   const logger = globalOptions ? createLogger(globalOptions) : null;
 
+  // CRITICAL: Direct console.log to debug Vercel issue
+  console.log('🔴 isAnomaly() CALLED with payload:', event.payload?.substring(0, 100));
+
   try {
     const { method, url, payload, ip, headers } = event;
     const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB

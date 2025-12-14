@@ -92,7 +92,12 @@ function tokenize(input: string): Token[] {
  * - ; DROP TABLE
  */
 export function detectSqliHeuristic(input: string): boolean {
-    if (!input || input.length < 5) return false;
+    console.log('🔴 detectSqliHeuristic CALLED, input length:', input?.length || 0);
+    
+    if (!input || input.length < 5) {
+        console.log('🔴 detectSqliHeuristic: Input too short, returning false');
+        return false;
+    }
 
     // Quick regex-based detection for common SQL injection patterns (fallback)
     const quickPatterns = [
@@ -106,6 +111,7 @@ export function detectSqliHeuristic(input: string): boolean {
     
     for (const pattern of quickPatterns) {
         if (pattern.test(input)) {
+            console.log('🔴 detectSqliHeuristic: MATCH found for pattern:', pattern.source);
             return true;
         }
     }
