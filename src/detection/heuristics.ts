@@ -94,6 +94,22 @@ function tokenize(input: string): Token[] {
 export function detectSqliHeuristic(input: string): boolean {
     if (!input || input.length < 5) return false;
 
+    // Quick regex-based detection for common SQL injection patterns (fallback)
+    const quickPatterns = [
+        /' OR '/i,                    // ' OR '
+        /' OR 1=/i,                   // ' OR 1=
+        /--$/,                        // SQL comment at end
+        /UNION.*SELECT/i,             // UNION SELECT
+        /; DROP TABLE/i,              // ; DROP TABLE
+        /' AND '/i                    // ' AND '
+    ];
+    
+    for (const pattern of quickPatterns) {
+        if (pattern.test(input)) {
+            return true;
+        }
+    }
+
     const tokens = tokenize(input);
 
     // Always log first 20 tokens on Vercel for debugging
