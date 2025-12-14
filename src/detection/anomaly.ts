@@ -60,11 +60,16 @@ export function isAnomaly(event: SilkerEvent): boolean {
     console.log('🔴 Destructured successfully, payload type:', typeof payload);
     const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB
 
+    console.log('🔴 maxPayloadSize set to:', maxPayloadSize);
+
     // Rate limiting check (lightweight, do first)
+    console.log('🔴 About to check rate limit, ip:', ip);
     if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
+      console.log('🚫 BLOCKED: Rate limit exceeded');
       logger?.debug('🚫 BLOCKED: Rate limit exceeded');
       return true;
     }
+    console.log('🔴 Rate limit check passed');
 
     // IP Allowlist/Blocklist check (lightweight)
     if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
