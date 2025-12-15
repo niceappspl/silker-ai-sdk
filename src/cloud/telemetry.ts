@@ -109,7 +109,7 @@ class TelemetryClient {
                     'Content-Type': 'application/json',
                     'x-silker-client-version': '1.0.0'
                 },
-                timeout: 3000 // 3 seconds - must be fast for Vercel serverless
+                timeout: 800 // 800ms - very fast for serverless
             });
 
             this.logger?.debug(`[Silker SDK] Flushed batch of ${batch.length} items. Status: ${response.status}`);

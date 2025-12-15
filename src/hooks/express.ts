@@ -96,26 +96,30 @@ export function hookExpress(options: SilkerOptions) {
         if (anomaly) {
           logger.debug('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
 
-          // Send alert to dashboard in background (fire-and-forget)
-          // This MUST NOT block the response
+          // Send alert to dashboard with timeout
+          // On Vercel/serverless we MUST wait, otherwise process freezes before sending
           if (options.features?.cloudCommunication !== false && options.appId) {
             setGlobalOptionsForThreat(options);
 
             const threatInfo = detectThreatType(event);
             if (threatInfo) {
-              // Fire-and-forget: send to dashboard without waiting
-              sendThreatToDashboard(
-                event,
-                threatInfo.type,
-                threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
-                true, // blocked
-                threatInfo.description,
-                options
-              ).catch(err => {
-                logger.debug('⚠️ Failed to send threat to dashboard (non-blocking):', err.message);
-              });
+              // Wait for dashboard send with 1s timeout
+              try {
+                await Promise.race([
+                  sendThreatToDashboard(
+                    event,
+                    threatInfo.type,
+                    threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
+                    true, // blocked
+                    threatInfo.description,
+                    options
+                  ),
+                  new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
+                ]);
+              } catch (err) {
+                logger.debug('⚠️ Dashboard send failed or timed out');
+              }
 
-              // Block immediately, don't wait for dashboard
               return res.status(403).json({
                 error: 'Request blocked by Silker AI',
                 reason: 'Security threat detected',
