@@ -35,6 +35,21 @@ export function hookExpress(options: SilkerOptions) {
 
   return async (req: any, res: any, next: any) => {
     try {
+        // Skip scanning for static assets and technical endpoints
+        const skipPatterns = [
+          /favicon\.(ico|png|jpg|svg)$/i,
+          /\.(css|js|map|woff|woff2|ttf|eot)$/i,
+          /\/assets\//i,
+          /\/static\//i,
+          /\/public\//i,
+          /_next\//i,
+          /\.well-known\//i
+        ];
+        
+        if (skipPatterns.some(pattern => pattern.test(req.originalUrl))) {
+          return next();
+        }
+
         logger.debug('🔍 Silker middleware processing request:', req.method, req.originalUrl);
         
         // Limit payload size for analysis to avoid blocking event loop
