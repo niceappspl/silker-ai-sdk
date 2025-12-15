@@ -51,25 +51,15 @@ export function setGlobalOptions(options: SilkerOptions | null) {
 export function isAnomaly(event: SilkerEvent): boolean {
   const logger = globalOptions ? createLogger(globalOptions) : null;
 
-  // CRITICAL: Direct console.log to debug Vercel issue
-  console.log('🔴 isAnomaly() CALLED with payload:', event.payload?.substring(0, 100));
-
   try {
-    console.log('🔴 About to destructure event...');
     const { method, url, payload, ip, headers } = event;
-    console.log('🔴 Destructured successfully, payload type:', typeof payload);
     const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB
 
-    console.log('🔴 maxPayloadSize set to:', maxPayloadSize);
-
     // Rate limiting check (lightweight, do first)
-    console.log('🔴 About to check rate limit, ip:', ip);
     if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
-      console.log('🚫 BLOCKED: Rate limit exceeded');
       logger?.debug('🚫 BLOCKED: Rate limit exceeded');
       return true;
     }
-    console.log('🔴 Rate limit check passed');
 
     // IP Allowlist/Blocklist check (lightweight)
     // NOTE: Localhost IPs should still be scanned for attacks, don't skip detection
@@ -84,25 +74,16 @@ export function isAnomaly(event: SilkerEvent): boolean {
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
     
-    console.log('🔴 Preparing scannedPayload, raw payload type:', typeof payload, 'length:', payload?.length);
-    
     if (payload && typeof payload === 'string') {
       scannedPayload = payload.length > maxPayloadSize ? payload.substring(0, maxPayloadSize) : payload;
-      console.log('🔴 scannedPayload from string, length:', scannedPayload.length);
     } else if (payload) {
       try {
         const str = JSON.stringify(payload);
         scannedPayload = str.length > maxPayloadSize ? str.substring(0, maxPayloadSize) : str;
-        console.log('🔴 scannedPayload from JSON.stringify, length:', scannedPayload.length);
       } catch (e) {
         // Circular reference or other error, ignore payload
-        console.log('🔴 Failed to stringify payload');
       }
-    } else {
-      console.log('🔴 payload is falsy');
     }
-
-    console.log('🔴 Final scannedPayload length:', scannedPayload.length, 'Will check SQL?', scannedPayload.length > 0);
 
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {

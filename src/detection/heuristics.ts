@@ -92,10 +92,7 @@ function tokenize(input: string): Token[] {
  * - ; DROP TABLE
  */
 export function detectSqliHeuristic(input: string): boolean {
-    console.log('🔴 detectSqliHeuristic CALLED, input length:', input?.length || 0);
-    
     if (!input || input.length < 5) {
-        console.log('🔴 detectSqliHeuristic: Input too short, returning false');
         return false;
     }
 
@@ -111,17 +108,11 @@ export function detectSqliHeuristic(input: string): boolean {
     
     for (const pattern of quickPatterns) {
         if (pattern.test(input)) {
-            console.log('🔴 detectSqliHeuristic: MATCH found for pattern:', pattern.source);
             return true;
         }
     }
 
     const tokens = tokenize(input);
-
-    // Always log first 20 tokens on Vercel for debugging
-    if (process.env.VERCEL || process.env.SILKER_DEBUG === 'true') {
-        console.log('[SQLi Heuristic] Input length:', input.length, 'Tokens:', tokens.slice(0, 20).map(t => t.value).join(' | '));
-    }
 
     for (let i = 0; i < tokens.length; i++) {
         const t = tokens[i];

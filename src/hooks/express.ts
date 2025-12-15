@@ -70,9 +70,6 @@ export function hookExpress(options: SilkerOptions) {
           headers: req.headers as Record<string, string>
         };
 
-        // DEBUG: Log payload to see what SDK receives
-        console.log('🔍 [SDK Internal] Payload sent to isAnomaly():', event.payload.substring(0, 200));
-
         (global as any).request = req;
 
         // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu
