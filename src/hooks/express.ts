@@ -60,11 +60,17 @@ export function hookExpress(options: SilkerOptions) {
         if (req.body) addSafeContent(req.body);
         if (req.query) addSafeContent(req.query);
 
+        // Get real IP from proxy headers (Vercel, Cloudflare, etc.)
+        const realIp = req.headers['x-real-ip'] || 
+                       req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+                       req.ip || 
+                       req.connection.remoteAddress;
+
         const event: SilkerEvent = {
           method: req.method,
           url: req.originalUrl,
           payload: payloadParts.join(' '),
-          ip: req.ip || req.connection.remoteAddress,
+          ip: realIp,
           timestamp: Date.now(),
           userAgent: req.get('User-Agent'),
           headers: req.headers as Record<string, string>
