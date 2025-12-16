@@ -327,7 +327,7 @@ interface SilkerOptions {
   debug?: boolean;         // Opcjonalne: Włącz logowanie do konsoli
   proxyMode?: boolean;     // Opcjonalne: Włącz tryb proxy dla konfiguracji CNAME
   features?: SilkerFeatures; // Opcjonalne: Włącz/wyłącz konkretne funkcjonalności
-  maxPayloadSize?: number; // Opcjonalne: Limit rozmiaru payloadu do skanowania (bajty), domyślnie 50KB
+  maxPayloadSize?: number; // Opcjonalne: Limit rozmiaru payloadu do skanowania (bajty), domyślnie 1MB
   logger?: Logger;         // Opcjonalne: Własna implementacja loggera
 }
 

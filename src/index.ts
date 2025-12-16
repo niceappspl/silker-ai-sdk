@@ -41,9 +41,8 @@ function validateOptions(options: SilkerOptions): void {
 
     if (options.maxPayloadSize !== undefined) {
         if (typeof options.maxPayloadSize !== 'number' || options.maxPayloadSize < 0) {
-            // Don't throw, just warn and correct to default to avoid crashing app on minor config error
-             console.warn('⚠️ [Silker SDK] Invalid maxPayloadSize provided. Using default (50KB).');
-             delete options.maxPayloadSize; // Will fall back to default in logic
+             console.warn('⚠️ [Silker SDK] Invalid maxPayloadSize provided. Using default (1MB).');
+             delete options.maxPayloadSize;
         }
     }
 
@@ -74,37 +73,14 @@ async function initSilker(options: SilkerOptions): Promise<void> {
     );
   }
 
-  // Ensure maxPayloadSize has a safe default if not provided or deleted by validation
   if (!options.maxPayloadSize) {
-      options.maxPayloadSize = 51200; // 50KB
+      options.maxPayloadSize = 1048576; // 1MB
   }
-
-  const optionsWithApiKey = { ...options, apiKey };
 
   setGlobalOptions(options);
+  setGlobalOptionsForThreat(options);
 
   (global as any).silkerStartTime = Date.now();
-
-  if (options.features?.cloudCommunication !== false && options.appId) {
-    const testEvent: SilkerEvent = {
-      method: 'GET',
-      url: '/silker/test',
-      timestamp: Date.now(),
-      ip: '127.0.0.1',
-      userAgent: 'Silker-AI-SDK/Test',
-      headers: {}
-    };
-
-    try {
-      setGlobalOptionsForThreat(options);
-      const threatInfo = detectThreatType(testEvent);
-      if (threatInfo) {
-        await sendAlertToDashboard(testEvent, threatInfo.type, threatInfo.severity, options);
-      }
-    } catch (error) {
-      logger.warn('⚠️ Dashboard connection test failed, but continuing...');
-    }
-  }
 
   logger.info('Silker AI initialized successfully');
 

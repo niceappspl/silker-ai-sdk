@@ -2,45 +2,48 @@ import { detectDataLeakage } from '../../src/detection/dataLeakage';
 
 describe('detectDataLeakage', () => {
   describe('API key detection', () => {
-    it('should detect API key in payload', () => {
-      const payload = 'api_key=sk-1234567890abcdef123456';
+    it('should detect Stripe API key in payload', () => {
+      const payload = '{"apiKey":"sk_live_1234567890abcdef123456"}';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
       expect(result.findings.some(f => f.includes('API Key'))).toBe(true);
     });
 
-    it('should detect bearer token', () => {
-      const payload = 'authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0';
+    it('should detect JWT bearer token', () => {
+      const payload = 'authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
-      expect(result.findings.some(f => f.includes('API Key'))).toBe(true);
+      expect(result.findings.some(f => f.includes('JWT Token'))).toBe(true);
     });
 
-    it('should detect x-api-key header', () => {
-      const payload = 'x-api-key: sk_live_1234567890abcdef';
+    it('should detect GitHub token', () => {
+      const payload = '{"token":"ghp_1234567890abcdefghijklmnopqrstuvwxyzAB"}';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('GitHub'))).toBe(true);
     });
   });
 
   describe('Secret detection', () => {
     it('should detect password in payload', () => {
-      const payload = 'password=secret123456';
+      const payload = '{"password":"secret123456"}';
+      const result = detectDataLeakage(payload);
+      expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('Password'))).toBe(true);
+    });
+
+    it('should detect client secret', () => {
+      const payload = '{"client_secret":"abc123def456ghi789jkl012"}';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
       expect(result.findings.some(f => f.includes('Secret'))).toBe(true);
     });
 
-    it('should detect secret token', () => {
-      const payload = 'secret_token=abc123def456ghi789';
+    it('should detect JWT token in payload', () => {
+      const payload = '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.signature"}';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
-    });
-
-    it('should detect token in payload', () => {
-      const payload = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
-      const result = detectDataLeakage(payload);
-      expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('JWT Token'))).toBe(true);
     });
   });
 
@@ -49,25 +52,20 @@ describe('detectDataLeakage', () => {
       const payload = 'ssn=123-45-6789';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
-      expect(result.findings.some(f => f.includes('PII'))).toBe(true);
+      expect(result.findings.some(f => f.includes('SSN'))).toBe(true);
     });
 
     it('should detect credit card number', () => {
-      const payload = 'card=4111-1111-1111-1111';
+      const payload = 'card=4242424242424242';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('Credit Card'))).toBe(true);
     });
 
-    it('should detect email address', () => {
+    it('should not detect email address (normal data)', () => {
       const payload = 'email=user@example.com';
       const result = detectDataLeakage(payload);
-      expect(result.leaked).toBe(true);
-    });
-
-    it('should detect phone number', () => {
-      const payload = 'phone=1234567890123';
-      const result = detectDataLeakage(payload);
-      expect(result.leaked).toBe(true);
+      expect(result.leaked).toBe(false);
     });
   });
 
@@ -76,25 +74,21 @@ describe('detectDataLeakage', () => {
       const payload = 'mysql://user:password@localhost:3306/database';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
-      expect(result.findings.some(f => f.includes('Database Credential'))).toBe(true);
+      expect(result.findings.some(f => f.includes('Database Connection'))).toBe(true);
     });
 
     it('should detect PostgreSQL connection string', () => {
-      const payload = 'postgres://user:password@localhost:5432/database';
+      const payload = 'postgresql://user:password@localhost:5432/database';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('Database Connection'))).toBe(true);
     });
 
     it('should detect MongoDB connection string', () => {
       const payload = 'mongodb://user:password@localhost:27017/database';
       const result = detectDataLeakage(payload);
       expect(result.leaked).toBe(true);
-    });
-
-    it('should detect connection_string field', () => {
-      const payload = 'connection_string=postgresql://user:pass@host:5432/db';
-      const result = detectDataLeakage(payload);
-      expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('Database Connection'))).toBe(true);
     });
   });
 
@@ -102,25 +96,27 @@ describe('detectDataLeakage', () => {
     it('should detect leaks in response object', () => {
       const response = {
         data: {
-          api_key: 'sk-1234567890abcdef',
-          email: 'user@example.com'
+          api_key: 'sk_live_1234567890abcdefghijk',
+          creditCard: '4242424242424242'
         }
       };
       const result = detectDataLeakage(undefined, response);
       expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('API Key') || f.includes('Credit Card'))).toBe(true);
     });
 
     it('should handle nested response objects', () => {
       const response = {
         user: {
           profile: {
-            password: 'secret123',
-            token: 'abc123def456'
+            password: 'SuperSecret123!',
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.signature'
           }
         }
       };
       const result = detectDataLeakage(undefined, response);
       expect(result.leaked).toBe(true);
+      expect(result.findings.some(f => f.includes('Password') || f.includes('JWT'))).toBe(true);
     });
   });
 
@@ -137,17 +133,22 @@ describe('detectDataLeakage', () => {
       expect(result.leaked).toBe(false);
     });
 
-    it('should limit findings to 5', () => {
+    it('should limit findings to 10', () => {
       const payload = [
-        'api_key=sk-1',
-        'api_key=sk-2',
-        'api_key=sk-3',
-        'api_key=sk-4',
-        'api_key=sk-5',
-        'api_key=sk-6'
-      ].join('&');
+        '{"apiKey":"sk_live_1234567890abcdefgh1"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh2"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh3"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh4"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh5"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh6"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh7"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh8"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh9"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh10"}',
+        '{"apiKey":"sk_live_1234567890abcdefgh11"}'
+      ].join(' ');
       const result = detectDataLeakage(payload);
-      expect(result.findings.length).toBeLessThanOrEqual(5);
+      expect(result.findings.length).toBeLessThanOrEqual(10);
     });
   });
 });

@@ -49,8 +49,6 @@ export function hookExpress(options: SilkerOptions) {
         if (skipPatterns.some(pattern => pattern.test(req.originalUrl))) {
           return next();
         }
-
-        logger.debug('🔍 Silker middleware processing request:', req.method, req.originalUrl);
         
         // Limit payload size for analysis to avoid blocking event loop
         const MAX_ANALYSIS_SIZE = 10240; // 10KB
@@ -115,8 +113,6 @@ export function hookExpress(options: SilkerOptions) {
 
         const anomaly = isAnomaly(event);
         if (anomaly) {
-          logger.debug('🚫 Anomaly detected, blocking request:', req.method, req.originalUrl);
-
           // Send alert to dashboard with timeout
           // On Vercel/serverless we MUST wait, otherwise process freezes before sending
           if (options.features?.cloudCommunication !== false && options.appId) {
@@ -138,7 +134,7 @@ export function hookExpress(options: SilkerOptions) {
                   new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
                 ]);
               } catch (err) {
-                logger.debug('⚠️ Dashboard send failed or timed out');
+                // Dashboard send failed or timed out
               }
 
               return res.status(403).json({

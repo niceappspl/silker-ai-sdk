@@ -50,7 +50,7 @@ app.use(middleware({
 | `appId` | `string` | `undefined` | Application ID for dashboard grouping |
 | `endpoint` | `string` | Auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://api.silkerai.com` prod) |
 | `debug` | `boolean` | `false` | Enable detailed console logging for debugging |
-| `maxPayloadSize` | `number` | `51200` | Maximum payload size to scan in bytes (50KB default) |
+| `maxPayloadSize` | `number` | `1048576` | Maximum payload size to scan in bytes (1MB default) |
 | `features` | `object` | All true | Feature toggles object to disable specific checks |
 
 ---
@@ -131,7 +131,7 @@ app.use(middleware({
   appId: 'd6bd4319-5aa9-49c8-b760-b4dfce661cbc',
   endpoint: 'https://api.silkerai.com',
   debug: false,
-  maxPayloadSize: 51200, // 50KB
+  maxPayloadSize: 1048576, // 1MB
 
   // Feature Toggles (All default to true)
   features: {
@@ -299,15 +299,15 @@ app.use(middleware(config));
 
 ### maxPayloadSize
 
-- **Default**: 51200 bytes (50KB)
-- **Recommended**: 51200 - 102400 bytes (50-100KB)
+- **Default**: 1048576 bytes (1MB)
+- **Recommended**: 1048576 - 5242880 bytes (1-5MB)
 - **Impact**: Larger payloads = slower scanning
 - **Best Practice**: Set to the maximum expected request size
 
 ```typescript
-maxPayloadSize: 51200   // Fast  - 50KB
-maxPayloadSize: 102400  // Medium - 100KB
-maxPayloadSize: 524288  // Slow  - 500KB
+maxPayloadSize: 1048576  // Fast  - 1MB
+maxPayloadSize: 5242880  // Medium - 5MB
+maxPayloadSize: 10485760 // Slow  - 10MB
 ```
 
 ### Feature Impact
@@ -336,7 +336,7 @@ app.use(middleware({
   appId: 'xxx',
   endpoint: 'https://silkerai.com',
   debug: true,
-  maxPayloadSize: 51200,
+  maxPayloadSize: 1048576,
 - dashboardUrl: 'https://dash.silker.ai',  // ❌ REMOVED - use endpoint
 - proxyMode: false,                        // ❌ REMOVED - not supported
 - tokenId: 'user-session-id',             // ❌ REMOVED - not implemented

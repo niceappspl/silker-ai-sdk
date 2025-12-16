@@ -16,7 +16,6 @@ import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection } from './promptInjection';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
-import { createLogger } from '../utils/logger';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -49,27 +48,15 @@ export function setGlobalOptions(options: SilkerOptions | null) {
  * @returns true jeśli wykryto anomalie, false w przeciwnym razie
  */
 export function isAnomaly(event: SilkerEvent): boolean {
-  const logger = globalOptions ? createLogger(globalOptions) : null;
-
   try {
     const { method, url, payload, ip, headers } = event;
-    const maxPayloadSize = globalOptions?.maxPayloadSize || 51200; // Default 50KB
+    const maxPayloadSize = globalOptions?.maxPayloadSize || 1048576; // Default 1MB
 
     // Rate limiting check (lightweight, do first)
     if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
-      logger?.debug('🚫 BLOCKED: Rate limit exceeded');
       return true;
     }
 
-    // IP Allowlist/Blocklist check (lightweight)
-    // NOTE: Localhost IPs should still be scanned for attacks, don't skip detection
-    // Only skip if this is explicitly a trusted internal network in production
-    // For now, we scan everything regardless of IP
-    // if (ip && (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.'))) {
-    //   if (!isFeatureEnabled('zeroTrustDetection')) {
-    //     return false;
-    //   }
-    // }
 
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
@@ -88,14 +75,12 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {
         if (detectSqliHeuristic(scannedPayload)) {
-          logger?.debug('🚫 BLOCKED: SQL injection detected');
           return true;
         }
       }
 
       if (isFeatureEnabled('xssDetection')) {
         if (detectXssHeuristic(scannedPayload)) {
-          logger?.debug('🚫 BLOCKED: XSS detected (Heuristic)');
           return true;
         }
       }
@@ -103,7 +88,6 @@ export function isAnomaly(event: SilkerEvent): boolean {
       if (isFeatureEnabled('promptInjectionDetection')) {
         const injection = detectPromptInjection(scannedPayload);
         if (injection.detected && (injection.severity === 'high' || injection.severity === 'critical')) {
-            logger?.debug('🚫 BLOCKED: Prompt Injection detected');
             return true;
         }
       }
@@ -112,11 +96,9 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (isFeatureEnabled('pathTraversalDetection')) {
       const pathTraversalPatterns = ['../', '..\\'];
       const urlHasTraversal = pathTraversalPatterns.some(pattern => url.includes(pattern));
-      // Check truncated payload for traversal too
       const payloadHasTraversal = scannedPayload && pathTraversalPatterns.some(pattern => scannedPayload.includes(pattern));
 
       if (urlHasTraversal || payloadHasTraversal) {
-        logger?.debug('🚫 BLOCKED: Path traversal detected');
         return true;
       }
     }
@@ -191,24 +173,39 @@ export function isAnomaly(event: SilkerEvent): boolean {
 
     if (isFeatureEnabled('securityHeadersValidation')) {
       const headerValidation = validateSecurityHeaders(headers);
-      if (!headerValidation.valid && headers) {
-        logger?.debug('⚠️ Missing security headers:', headerValidation.missing);
-      }
     }
 
     if (isFeatureEnabled('dataLeakageDetection') && (event.method === 'GET' || event.method === 'POST')) {
-      // Use scannedPayload for leakage detection too
       const leakageCheck = detectDataLeakage(scannedPayload);
       if (leakageCheck.leaked) {
-        logger?.debug('🚨 Data leakage detected:', leakageCheck.findings);
+        const isAuthEndpoint = /\/(login|register|auth|signin|signup)/i.test(event.url);
         
-        const hasCriticalLeak = leakageCheck.findings.some((finding: string) =>
-          finding.includes('credit card') ||
-          finding.includes('SSN:') ||
-          finding.includes('API key:')
+        const hasHighRiskLeak = leakageCheck.findings.some((finding: string) =>
+          finding.includes('Credit Card') ||
+          finding.includes('SSN') ||
+          finding.includes('Private Key') ||
+          finding.includes('Database Connection')
         );
 
-        if (event.method === 'GET' || hasCriticalLeak) {
+        const hasPasswordLeak = leakageCheck.findings.some((finding: string) =>
+          finding.includes('Password')
+        );
+
+        const hasApiKeyLeak = leakageCheck.findings.some((finding: string) =>
+          finding.includes('API Key') ||
+          finding.includes('Secret') ||
+          finding.includes('JWT Token')
+        );
+
+        if (hasHighRiskLeak) {
+          return true;
+        }
+
+        if (hasPasswordLeak && !isAuthEndpoint) {
+          return true;
+        }
+
+        if (event.method === 'GET' && hasApiKeyLeak) {
           return true;
         }
       }
@@ -216,9 +213,6 @@ export function isAnomaly(event: SilkerEvent): boolean {
 
     if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && scannedPayload) {
       const apiValidation = performApiValidation(event);
-      if (!apiValidation.valid) {
-        logger?.debug('⚠️ API schema validation warnings:', apiValidation.warnings);
-      }
     }
 
     if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
@@ -240,13 +234,11 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (isFeatureEnabled('threatIntelligence')) {
       const threatCheck = checkThreatIntelligence(event);
       if (threatCheck.threat) {
-        logger?.debug('🕵️ Threat intelligence alert:', threatCheck.details);
         return true;
       }
     }
     return false;
   } catch (error) {
-    logger?.error('Silker AI Detection Error:', error);
     return false;
   }
 }

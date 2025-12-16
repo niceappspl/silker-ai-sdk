@@ -102,7 +102,7 @@ export function detectThirdPartyRisks(event: SilkerEvent): { risky: boolean; iss
  * @returns true jeśli wykryto potencjalny atak związany z integracjami zewnętrznymi, false w przeciwnym razie
  */
 export function detectThirdPartyAttack(event: SilkerEvent): boolean {
-  if (!event.url || event.url.includes('localhost') || event.url.includes('127.0.0.1')) {
+  if (!event.url) {
     return false;
   }
 

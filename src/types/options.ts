@@ -68,6 +68,6 @@ export interface SilkerOptions {
   debug?: boolean;
   /** Funkcjonalności do włączania/wyłączania (domyślnie wszystkie włączone) */
   features?: SilkerFeatures;
-  /** Maksymalny rozmiar payloadu w bajtach (domyślnie 50KB) */
+  /** Maksymalny rozmiar payloadu w bajtach (domyślnie 1MB) */
   maxPayloadSize?: number;
 }
