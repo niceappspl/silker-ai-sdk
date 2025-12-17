@@ -1,6 +1,6 @@
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
-import { sendAlertToDashboard, sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
+import { sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { logAuditEvent } from '../monitoring/audit';
 import { createLogger } from '../utils/logger';
@@ -51,13 +51,6 @@ export function hookFetch(options: SilkerOptions) {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
-          sendAlertToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity,
-            options
-          );
-
           sendThreatToDashboard(
             event,
             threatInfo.type,
@@ -74,7 +67,7 @@ export function hookFetch(options: SilkerOptions) {
           return new Response(JSON.stringify({
             error: 'Request blocked by Silker AI',
             reason: 'Security threat detected',
-
+            type: threatInfo.type
           }), {
             status: 403,
             headers: { 'Content-Type': 'application/json' }

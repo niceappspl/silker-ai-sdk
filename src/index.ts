@@ -5,7 +5,7 @@ import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection'
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
 import { setGlobalOptions as setAuditOptions } from './monitoring/audit';
 import { setGlobalOptions as setConfigOptions } from './config/runtime';
-import { sendAlertToDashboard, sendThreatToDashboard, sendRequestToDashboard } from './cloud/dashboard';
+import { sendThreatToDashboard, sendRequestToDashboard } from './cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
 import { hookExpress, getVibeEmitter } from './hooks/express';
@@ -102,13 +102,6 @@ async function initSilker(options: SilkerOptions): Promise<void> {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
-          await sendAlertToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity,
-            options
-          );
-          
           await sendThreatToDashboard(
             event,
             threatInfo.type,

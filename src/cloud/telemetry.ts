@@ -3,7 +3,7 @@ import { SilkerOptions } from '../types';
 import { sanitizeSensitiveData } from './sanitization';
 import { createLogger, Logger } from '../utils/logger';
 
-type TelemetryType = 'alert' | 'threat' | 'request';
+type TelemetryType = 'threat' | 'request';
 
 interface TelemetryItem {
     type: TelemetryType;

@@ -2,13 +2,7 @@ import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
 import { isAnomaly, setGlobalOptions } from '../detection';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
-import { getPerformanceReport, recordPerformanceMetrics } from '../analytics/performance';
-import { getAuditLogs, getAuditSummary, logAuditEvent } from '../monitoring/audit';
-import { getRuntimeConfig, updateRuntimeConfig } from '../config';
-import { performHealthCheck } from '../monitoring/health';
-import { performApiValidation } from '../validation/apiSchema';
-import { validateSecurityHeaders } from '../validation/securityHeaders';
-import { analyzeUserBehavior } from '../analytics/userBehavior';
+import { recordPerformanceMetrics } from '../analytics/performance';
 import { createLogger } from '../utils/logger';
 import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 
@@ -113,7 +107,10 @@ export function hookExpress(options: SilkerOptions) {
 
         const anomaly = isAnomaly(event);
         if (anomaly) {
-          // Send alert to dashboard with timeout
+          // Record metrics locally for blocked request
+          recordPerformanceMetrics(event, Date.now() - start, 403);
+          
+          // Send threat to dashboard with timeout
           // On Vercel/serverless we MUST wait, otherwise process freezes before sending
           if (options.features?.cloudCommunication !== false && options.appId) {
             setGlobalOptionsForThreat(options);
@@ -121,6 +118,7 @@ export function hookExpress(options: SilkerOptions) {
             const threatInfo = detectThreatType(event);
             if (threatInfo) {
               // Wait for dashboard send with 1s timeout
+              // Backend will automatically create request entry from threat
               try {
                 await Promise.race([
                   sendThreatToDashboard(
