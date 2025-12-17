@@ -19,7 +19,8 @@ export async function sendThreatToDashboard(
   severity: 'critical' | 'high' | 'medium' | 'low',
   blocked: boolean,
   description: string,
-  options: SilkerOptions
+  options: SilkerOptions,
+  responseTime?: number
 ): Promise<void> {
   try {
     telemetry.configure(options);
@@ -36,7 +37,8 @@ export async function sendThreatToDashboard(
       body: event.payload || '',
       query: event.url.split('?')[1] || '',
       user_agent: event.userAgent || 'unknown',
-      app_id: options.appId
+      app_id: options.appId,
+      response_time: responseTime
     };
 
     await telemetry.push('threat', '/api/threats', threatData);

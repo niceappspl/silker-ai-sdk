@@ -50,15 +50,16 @@ export function hookFetch(options: SilkerOptions) {
       if (options.features?.cloudCommunication !== false && options.appId) {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
-        if (threatInfo) {
-          sendThreatToDashboard(
-            event,
-            threatInfo.type,
-            threatInfo.severity,
-            true,
-            threatInfo.description,
-            options
-          );
+      if (threatInfo) {
+        sendThreatToDashboard(
+          event,
+          threatInfo.type,
+          threatInfo.severity,
+          true,
+          threatInfo.description,
+          options,
+          Date.now() - start
+        );
 
           if (isAuditEnabled) {
             logAuditEvent(event, 'blocked', `Threat blocked: ${threatInfo.type}`, 'critical');

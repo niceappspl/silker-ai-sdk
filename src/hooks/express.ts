@@ -117,6 +117,7 @@ export function hookExpress(options: SilkerOptions) {
 
             const threatInfo = detectThreatType(event);
             if (threatInfo) {
+              const duration = Date.now() - start;
               // Wait for dashboard send with 1s timeout
               // Backend will automatically create request entry from threat
               try {
@@ -127,7 +128,8 @@ export function hookExpress(options: SilkerOptions) {
                     threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
                     true, // blocked
                     threatInfo.description,
-                    options
+                    options,
+                    duration
                   ),
                   new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
                 ]);

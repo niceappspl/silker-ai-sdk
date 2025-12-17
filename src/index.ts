@@ -99,7 +99,8 @@ async function initSilker(options: SilkerOptions): Promise<void> {
             threatInfo.severity,
             true,
             threatInfo.description,
-            options
+            options,
+            Date.now() - event.timestamp
           );
 
           logger.debug('Workflow anomaly detected and reported:', event.url);
