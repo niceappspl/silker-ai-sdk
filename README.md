@@ -64,7 +64,7 @@ Node.js 14+, Next.js, Express, Fastify, NestJS, AWS Lambda, Vercel, Cloudflare W
 
 ## Documentation
 
-Full documentation: [https://silker.ai/docs](https://silker.ai/docs)
+Full documentation: [https://silkerai.com/docs](https://silkerai.com/docs)
 
 ## License
 

@@ -337,7 +337,7 @@ app.use(middleware({
   endpoint: 'https://silkerai.com',
   debug: true,
   maxPayloadSize: 1048576,
-- dashboardUrl: 'https://dash.silker.ai',  // ❌ REMOVED - use endpoint
+- dashboardUrl: 'https://dash.silkerai.com',  // ❌ REMOVED - use endpoint
 - proxyMode: false,                        // ❌ REMOVED - not supported
 - tokenId: 'user-session-id',             // ❌ REMOVED - not implemented
 - failOpen: true,                          // ❌ REMOVED - not implemented

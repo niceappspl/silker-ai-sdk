@@ -87,15 +87,6 @@ async function initSilker(options: SilkerOptions): Promise<void> {
   hookFetch(options);
 
   const vibeEmitter = getVibeEmitter();
-  vibeEmitter.on('request', async (event: SilkerEvent) => {
-    // Send request to dashboard
-    if (options.features?.cloudCommunication !== false && options.appId) {
-      // Default response values if not provided in event (since middleware might not capture response end yet)
-      // TODO: Implement response capture in middleware
-      sendRequestToDashboard(event, 200, 0, options);
-    }
-  });
-
   vibeEmitter.on('workflow', async (event: SilkerEvent) => {
     if (isAnomaly(event)) {
       if (options.features?.cloudCommunication !== false && options.appId) {
