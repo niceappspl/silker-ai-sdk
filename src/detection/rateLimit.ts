@@ -1,6 +1,19 @@
-import { SilkerEvent } from '../types';
+import { SilkerEvent, RateLimitConfig } from '../types';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+let rateLimitConfig: RateLimitConfig = {
+  windowMs: 60000,
+  maxRequests: 5
+};
+
+/**
+ * Ustawia globalną konfigurację rate limiting.
+ * @param config - Nowa konfiguracja rate limiting
+ */
+export function setRateLimitConfig(config: RateLimitConfig): void {
+  rateLimitConfig = { ...rateLimitConfig, ...config };
+}
 
 /**
  * Czyści stan rate limitera. Używane głównie w testach.
@@ -11,7 +24,7 @@ export function clearRateLimitState(): void {
 
 /**
  * Sprawdza czy żądanie przekracza limit szybkości (rate limit).
- * Używa okna czasowego 1 minuty z limitem 5 żądań na IP.
+ * Używa konfigurowalnego okna czasowego i limitu żądań.
  * Automatycznie czyści wygasłe wpisy z mapy.
  * @param event - Zdarzenie do sprawdzenia
  * @returns true jeśli przekroczono limit szybkości, false w przeciwnym razie
@@ -20,7 +33,8 @@ export function checkRateLimit(event: SilkerEvent): boolean {
   if (!event.ip) return false;
 
   const now = Date.now();
-  const windowMs = 60000;
+  const windowMs = rateLimitConfig.windowMs || 60000;
+  const maxRequests = rateLimitConfig.maxRequests || 5;
   const key = `${event.ip}:${Math.floor(now / windowMs)}`;
   let current = rateLimitMap.get(key);
 
@@ -31,7 +45,7 @@ export function checkRateLimit(event: SilkerEvent): boolean {
 
   current.count++;
   
-  if (current.count > 5) {
+  if (current.count > maxRequests) {
     return true;
   }
 

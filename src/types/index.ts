@@ -6,3 +6,5 @@ export * from './metrics';
 export * from './config';
 export * from './errors';
 
+export type { RateLimitConfig } from './options';
+

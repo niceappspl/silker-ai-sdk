@@ -55,6 +55,16 @@ export interface SilkerFeatures {
 }
 
 /**
+ * Konfiguracja rate limiting.
+ */
+export interface RateLimitConfig {
+  /** Okno czasowe w milisekundach (domyślnie 60000 = 1 minuta) */
+  windowMs?: number;
+  /** Maksymalna liczba żądań w oknie czasowym (domyślnie 5) */
+  maxRequests?: number;
+}
+
+/**
  * Opcje konfiguracyjne dla Silker AI.
  */
 export interface SilkerOptions {
@@ -70,4 +80,8 @@ export interface SilkerOptions {
   features?: SilkerFeatures;
   /** Maksymalny rozmiar payloadu w bajtach (domyślnie 1MB) */
   maxPayloadSize?: number;
+  /** Lista dozwolonych hostów dla walidacji Host header (opcjonalne, domyślnie brak walidacji) */
+  allowedHosts?: string[];
+  /** Konfiguracja rate limiting (opcjonalne, domyślnie 5 req/min) */
+  rateLimit?: RateLimitConfig;
 }

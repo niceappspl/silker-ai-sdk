@@ -152,7 +152,7 @@ export function detectSessionAnomalies(event: SilkerEvent): boolean {
   if (behavior.isAnomalous) {
     if (globalOptions?.debug) {
       const logger = createLogger(globalOptions as any); // Cast as it expects full SilkerOptions but only needs debug
-      logger.debug('🚨 User behavior anomaly detected:', {
+      logger.debug('User behavior anomaly detected:', {
         score: behavior.score,
         reasons: behavior.reasons,
         ip: event.ip,

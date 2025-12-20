@@ -64,7 +64,7 @@ class TelemetryClient {
             const dropCount = Math.ceil(this.MAX_QUEUE_SIZE * 0.1);
             this.queue.splice(0, dropCount);
             
-            this.logger?.warn(`⚠️ [Silker SDK] Telemetry queue full (${this.MAX_QUEUE_SIZE}). Dropped ${dropCount} oldest events.`);
+            this.logger?.warn(`[Silker SDK] Telemetry queue full (${this.MAX_QUEUE_SIZE}). Dropped ${dropCount} oldest events.`);
         }
 
         // Sanitize data before queuing to ensure no sensitive info resides in memory/transit
@@ -119,7 +119,7 @@ class TelemetryClient {
 
         } catch (error: any) {
             // Log detailed error information
-            this.logger?.error('🚨 [Silker SDK] Flush error details:', {
+            this.logger?.error('[Silker SDK] Flush error details:', {
                 message: error.message,
                 code: error.code,
                 status: error.response?.status,
@@ -135,14 +135,14 @@ class TelemetryClient {
                                (error.response && error.response.status === 429); // Rate limit
             
             if (isRetryable && retryCount < 3) {
-                this.logger?.warn(`⚠️ [Silker SDK] Flush failed, retrying (${retryCount + 1}/3)...`);
+                this.logger?.warn(`[Silker SDK] Flush failed, retrying (${retryCount + 1}/3)...`);
                 this.isFlushing = false;
                 // Wait with exponential backoff: 1s, 2s, 4s
                 setTimeout(() => this.flush(retryCount + 1), 1000 * Math.pow(2, retryCount));
                 return;
             }
 
-            this.logger?.error('🚨 [Silker SDK] Failed to flush telemetry batch after retries');
+            this.logger?.error('[Silker SDK] Failed to flush telemetry batch after retries');
             // If max retries reached or non-retryable error (e.g. 401), drop the batch to unblock queue
             this.queue.splice(0, batch.length);
         } finally {

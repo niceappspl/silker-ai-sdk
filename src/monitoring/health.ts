@@ -1,6 +1,7 @@
 import { HealthStatus } from '../types';
 import { getPerformanceReport } from '../analytics/performance';
 import { getAuditLogs } from './audit';
+import { getSilkerState } from '../utils/globalState';
 
 /**
  * Wykonuje sprawdzenie zdrowia systemu Silker.
@@ -9,7 +10,8 @@ import { getAuditLogs } from './audit';
  */
 export function performHealthCheck(): HealthStatus {
   const now = Date.now();
-  const startTime = (global as any).silkerStartTime || now;
+  const state = getSilkerState();
+  const startTime = state.startTime || now;
 
   const memUsage = process.memoryUsage();
   const memoryMB = memUsage.heapUsed / 1024 / 1024;
@@ -25,7 +27,7 @@ export function performHealthCheck(): HealthStatus {
   ).length;
   const securityStatus = recentBlocks > 100 ? 'warning' : recentBlocks > 500 ? 'error' : 'ok';
 
-  const lastCloudContact = (global as any).lastCloudContact || 0;
+  const lastCloudContact = state.lastCloudContact || 0;
   const timeSinceLastContact = now - lastCloudContact;
   const connectivityStatus = timeSinceLastContact > 300000 ? 'error' : 'ok';
 

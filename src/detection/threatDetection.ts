@@ -141,7 +141,7 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   }
 
   // 9. Host Header Injection
-  if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
+  if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers, globalOptions?.allowedHosts)) {
     return {
       type: 'Host Header Injection',
       severity: 'high',

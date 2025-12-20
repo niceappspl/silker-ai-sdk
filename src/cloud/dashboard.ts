@@ -44,7 +44,7 @@ export async function sendThreatToDashboard(
     await telemetry.push('threat', '/api/threats', threatData);
   } catch (error) {
     const logger = createLogger(options);
-    logger.error('🚨 Failed to queue threat:', error);
+    logger.error('Failed to queue threat:', error);
   }
 }
 
@@ -79,6 +79,6 @@ export async function sendRequestToDashboard(
     await telemetry.push('request', '/api/requests', requestData);
   } catch (error) {
     const logger = createLogger(options);
-    logger.error('🚨 Failed to queue request:', error);
+    logger.error('Failed to queue request:', error);
   }
 }

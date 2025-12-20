@@ -1,5 +1,6 @@
 import { SilkerEvent } from '../types';
 import { AuditLogEntry } from '../types/metrics';
+import { createLogger } from '../utils/logger';
 
 const auditLogs: AuditLogEntry[] = [];
 const MAX_AUDIT_LOGS = 10000;
@@ -46,7 +47,8 @@ export function logAuditEvent(
   }
 
   if (globalOptions?.debug) {
-    console.log(`🔍 AUDIT [${severity.toUpperCase()}]: ${action} - ${reason}`);
+    const logger = createLogger(globalOptions as any);
+    logger.debug(`AUDIT [${severity.toUpperCase()}]: ${action} - ${reason}`);
   }
 }
 

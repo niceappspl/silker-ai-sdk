@@ -1,12 +1,12 @@
 import nock from 'nock';
-import { hookFetch } from '../../src/hooks/fetch';
+import { hookFetch, resetFetchHook } from '../../src/hooks/fetch';
 import { SilkerOptions } from '../../src/types';
 import { clearRateLimitState } from '../../src/detection/rateLimit';
 import { setGlobalOptions } from '../../src/detection/anomaly';
 
 describe('hookFetch', () => {
   const mockOptions: SilkerOptions = {
-    apiKey: 'test-api-key',
+    apiKey: 'sk_test1234567890abcdefghijklmnopqrstuvwxyz123456789',
     endpoint: 'https://test-silker.com/api',
     debug: false,
     features: {
@@ -40,6 +40,7 @@ describe('hookFetch', () => {
   let mockFetch: jest.Mock;
 
   beforeEach(() => {
+    resetFetchHook();
     clearRateLimitState();
     setGlobalOptions(null);
     delete (global as any).request;

@@ -7,6 +7,30 @@ import { createLogger } from '../utils/logger';
 import { recordPerformanceMetrics } from '../analytics/performance';
 
 let globalOptions: SilkerOptions | null = null;
+let originalFetchBackup: typeof global.fetch | null = null;
+
+/**
+ * Resetuje stan fetch hook.
+ * TYLKO DO UŻYTKU W TESTACH!
+ * @internal
+ */
+export function resetFetchHook(): void {
+  if (originalFetchBackup) {
+    global.fetch = originalFetchBackup;
+    originalFetchBackup = null;
+  }
+}
+
+/**
+ * Bezpieczna serializacja do JSON z obsługą circular references i błędów.
+ */
+function safeStringify(obj: any): string {
+  try {
+    return JSON.stringify(obj);
+  } catch (e) {
+    return '[Unserializable Body]';
+  }
+}
 
 /**
  * Przechwytuje globalną funkcję fetch i dodaje monitorowanie bezpieczeństwa.
@@ -14,13 +38,18 @@ let globalOptions: SilkerOptions | null = null;
  * @param options - Opcje konfiguracyjne Silker
  */
 export function hookFetch(options: SilkerOptions) {
-  globalOptions = options;
-  setGlobalOptions(options);
-  const logger = createLogger(options);
+  try {
+    if (originalFetchBackup !== null) {
+      return;
+    }
 
-  const originalFetch = global.fetch;
+    globalOptions = options;
+    setGlobalOptions(options);
+    const logger = createLogger(options);
 
-  global.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+    originalFetchBackup = global.fetch;
+
+    global.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
     const start = Date.now();
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     const method = init?.method || 'GET';
@@ -31,7 +60,7 @@ export function hookFetch(options: SilkerOptions) {
       method,
       url,
       payload: init?.body
-        ? (typeof init.body === 'string' ? init.body : JSON.stringify(init.body))
+        ? (typeof init.body === 'string' ? init.body : safeStringify(init.body))
         : undefined,
       ip,
       timestamp: start,
@@ -40,7 +69,7 @@ export function hookFetch(options: SilkerOptions) {
     };
 
     if (isAnomaly(event)) {
-      logger.debug('🚨 Anomaly detected, blocking request');
+      logger.debug('Anomaly detected, blocking request');
 
       const isAuditEnabled = options.features?.auditLogging !== false;
       if (isAuditEnabled) {
@@ -94,7 +123,7 @@ export function hookFetch(options: SilkerOptions) {
     }
 
     try {
-        const response = await originalFetch.call(this, input, init);
+        const response = await originalFetchBackup!.call(this, input, init);
         const duration = Date.now() - start;
         
         // Record performance metrics
@@ -111,6 +140,10 @@ export function hookFetch(options: SilkerOptions) {
         recordPerformanceMetrics(event, duration, 0); // 0 status for error
         throw error;
     }
-  };
+    };
+  } catch (error) {
+    const logger = createLogger(options);
+    logger.error('[Silker SDK] Critical error hooking fetch. Fetch will work normally without security monitoring:', error);
+  }
 }
 

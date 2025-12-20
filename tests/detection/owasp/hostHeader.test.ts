@@ -8,10 +8,6 @@ describe('detectHostHeaderInjection', () => {
     timestamp: Date.now()
   };
 
-  beforeEach(() => {
-    delete process.env.SILKER_ALLOWED_HOSTS;
-  });
-
   it('should detect newline character in host header', () => {
     const headers = { host: 'example.com\ninjected' };
     expect(detectHostHeaderInjection(baseEvent, headers)).toBe(true);
@@ -28,21 +24,21 @@ describe('detectHostHeaderInjection', () => {
   });
 
   it('should allow host from allowed list', () => {
-    process.env.SILKER_ALLOWED_HOSTS = 'example.com,api.example.com';
+    const allowedHosts = ['example.com', 'api.example.com'];
     const headers = { host: 'example.com' };
-    expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
+    expect(detectHostHeaderInjection(baseEvent, headers, allowedHosts)).toBe(false);
   });
 
   it('should allow host that includes allowed host', () => {
-    process.env.SILKER_ALLOWED_HOSTS = 'example.com,api.example.com';
+    const allowedHosts = ['example.com', 'api.example.com'];
     const headers = { host: 'api.example.com' };
-    expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
+    expect(detectHostHeaderInjection(baseEvent, headers, allowedHosts)).toBe(false);
   });
 
   it('should detect host not in allowed list', () => {
-    process.env.SILKER_ALLOWED_HOSTS = 'example.com';
+    const allowedHosts = ['example.com'];
     const headers = { host: 'evil.com' };
-    expect(detectHostHeaderInjection(baseEvent, headers)).toBe(true);
+    expect(detectHostHeaderInjection(baseEvent, headers, allowedHosts)).toBe(true);
   });
 
   it('should handle case-insensitive host header key', () => {
@@ -62,9 +58,9 @@ describe('detectHostHeaderInjection', () => {
   });
 
   it('should handle multiple allowed hosts', () => {
-    process.env.SILKER_ALLOWED_HOSTS = 'example.com,test.com,api.example.com';
+    const allowedHosts = ['example.com', 'test.com', 'api.example.com'];
     const headers = { host: 'test.com' };
-    expect(detectHostHeaderInjection(baseEvent, headers)).toBe(false);
+    expect(detectHostHeaderInjection(baseEvent, headers, allowedHosts)).toBe(false);
   });
 });
 

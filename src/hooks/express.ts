@@ -7,6 +7,7 @@ import { createLogger } from '../utils/logger';
 import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 
 const vibeEmitter = new EventEmitter();
+vibeEmitter.setMaxListeners(50);
 let isListenerRegistered = false;
 
 /**
@@ -25,7 +26,7 @@ export function hookExpress(options: SilkerOptions) {
     isListenerRegistered = true;
   }
 
-  logger.info('🛡️ Silker middleware initialized');
+  logger.info('Silker middleware initialized');
 
   return async (req: any, res: any, next: any) => {
     try {
@@ -91,8 +92,6 @@ export function hookExpress(options: SilkerOptions) {
         res.on('finish', () => {
           try {
               const duration = Date.now() - start;
-              // Aktualizujemy event o rzeczywiste dane
-              // const completedEvent = { ...event, statusCode: res.statusCode, duration }; // unused
               
               // Record performance metrics locally for health checks
               recordPerformanceMetrics(event, duration, res.statusCode);
@@ -101,60 +100,73 @@ export function hookExpress(options: SilkerOptions) {
                 sendRequestToDashboard(event, res.statusCode, duration, options);
               }
           } catch (err) {
-              logger.error('Error in response finish handler:', err);
+              logger.error('[Silker SDK] Error in response finish handler:', err);
+              // Don't crash - just log
           }
         });
 
-        const anomaly = isAnomaly(event);
+        let anomaly = false;
+        try {
+          anomaly = isAnomaly(event);
+        } catch (error) {
+          logger.error('[Silker SDK] Error detecting anomaly, allowing request:', error);
+          anomaly = false; // Fail open
+        }
+
         if (anomaly) {
-          // Record metrics locally for blocked request
-          recordPerformanceMetrics(event, Date.now() - start, 403);
-          
-          // Send threat to dashboard with timeout
-          // On Vercel/serverless we MUST wait, otherwise process freezes before sending
-          if (options.features?.cloudCommunication !== false && options.appId) {
-            setGlobalOptionsForThreat(options);
+          try {
+            // Record metrics locally for blocked request
+            recordPerformanceMetrics(event, Date.now() - start, 403);
+            
+            // Send threat to dashboard with timeout
+            // On Vercel/serverless we MUST wait, otherwise process freezes before sending
+            if (options.features?.cloudCommunication !== false && options.appId) {
+              setGlobalOptionsForThreat(options);
 
-            const threatInfo = detectThreatType(event);
-            if (threatInfo) {
-              const duration = Date.now() - start;
-              // Wait for dashboard send with 1s timeout
-              // Backend will automatically create request entry from threat
-              try {
-                await Promise.race([
-                  sendThreatToDashboard(
-                    event,
-                    threatInfo.type,
-                    threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
-                    true, // blocked
-                    threatInfo.description,
-                    options,
-                    duration
-                  ),
-                  new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
-                ]);
-              } catch (err) {
-                // Dashboard send failed or timed out
+              const threatInfo = detectThreatType(event);
+              if (threatInfo) {
+                const duration = Date.now() - start;
+                // Wait for dashboard send with 1s timeout
+                // Backend will automatically create request entry from threat
+                try {
+                  await Promise.race([
+                    sendThreatToDashboard(
+                      event,
+                      threatInfo.type,
+                      threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
+                      true, // blocked
+                      threatInfo.description,
+                      options,
+                      duration
+                    ),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
+                  ]);
+                } catch (err) {
+                  // Dashboard send failed or timed out - not critical
+                }
+
+                return res.status(403).json({
+                  error: 'Request blocked by Silker AI',
+                  reason: 'Security threat detected',
+                  type: threatInfo.type
+                });
               }
-
-              return res.status(403).json({
-                error: 'Request blocked by Silker AI',
-                reason: 'Security threat detected',
-                type: threatInfo.type
-              });
             }
-          }
 
-          // Block even if cloud communication is disabled
-          return res.status(403).json({
-            error: 'Request blocked by Silker AI',
-            reason: 'Security threat detected'
-          });
+            // Block even if cloud communication is disabled
+            return res.status(403).json({
+              error: 'Request blocked by Silker AI',
+              reason: 'Security threat detected'
+            });
+          } catch (error) {
+            // If blocking fails, log and allow request (fail open)
+            logger.error('[Silker SDK] Error blocking request, allowing through:', error);
+          }
         }
 
         next();
     } catch (error) {
-        logger.error('🚨 Silker middleware error:', error);
+        logger.error('Silker middleware error:', error);
         // Always fail open to protect user application unless explicitly configured otherwise
         // If user wants strict mode, they should have a way, but MVP goal is "never crash"
         next();

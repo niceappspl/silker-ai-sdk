@@ -115,7 +115,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
       return true;
     }
 
-    if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers)) {
+    if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers, globalOptions?.allowedHosts)) {
       return true;
     }
 

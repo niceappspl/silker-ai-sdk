@@ -1,13 +1,16 @@
 import nock from 'nock';
-import { initSilker, emitSilkerWorkflowEvent as emitWorkflowEvent, SilkerError } from '../src/index';
+import { initSilker, emitSilkerWorkflowEvent as emitWorkflowEvent, SilkerError, resetSilkerState } from '../src/index';
 import { clearRateLimitState } from '../src/detection/rateLimit';
 import { setGlobalOptions } from '../src/detection/anomaly';
+import { resetFetchHook } from '../src/hooks/fetch';
 
 describe('Silker Agent', () => {
-  const mockApiKey = 'test-api-key';
+  const mockApiKey = 'sk_test1234567890abcdefghijklmnopqrstuvwxyz123456789';
   const mockEndpoint = 'https://test-silker.com/api';
 
   beforeEach(() => {
+    resetSilkerState();
+    resetFetchHook();
     clearRateLimitState();
     setGlobalOptions(null);
     jest.clearAllMocks();
@@ -30,10 +33,11 @@ describe('Silker Agent', () => {
       // Note: nock scope might not be done if other calls happen
     });
 
-    it('should throw error with missing API key', async () => {
-      await expect(initSilker({ apiKey: '' })).rejects.toThrow(SilkerError);
-      await expect(initSilker({ apiKey: '' })).rejects.toThrow('API key required');
-    });
+  it('should handle missing API key gracefully (fail-safe)', async () => {
+    // SDK nie crashuje aplikacji użytkownika, tylko loguje błąd
+    await expect(initSilker({ apiKey: '' })).resolves.not.toThrow();
+    // SDK returns gracefully bez inicjalizacji
+  });
 
     it('should not throw error when cloud connection fails (graceful degradation)', async () => {
       nock('https://test-silker.com')
