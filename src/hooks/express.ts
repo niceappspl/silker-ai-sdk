@@ -86,19 +86,14 @@ export function hookExpress(options: SilkerOptions) {
 
         (global as any).request = req;
 
-        // Check if IP is already banned to block early without heavy analysis
-        if (event.ip && isIpBanned(event.ip)) {
-          return res.status(403).json({
-            error: 'Request blocked by Silker AI',
-            reason: 'IP address is temporarily banned'
-          });
-        }
-
-        // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu
+        // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu na samym początku
         const start = Date.now();
         
         res.on('finish', () => {
           try {
+              // Skip if this request was already reported as a threat
+              if ((req as any)._silkerThreatReported) return;
+
               const duration = Date.now() - start;
               
               // Record performance metrics locally for health checks
@@ -113,6 +108,7 @@ export function hookExpress(options: SilkerOptions) {
           }
         });
 
+        // 1. First, check if there's a specific security threat in this request
         let anomaly = false;
         try {
           anomaly = isAnomaly(event);
@@ -131,8 +127,10 @@ export function hookExpress(options: SilkerOptions) {
             // Record metrics locally for blocked request
             recordPerformanceMetrics(event, Date.now() - start, 403);
             
+            // Mark as reported to prevent duplicate in finish handler
+            (req as any)._silkerThreatReported = true;
+
             // Send threat to dashboard with timeout
-            // On Vercel/serverless we MUST wait, otherwise process freezes before sending
             if (options.features?.cloudCommunication !== false && options.appId) {
               setGlobalOptionsForThreat(options);
 
@@ -140,7 +138,6 @@ export function hookExpress(options: SilkerOptions) {
               if (threatInfo) {
                 const duration = Date.now() - start;
                 // Wait for dashboard send with 1s timeout
-                // Backend will automatically create request entry from threat
                 try {
                   await Promise.race([
                     sendThreatToDashboard(
@@ -175,6 +172,30 @@ export function hookExpress(options: SilkerOptions) {
             // If blocking fails, log and allow request (fail open)
             logger.error('[Silker SDK] Error blocking request, allowing through:', error);
           }
+        }
+
+        // 2. If no specific anomaly, check if IP is already banned to block early
+        if (event.ip && isIpBanned(event.ip)) {
+          // Mark as reported to prevent duplicate in finish handler
+          (req as any)._silkerThreatReported = true;
+
+          // Report as threat even if already banned, so dashboard shows activity
+          if (options.features?.cloudCommunication !== false && options.appId) {
+            sendThreatToDashboard(
+              event,
+              'Banned IP Activity',
+              'medium',
+              true,
+              'Request from a temporarily banned IP address',
+              options,
+              Date.now() - start
+            ).catch(() => {});
+          }
+
+          return res.status(403).json({
+            error: 'Request blocked by Silker AI',
+            reason: 'IP address is temporarily banned'
+          });
         }
 
         next();
