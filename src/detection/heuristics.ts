@@ -153,30 +153,92 @@ export function detectSqliHeuristic(input: string): boolean {
 }
 
 /**
- * Detects XSS using token stream analysis.
- * Looks for dangerous sequences like:
- * - <SCRIPT
- * - JAVASCRIPT:
- * - ONERROR=
+ * Decodes common HTML entities like &#97; or &#x3A; to their character equivalents.
+ */
+function decodeEntities(input: string): string {
+    return input
+        .replace(/&#([0-9]{1,3});/gi, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
+        .replace(/&#x([0-9a-f]{1,2});/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+        .replace(/&[a-z0-9]+;/gi, (match) => {
+            const entities: Record<string, string> = {
+                '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'", '&amp;': '&',
+                '&NewLine;': '\n', '&Tab;': '\t', '&colon;': ':'
+            };
+            return entities[match] || match;
+        });
+}
+
+/**
+ * Detects XSS using token stream analysis and advanced regex patterns.
  */
 export function detectXssHeuristic(input: string): boolean {
     if (!input || input.length < 5) return false;
 
-    const tokens = tokenize(input);
+    // 1. Pre-normalization: Decode HTML entities and lowercase
+    const decoded = decodeEntities(input);
+    const lower = decoded.toLowerCase();
+
+    // 2. High-confidence regex patterns for obfuscated XSS
+    const criticalPatterns = [
+        /<script/i,
+        /javascript\s*:/i,
+        /data\s*:\s*text\/html/i,
+        /base64\s*,/i,
+        /on\w+\s*=/i, // Any event handler (onerror, onload, etc.)
+        /alert\s*\(/i,
+        /prompt\s*\(/i,
+        /confirm\s*\(/i,
+        /eval\s*\(/i,
+        /expression\s*\(/i,
+        /url\s*\(\s*javascript/i
+    ];
+
+    for (const pattern of criticalPatterns) {
+        if (pattern.test(decoded)) return true;
+    }
+
+    // 3. Catch the specific obfuscated "javascript:" like "j&#97v&#97script"
+    // (after decoding entities it becomes "javascript")
+    if (lower.includes('javascript:')) return true;
+
+    // 4. Token-based analysis for structural patterns
+    const tokens = tokenize(decoded);
 
     for (let i = 0; i < tokens.length; i++) {
         const t = tokens[i];
         const next = tokens[i + 1];
 
-        // 1. <TAG
-        if (t.value === '<' && next?.type === 'KEYWORD' && XSS_TAGS.has(next.value)) return true;
+        // <TAG (including those not in XSS_TAGS but having dangerous attributes)
+        if (t.value === '<' && next?.type === 'KEYWORD') {
+            const tag = next.value;
+            
+            // Look ahead for dangerous attributes within this tag
+            let j = i + 2;
+            let attributeCount = 0;
+            while (j < tokens.length && tokens[j].value !== '>') {
+                if (tokens[j].type === 'KEYWORD') {
+                    attributeCount++;
+                    const attr = tokens[j].value;
+                    
+                    if (XSS_ATTRIBUTES.has(attr)) return true;
+                    
+                    // Excessive attributes check (obfuscation attempt)
+                    if (attributeCount > 15) return true;
+                }
+                
+                // If we see another '<' before '>', it's a new tag, break
+                if (tokens[j].value === '<') break;
+                j++;
+            }
 
-        // 2. javascript: protocol
+            if (XSS_TAGS.has(tag)) return true;
+        }
+
+        // javascript: protocol (standalone or in strings)
         if (t.value === 'JAVASCRIPT' && next?.value === ':') return true;
-        if (t.value === 'VBSCRIPT' && next?.value === ':') return true;
         if (t.value === 'DATA' && next?.value === ':') return true;
 
-        // 3. Event handlers: onerror=
+        // Event handlers
         if (XSS_ATTRIBUTES.has(t.value) && next?.value === '=') return true;
     }
 
