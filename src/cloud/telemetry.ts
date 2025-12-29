@@ -166,7 +166,7 @@ class TelemetryClient {
                 headers: {
                     'x-api-key': options.apiKey,
                     'Content-Type': 'application/json',
-                    'x-silker-client-version': '1.0.22'
+                    'x-silker-client-version': '1.0.23'
                 },
                 timeout: isServerless ? 10000 : 5000 // Higher timeout for serverless batches
             });
