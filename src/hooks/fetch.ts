@@ -79,16 +79,20 @@ export function hookFetch(options: SilkerOptions) {
       if (options.features?.cloudCommunication !== false && options.appId) {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
-      if (threatInfo) {
-        sendThreatToDashboard(
-          event,
-          threatInfo.type,
-          threatInfo.severity,
-          true,
-          threatInfo.description,
-          options,
-          Date.now() - start
-        );
+        if (threatInfo) {
+          try {
+            await sendThreatToDashboard(
+              event,
+              threatInfo.type,
+              threatInfo.severity,
+              true,
+              threatInfo.description,
+              options,
+              Date.now() - start
+            );
+          } catch (err) {
+            // Ignore dashboard error
+          }
 
           if (isAuditEnabled) {
             logAuditEvent(event, 'blocked', `Threat blocked: ${threatInfo.type}`, 'critical');
@@ -131,7 +135,11 @@ export function hookFetch(options: SilkerOptions) {
 
         // Send request metrics to dashboard if enabled
         if (options.features?.cloudCommunication !== false && options.appId) {
-            sendRequestToDashboard(event, response.status, duration, options);
+            try {
+                await sendRequestToDashboard(event, response.status, duration, options);
+            } catch (err) {
+                // Ignore
+            }
         }
 
         return response;

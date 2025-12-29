@@ -137,7 +137,7 @@ export function hookExpress(options: SilkerOptions) {
               const threatInfo = detectThreatType(event);
               if (threatInfo) {
                 const duration = Date.now() - start;
-                // Wait for dashboard send with 1s timeout
+                // Wait for dashboard send with 3s timeout (increased from 1s for better reliability)
                 try {
                   await Promise.race([
                     sendThreatToDashboard(
@@ -149,7 +149,7 @@ export function hookExpress(options: SilkerOptions) {
                       options,
                       duration
                     ),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 1000))
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 3000))
                   ]);
                 } catch (err) {
                   // Dashboard send failed or timed out - not critical
@@ -181,15 +181,22 @@ export function hookExpress(options: SilkerOptions) {
 
           // Report as threat even if already banned, so dashboard shows activity
           if (options.features?.cloudCommunication !== false && options.appId) {
-            sendThreatToDashboard(
-              event,
-              'Banned IP Activity',
-              'medium',
-              true,
-              'Request from a temporarily banned IP address',
-              options,
-              Date.now() - start
-            ).catch(() => {});
+            try {
+              await Promise.race([
+                sendThreatToDashboard(
+                  event,
+                  'Banned IP Activity',
+                  'medium',
+                  true,
+                  'Request from a temporarily banned IP address',
+                  options,
+                  Date.now() - start
+                ),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 3000))
+              ]);
+            } catch (err) {
+              // Ignore timeout or error
+            }
           }
 
           return res.status(403).json({

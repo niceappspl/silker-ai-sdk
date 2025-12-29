@@ -109,6 +109,7 @@ class TelemetryClient {
 
         // Sanitize data before queuing to ensure no sensitive info resides in memory/transit
         const sanitizedData = sanitizeSensitiveData(data);
+        const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY);
 
         this.queue.push({
             type,
@@ -117,9 +118,22 @@ class TelemetryClient {
             timestamp: Date.now()
         });
 
-        // If queue is too large or we're in serverless mode (batch size 1), flush immediately
-        if (this.queue.length >= this.MAX_BATCH_SIZE) {
-            await this.flush();
+        // In serverless, we must ensure everything is sent before returning
+        if (isServerless) {
+            let attempts = 0;
+            // Wait for any in-progress flush or start a new one
+            while (this.queue.length > 0 && attempts < 5) {
+                if (!this.isFlushing) {
+                    await this.flush();
+                } else {
+                    // Wait for the current flush to finish
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+                attempts++;
+            }
+        } else if (this.queue.length >= this.MAX_BATCH_SIZE) {
+            // In long-running processes, flush in the background
+            this.flush().catch(() => {});
         }
     }
 
@@ -129,9 +143,11 @@ class TelemetryClient {
         this.isFlushing = true;
         
         try {
-            // Take as many items as we can, up to MAX_BATCH_SIZE
-            // If the queue is very large, we might want to increase batch size temporarily
-            const currentBatchSize = this.queue.length > 500 ? 100 : this.MAX_BATCH_SIZE;
+            const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY);
+            
+            // Take as many items as we can
+            // In serverless, we want to send EVERYTHING at once to avoid process freeze issues
+            const currentBatchSize = isServerless ? this.queue.length : (this.queue.length > 500 ? 100 : this.MAX_BATCH_SIZE);
             const batch = this.queue.slice(0, currentBatchSize);
             const options = this.options;
 
@@ -150,9 +166,9 @@ class TelemetryClient {
                 headers: {
                     'x-api-key': options.apiKey,
                     'Content-Type': 'application/json',
-                    'x-silker-client-version': '1.0.20'
+                    'x-silker-client-version': '1.0.22'
                 },
-                timeout: 5000 // Increased to 5s for larger batches under load
+                timeout: isServerless ? 10000 : 5000 // Higher timeout for serverless batches
             });
 
             this.logger?.debug(`[Silker SDK] Flushed batch of ${batch.length} items. Status: ${response.status}`);
@@ -165,10 +181,10 @@ class TelemetryClient {
             // On success, remove the batch from queue
             this.queue.splice(0, batch.length);
 
-            // IMPORTANT: If there are still items in the queue, trigger another flush immediately
-            if (this.queue.length > 0) {
+            // In serverless, we don't use the background loop for remaining items as it will be killed
+            // We expect the next request or the current request's push to handle it
+            if (!isServerless && this.queue.length > 0) {
                 this.isFlushing = false;
-                // Use setImmediate or setTimeout to avoid deep recursion
                 setTimeout(() => this.flush(), 10);
                 return;
             }
