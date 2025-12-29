@@ -53,7 +53,8 @@ export function isAnomaly(event: SilkerEvent): boolean {
     const maxPayloadSize = globalOptions?.maxPayloadSize || 1048576; // Default 1MB
 
     // Rate limiting check (lightweight, do first)
-    if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event)) {
+    const ipBanningEnabled = isFeatureEnabled('ipBanning');
+    if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event, ipBanningEnabled)) {
       return true;
     }
 

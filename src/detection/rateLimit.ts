@@ -97,13 +97,14 @@ export function syncBans(bannedIps: { ip: string, until: string }[]): void {
  * Używa konfigurowalnego okna czasowego i limitu żądań.
  * Automatycznie czyści wygasłe wpisy z mapy.
  * @param event - Zdarzenie do sprawdzenia
+ * @param shouldBan - Czy automatycznie zbanować IP po przekroczeniu limitu (domyślnie true)
  * @returns true jeśli przekroczono limit szybkości lub IP jest zbanowane, false w przeciwnym razie
  */
-export function checkRateLimit(event: SilkerEvent): boolean {
+export function checkRateLimit(event: SilkerEvent, shouldBan: boolean = true): boolean {
   if (!event.ip) return false;
 
-  // Check if already banned
-  if (isIpBanned(event.ip)) {
+  // Check if already banned (only if banning is enabled)
+  if (shouldBan && isIpBanned(event.ip)) {
     return true;
   }
 
@@ -121,8 +122,10 @@ export function checkRateLimit(event: SilkerEvent): boolean {
   current.count++;
   
   if (current.count > maxRequests) {
-    // Automatically ban IP if rate limit is exceeded
-    banIp(event.ip);
+    // Automatically ban IP if rate limit is exceeded and enabled
+    if (shouldBan) {
+      banIp(event.ip);
+    }
     return true;
   }
 

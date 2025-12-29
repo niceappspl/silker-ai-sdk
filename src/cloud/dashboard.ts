@@ -38,7 +38,8 @@ export async function sendThreatToDashboard(
       query: event.url.split('?')[1] || '',
       user_agent: event.userAgent || 'unknown',
       app_id: options.appId,
-      response_time: responseTime
+      response_time: responseTime,
+      ip__banning_enabled: options.features?.ipBanning !== false
     };
 
     await telemetry.push('threat', '/api/threats', threatData);
