@@ -119,8 +119,8 @@ export function hookExpress(options: SilkerOptions) {
 
         if (anomaly) {
           try {
-            // Automatically ban IP for a while after detecting an anomaly
-            if (event.ip) {
+            // Automatically ban IP for a while after detecting an anomaly if feature is enabled
+            if (event.ip && options.features?.ipBanning !== false) {
               banIp(event.ip);
             }
 
@@ -175,7 +175,7 @@ export function hookExpress(options: SilkerOptions) {
         }
 
         // 2. If no specific anomaly, check if IP is already banned to block early
-        if (event.ip && isIpBanned(event.ip)) {
+        if (event.ip && options.features?.ipBanning !== false && isIpBanned(event.ip)) {
           // Mark as reported to prevent duplicate in finish handler
           (req as any)._silkerThreatReported = true;
 

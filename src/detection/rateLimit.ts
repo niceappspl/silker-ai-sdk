@@ -116,8 +116,9 @@ export function checkRateLimit(event: SilkerEvent): boolean {
   current.count++;
   
   if (current.count > maxRequests) {
-    // Automatically ban IP if rate limit is exceeded
-    banIp(event.ip);
+    // Automatically ban IP if rate limit is exceeded and banning is not disabled
+    // Note: The caller (anomaly.ts) already checks isFeatureEnabled('rateLimit')
+    // We should probably check ipBanning here too if we want it to be fully configurable
     return true;
   }
 

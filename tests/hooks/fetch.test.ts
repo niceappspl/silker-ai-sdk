@@ -32,7 +32,8 @@ describe('hookFetch', () => {
       complianceDetection: false,
       threatIntelligence: false,
       zeroTrustDetection: false,
-      promptInjectionDetection: false
+      promptInjectionDetection: false,
+      ipBanning: true
     }
   };
 

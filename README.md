@@ -53,6 +53,7 @@ await SilkerAI.init({
     sqliDetection: true,
     xssDetection: true,
     promptInjectionDetection: true,
+    ipBanning: true,
     cloudCommunication: true
   }
 });

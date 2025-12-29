@@ -70,6 +70,7 @@ Essential protection against common web attacks.
 | **XSS Protection** | `xssDetection` | Prevents Cross-Site Scripting (XSS) attacks by detecting malicious scripts in input data. | `true` |
 | **Path Traversal** | `pathTraversalDetection` | Blocks attempts to access unauthorized files via directory traversal (e.g., `../etc/passwd`). | `true` |
 | **Prompt Injection** | `promptInjectionDetection` | **AI/LLM Specific:** Detects attempts to manipulate LLM behavior via malicious prompts (jailbreaks, context leaks). | `true` |
+| **IP Banning** | `ipBanning` | Automatically bans IP addresses for a period after detecting a security threat or rate limit violation. | `true` |
 
 ### OWASP Top 10
 
@@ -141,6 +142,7 @@ app.use(middleware({
     xssDetection: true,
     pathTraversalDetection: true,
     promptInjectionDetection: true,
+    ipBanning: true,
 
     // OWASP
     accessControlDetection: true,
@@ -319,6 +321,7 @@ maxPayloadSize: 10485760 // Slow  - 10MB
 | `xssDetection` | Low |
 | `pathTraversalDetection` | Very Low |
 | `promptInjectionDetection` | Low |
+| `ipBanning` | Very Low |
 | `threatIntelligence` | Medium (network call) |
 | `sessionAnomaliesDetection` | Medium (stateful) |
 | `apiSchemaValidation` | Medium (validation) |

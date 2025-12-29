@@ -357,6 +357,7 @@ interface SilkerFeatures {
   threatIntelligence?: boolean;           // Threat intelligence
   zeroTrustDetection?: boolean;           // Weryfikacja zero-trust
   promptInjectionDetection?: boolean;     // Ochrona przed prompt injection (AI/LLM)
+  ipBanning?: boolean;                    // Automatyczne banowanie adresów IP
   auditLogging?: boolean;                  // Logowanie audytu
   performanceMonitoring?: boolean;       // Monitorowanie wydajności
   cloudCommunication?: boolean;          // Komunikacja z chmurą
@@ -582,6 +583,7 @@ interface SilkerFeatures {
   threatIntelligence?: boolean;
   zeroTrustDetection?: boolean;
   promptInjectionDetection?: boolean;
+  ipBanning?: boolean;
   auditLogging?: boolean;
   performanceMonitoring?: boolean;
   cloudCommunication?: boolean;
@@ -611,6 +613,7 @@ interface RuntimeConfig {
   slowRequestThreshold: number;
   enableAuditLogging: boolean;
   enablePerformanceMonitoring: boolean;
+  ipBanningEnabled: boolean;
   customRules: any[];
 }
 

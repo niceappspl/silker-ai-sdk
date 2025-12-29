@@ -12,6 +12,8 @@ export interface RuntimeConfig {
   enableAuditLogging: boolean;
   /** Włącza monitorowanie wydajności */
   enablePerformanceMonitoring: boolean;
+  /** Automatyczne banowanie adresów IP */
+  ipBanning: boolean;
   /** Niestandardowe reguły bezpieczeństwa */
   customRules: any[];
 }

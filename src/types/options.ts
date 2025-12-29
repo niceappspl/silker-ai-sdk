@@ -52,6 +52,8 @@ export interface SilkerFeatures {
   softwareIntegrityValidation?: boolean;
   /** Wykrywanie prompt injection dla systemów AI/LLM */
   promptInjectionDetection?: boolean;
+  /** Automatyczne banowanie adresów IP po wykryciu ataku lub przekroczeniu limitów */
+  ipBanning?: boolean;
 }
 
 /**

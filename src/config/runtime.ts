@@ -6,6 +6,7 @@ let runtimeConfig: RuntimeConfig = {
   slowRequestThreshold: 5000,
   enableAuditLogging: true,
   enablePerformanceMonitoring: true,
+  ipBanning: true,
   customRules: []
 };
 
