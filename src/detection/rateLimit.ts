@@ -51,6 +51,11 @@ export function isIpBanned(ip: string | undefined): boolean {
  */
 export function banIp(ip: string | undefined, durationMs?: number): void {
   if (!ip) return;
+  
+  // Jeśli banowanie jest wyłączone w konfiguracji runtime, nie rób nic
+  // (ale pozwól na bany z synchronizacji z dashboardu)
+  // W przyszłości można tu dodać sprawdzanie globalOptions.features.ipBanning
+  
   const duration = durationMs || rateLimitConfig.banDurationMs || 300000;
   banMap.set(ip, { banUntil: Date.now() + duration });
 }
@@ -116,9 +121,8 @@ export function checkRateLimit(event: SilkerEvent): boolean {
   current.count++;
   
   if (current.count > maxRequests) {
-    // Automatically ban IP if rate limit is exceeded and banning is not disabled
-    // Note: The caller (anomaly.ts) already checks isFeatureEnabled('rateLimit')
-    // We should probably check ipBanning here too if we want it to be fully configurable
+    // Automatically ban IP if rate limit is exceeded
+    banIp(event.ip);
     return true;
   }
 
