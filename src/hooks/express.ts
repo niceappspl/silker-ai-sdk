@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { SilkerEvent, SilkerOptions } from '../types';
-import { isAnomaly, setGlobalOptions } from '../detection';
+import { isAnomaly, setGlobalOptions, banIp, isIpBanned } from '../detection';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { recordPerformanceMetrics } from '../analytics/performance';
 import { createLogger } from '../utils/logger';
@@ -86,6 +86,14 @@ export function hookExpress(options: SilkerOptions) {
 
         (global as any).request = req;
 
+        // Check if IP is already banned to block early without heavy analysis
+        if (event.ip && isIpBanned(event.ip)) {
+          return res.status(403).json({
+            error: 'Request blocked by Silker AI',
+            reason: 'IP address is temporarily banned'
+          });
+        }
+
         // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu
         const start = Date.now();
         
@@ -115,6 +123,11 @@ export function hookExpress(options: SilkerOptions) {
 
         if (anomaly) {
           try {
+            // Automatically ban IP for a while after detecting an anomaly
+            if (event.ip) {
+              banIp(event.ip);
+            }
+
             // Record metrics locally for blocked request
             recordPerformanceMetrics(event, Date.now() - start, 403);
             

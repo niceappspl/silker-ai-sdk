@@ -62,6 +62,8 @@ export interface RateLimitConfig {
   windowMs?: number;
   /** Maksymalna liczba żądań w oknie czasowym (domyślnie 5) */
   maxRequests?: number;
+  /** Czas trwania blokady IP w milisekundach po przekroczeniu limitu (domyślnie 300000 = 5 minut) */
+  banDurationMs?: number;
 }
 
 /**

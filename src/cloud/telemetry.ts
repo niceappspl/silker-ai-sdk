@@ -2,6 +2,7 @@ import axios from 'axios';
 import { SilkerOptions } from '../types';
 import { sanitizeSensitiveData } from './sanitization';
 import { createLogger, Logger } from '../utils/logger';
+import { syncBans } from '../detection/rateLimit';
 
 type TelemetryType = 'threat' | 'request';
 
@@ -40,6 +41,45 @@ class TelemetryClient {
         this.logger = createLogger(options);
         if (!this.flushInterval) {
             this.startFlushLoop();
+        }
+        // Initial sync of configuration and bans
+        this.syncWithDashboard().catch(err => {
+            this.logger?.debug('[Silker SDK] Initial dashboard sync failed:', err.message);
+        });
+    }
+
+    private async syncWithDashboard() {
+        if (!this.options) return;
+        const options = this.options;
+
+        try {
+            const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
+            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://silkerai.com');
+            
+            if (baseUrl.includes('/api')) {
+                baseUrl = baseUrl.replace('/api', '');
+            }
+            baseUrl = baseUrl.replace(/\/$/, '');
+
+            const syncUrl = `${baseUrl}/api/dashboard/sync`;
+
+            const response = await axios.post(syncUrl, { 
+                appId: options.appId,
+                timestamp: Date.now()
+            }, {
+                headers: {
+                    'x-api-key': options.apiKey,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 2000
+            });
+
+            if (response.data?.bannedIps) {
+                syncBans(response.data.bannedIps);
+                this.logger?.debug(`[Silker SDK] Synced ${response.data.bannedIps.length} banned IPs from dashboard`);
+            }
+        } catch (error: any) {
+            // Non-critical, ignore
         }
     }
 
@@ -87,11 +127,14 @@ class TelemetryClient {
         if (this.isFlushing || this.queue.length === 0 || !this.options) return;
 
         this.isFlushing = true;
-        // Peek at batch without removing yet, in case of failure
-        const batch = this.queue.slice(0, this.MAX_BATCH_SIZE);
-        const options = this.options;
-
+        
         try {
+            // Take as many items as we can, up to MAX_BATCH_SIZE
+            // If the queue is very large, we might want to increase batch size temporarily
+            const currentBatchSize = this.queue.length > 500 ? 100 : this.MAX_BATCH_SIZE;
+            const batch = this.queue.slice(0, currentBatchSize);
+            const options = this.options;
+
             const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
             let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://silkerai.com');
 
@@ -107,17 +150,31 @@ class TelemetryClient {
                 headers: {
                     'x-api-key': options.apiKey,
                     'Content-Type': 'application/json',
-                    'x-silker-client-version': '1.0.0'
+                    'x-silker-client-version': '1.0.20'
                 },
-                timeout: 800 // 800ms - very fast for serverless
+                timeout: 5000 // Increased to 5s for larger batches under load
             });
 
             this.logger?.debug(`[Silker SDK] Flushed batch of ${batch.length} items. Status: ${response.status}`);
 
+            // Update local ban list from dashboard response
+            if (response.data?.data?.bannedIps) {
+                syncBans(response.data.data.bannedIps);
+            }
+
             // On success, remove the batch from queue
             this.queue.splice(0, batch.length);
 
+            // IMPORTANT: If there are still items in the queue, trigger another flush immediately
+            if (this.queue.length > 0) {
+                this.isFlushing = false;
+                // Use setImmediate or setTimeout to avoid deep recursion
+                setTimeout(() => this.flush(), 10);
+                return;
+            }
+
         } catch (error: any) {
+            // ... error handling ...
             // Log detailed error information
             this.logger?.error('[Silker SDK] Flush error details:', {
                 message: error.message,
@@ -144,7 +201,9 @@ class TelemetryClient {
 
             this.logger?.error('[Silker SDK] Failed to flush telemetry batch after retries');
             // If max retries reached or non-retryable error (e.g. 401), drop the batch to unblock queue
-            this.queue.splice(0, batch.length);
+            // We drop only the batch that failed, not the whole queue
+            const batchSizeToDrop = Math.min(this.queue.length, this.MAX_BATCH_SIZE);
+            this.queue.splice(0, batchSizeToDrop);
         } finally {
             this.isFlushing = false;
         }
