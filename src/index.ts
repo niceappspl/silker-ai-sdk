@@ -1,10 +1,11 @@
 import { EventEmitter } from 'events';
-import { SilkerOptions, SilkerFeatures, SilkerEvent } from './types';
+import { SilkerOptions, SilkerFeatures, SilkerEvent, ConfigProfile, DataLeakageConfig, DataLeakageStrategy } from './types';
 import { SilkerError } from './types/errors';
 import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection';
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
 import { setGlobalOptions as setAuditOptions } from './monitoring/audit';
 import { setGlobalOptions as setConfigOptions } from './config/runtime';
+import { applyProfile } from './config/profiles';
 import { sendThreatToDashboard, sendRequestToDashboard } from './cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
@@ -81,13 +82,16 @@ function validateOptions(options: SilkerOptions): boolean {
  * @param options - Opcje konfiguracyjne Silker AI
  * @throws {SilkerError} Jeśli brakuje klucza API, połączenie z chmurą nie powiodło się lub SDK jest już zainicjalizowany
  */
-async function initSilker(options: SilkerOptions): Promise<void> {
+async function initSilker(inputOptions: SilkerOptions): Promise<void> {
   try {
     if (isInitialized) {
-      const logger = createLogger(options);
+      const logger = createLogger(inputOptions);
       logger.warn('[Silker SDK] SDK is already initialized. Skipping re-initialization.');
       return;
     }
+
+    // Apply profile defaults (user overrides take precedence)
+    const options = applyProfile(inputOptions);
 
     if (!validateOptions(options)) {
       return;
@@ -155,7 +159,7 @@ async function initSilker(options: SilkerOptions): Promise<void> {
     
     isInitialized = true;
   } catch (error) {
-    const logger = createLogger(options);
+    const logger = createLogger(inputOptions);
     logger.error('[Silker SDK] Critical error during initialization. SDK will not function:', error);
   }
 }
@@ -212,4 +216,7 @@ export type {
   SilkerOptions,
   SilkerFeatures,
   SilkerEvent,
+  ConfigProfile,
+  DataLeakageConfig,
+  DataLeakageStrategy,
 };

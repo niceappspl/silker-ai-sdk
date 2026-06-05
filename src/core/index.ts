@@ -1,0 +1,129 @@
+/**
+ * @silker-ai/core - edge-safe silnik detekcji.
+ *
+ * Współdzielony rdzeń używany przez wszystkie powłoki dostarczania:
+ * SDK (Node/Express/fetch), Cloudflare Worker oraz kontener self-host.
+ * Nie zawiera zależności Node-only (brak `Buffer`, `axios`, `process`),
+ * dzięki czemu działa na runtime V8 (edge) i w Node.
+ *
+ * Powłoka odpowiada za: transport (telemetria), stan rozproszony (KV/DO)
+ * i forward ruchu. Core odpowiada wyłącznie za decyzję block/allow.
+ */
+import { isAnomaly, setGlobalOptions as setDetectionOptions } from '../detection';
+import { setGlobalOptions as setBehaviorOptions } from '../analytics/userBehavior';
+import {
+  detectThreatType,
+  setGlobalOptionsForThreat,
+  ThreatInfo,
+} from '../detection/threatDetection';
+import { SilkerOptions, SilkerEvent, SilkerFeatures } from '../types';
+
+/** Maksymalny rozmiar body skanowanego pod kątem zagrożeń (ochrona przed DoS/latencją). */
+export const MAX_BODY_SCAN_BYTES = 50 * 1024; // 50KB
+
+/**
+ * Domyślny zestaw funkcji dla powłok edge/proxy (Worker, kontener).
+ *
+ * Włączone: SQLi, XSS, path traversal, prompt injection, data leakage, rate limit,
+ * file upload, threat intelligence - wysokowartościowe, niskie false-positive na surowym ruchu HTTP.
+ *
+ * Wyłączone: detektory zależne od kontekstu aplikacji (SSRF/CSRF/IDOR/host header,
+ * zero-trust, access control, compliance, third-party, schema) - na warstwie sieci
+ * generują false-positives na normalnym ruchu (brak Origin/auth itd.).
+ */
+export const EDGE_SAFE_FEATURES: SilkerFeatures = {
+  disableLegacySecurity: true,
+  zeroTrustDetection: false,
+  accessControlDetection: false,
+  complianceDetection: false,
+  thirdPartyDetection: false,
+  apiSchemaValidation: false,
+};
+
+/**
+ * Konfiguruje silnik detekcji. Wywołać raz przed pierwszym `inspectEvent`.
+ */
+export function configureCore(options: SilkerOptions): void {
+  setDetectionOptions(options);
+  setBehaviorOptions(options);
+  setGlobalOptionsForThreat(options);
+}
+
+/** Wynik inspekcji pojedynczego zdarzenia. */
+export interface InspectResult {
+  /** Czy żądanie powinno zostać zablokowane. */
+  blocked: boolean;
+  /** Szczegóły zagrożenia (typ, severity, opis) jeśli zablokowano. */
+  threat: ThreatInfo | null;
+}
+
+/**
+ * Inspekcja zdarzenia: zwraca decyzję block/allow + typ zagrożenia.
+ * Czysto synchroniczna, lekka (regex/heurystyki) - bezpieczna w ścieżce żądania.
+ */
+export function inspectEvent(event: SilkerEvent): InspectResult {
+  if (isAnomaly(event)) {
+    return { blocked: true, threat: detectThreatType(event) };
+  }
+  return { blocked: false, threat: null };
+}
+
+/**
+ * Buduje `SilkerEvent` ze standardowego Web `Request` (Worker, Node 18+, edge).
+ * Body czytane jest z klona (oryginał pozostaje do forwardu) i przycinane do limitu.
+ */
+export async function eventFromRequest(request: Request, ip?: string): Promise<SilkerEvent> {
+  const headers: Record<string, string> = {};
+  request.headers.forEach((value, key) => {
+    headers[key] = value;
+  });
+
+  const method = request.method || 'GET';
+  let bodyText = '';
+
+  if (method !== 'GET' && method !== 'HEAD') {
+    try {
+      const text = await request.clone().text();
+      bodyText = text.length > MAX_BODY_SCAN_BYTES ? text.slice(0, MAX_BODY_SCAN_BYTES) : text;
+    } catch {
+      // Brak/niereadable body - pomijamy skan body.
+    }
+  }
+
+  // Query string jest częścią powierzchni ataku (SQLi/XSS w parametrach) - skanujemy razem z body.
+  let queryText = '';
+  try {
+    queryText = decodeURIComponent(new URL(request.url).search.replace(/^\?/, ''));
+  } catch {
+    // Niepoprawny URL/encoding - pomijamy query.
+  }
+
+  const combined = `${bodyText} ${queryText}`.trim();
+  const payload = combined.length > 0 ? combined.slice(0, MAX_BODY_SCAN_BYTES) : undefined;
+
+  const resolvedIp =
+    ip ||
+    headers['x-real-ip'] ||
+    headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    headers['cf-connecting-ip'];
+
+  return {
+    method,
+    url: request.url,
+    payload,
+    ip: resolvedIp,
+    timestamp: Date.now(),
+    userAgent: headers['user-agent'],
+    headers,
+  };
+}
+
+export { isAnomaly, detectThreatType };
+export type { SilkerFeatures };
+export {
+  buildThreatItem,
+  buildRequestItem,
+  sendEvents,
+  type TelemetryConfig,
+} from './telemetry';
+export type { SilkerOptions, SilkerEvent, ThreatInfo };

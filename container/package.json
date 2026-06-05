@@ -1,0 +1,18 @@
+{
+  "name": "@silker-ai/proxy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Silker self-host reverse proxy - runtime security for any backend (reuses @silker-ai/core).",
+  "scripts": {
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/server.js",
+    "start": "node dist/server.js",
+    "dev": "node --import tsx src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "esbuild": "^0.23.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.4.0"
+  }
+}

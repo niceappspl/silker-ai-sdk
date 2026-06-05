@@ -66,7 +66,7 @@ export function validateApiSchema(event: SilkerEvent, payload?: any): { valid: b
       const url = new URL(event.url, 'http://localhost');
       const params = url.searchParams;
 
-      for (const [key, value] of params) {
+      params.forEach((value, key) => {
         if (value.length > 1000) {
           errors.push(`Parameter '${key}' value too long`);
         }
@@ -74,7 +74,7 @@ export function validateApiSchema(event: SilkerEvent, payload?: any): { valid: b
         if (value.match(/(\bUNION\b|\bSELECT\b|\bDROP\b|\bDELETE\b)/i)) {
           errors.push(`Parameter '${key}' contains suspicious SQL patterns`);
         }
-      }
+      });
     } catch (error) {
       // Ignore URL parsing errors
     }

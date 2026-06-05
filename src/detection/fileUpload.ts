@@ -2,6 +2,33 @@ import { SilkerEvent } from '../types';
 import { FileUploadEvent } from '../types/metrics';
 
 /**
+ * Edge-safe dekodowanie base64 do bajtów (działa w Cloudflare Worker, Node i przeglądarce).
+ * Nie używa Node `Buffer`, dzięki czemu moduł jest przenośny na runtime V8 (edge).
+ */
+function base64ToBytes(b64: string): Uint8Array {
+  try {
+    // Strip data-URL prefix i białe znaki; uzupełnij padding (forgiving, jak Buffer).
+    let clean = b64.replace(/^data:[^;]*;base64,/, '').replace(/[^A-Za-z0-9+/=]/g, '');
+    const pad = clean.length % 4;
+    if (pad === 1) {
+      // Niepoprawna długość base64 - brak sensownych bajtów do analizy.
+      return new Uint8Array(0);
+    }
+    if (pad > 0) {
+      clean = clean.padEnd(clean.length + (4 - pad), '=');
+    }
+    const binary = atob(clean);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  } catch {
+    return new Uint8Array(0);
+  }
+}
+
+/**
  * Waliduje upload pliku pod kątem bezpieczeństwa.
  * Sprawdza rozmiar, typ MIME, magic bytes, nazwę pliku i zawartość.
  * @param event - Zdarzenie zawierające informacje o uploadzie pliku
@@ -13,7 +40,7 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
   let filename = '';
   let contentType = '';
   let size = 0;
-  let content: Buffer | string = '';
+  let content = '';
 
   try {
     // Attempt to parse payload if it's a string JSON, usually from middleware
@@ -78,20 +105,22 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
       }
     }
 
-    // Magic Bytes & Content Analysis
+    // Magic Bytes & Content Analysis (edge-safe, no Node Buffer)
     if (content && typeof content === 'string') {
-      const buffer = Buffer.from(content, 'base64');
-      const magicBytes = buffer.slice(0, 8);
+      const bytes = base64ToBytes(content);
 
-      const exeSignatures = [
-        Buffer.from([0x4D, 0x5A]), // MZ (DOS/PE)
-        Buffer.from([0x7F, 0x45, 0x4C, 0x46]), // ELF (Linux)
-        Buffer.from([0x23, 0x21]), // #! (Shebang)
-        Buffer.from([0xCA, 0xFE, 0xBA, 0xBE]), // Java Class
+      const exeSignatures: number[][] = [
+        [0x4D, 0x5A], // MZ (DOS/PE)
+        [0x7F, 0x45, 0x4C, 0x46], // ELF (Linux)
+        [0x23, 0x21], // #! (Shebang)
+        [0xCA, 0xFE, 0xBA, 0xBE], // Java Class
       ];
 
+      const startsWith = (signature: number[]): boolean =>
+        signature.every((b, i) => bytes[i] === b);
+
       for (const signature of exeSignatures) {
-        if (magicBytes.slice(0, signature.length).equals(signature)) {
+        if (startsWith(signature)) {
           issues.push('Executable file detected - potential malware');
           break;
         }
@@ -99,7 +128,7 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
 
       // Check for scripts in non-script files (XSS via file upload)
       if (!contentType.includes('html') && !contentType.includes('text')) {
-        const contentStr = buffer.toString('utf8', 0, 100); // Check first 100 chars
+        const contentStr = new TextDecoder('utf-8', { fatal: false }).decode(bytes.slice(0, 100));
         if (contentStr.includes('<script') || contentStr.includes('javascript:') || contentStr.includes('onload=')) {
           issues.push('Script content detected in non-script file');
         }

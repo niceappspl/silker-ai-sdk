@@ -22,6 +22,8 @@ class TelemetryClient {
     private MAX_BATCH_SIZE = 50;
     private isFlushing = false;
     private readonly MAX_QUEUE_SIZE = 1000; // Prevent memory leaks
+    private sampleRate = 1; // Fraction of 'request' events to send (threats always 100%)
+    private waitUntil: ((promise: Promise<unknown>) => void) | null = null;
 
     constructor() {
         // Detect serverless environment (Vercel, AWS Lambda, etc.)
@@ -39,6 +41,15 @@ class TelemetryClient {
     public configure(options: SilkerOptions) {
         this.options = options;
         this.logger = createLogger(options);
+
+        const rate = options.telemetry?.sampleRate;
+        if (typeof rate === 'number' && rate >= 0 && rate <= 1) {
+            this.sampleRate = rate;
+        }
+        if (typeof options.waitUntil === 'function') {
+            this.waitUntil = options.waitUntil;
+        }
+
         if (!this.flushInterval) {
             this.startFlushLoop();
         }
@@ -94,22 +105,31 @@ class TelemetryClient {
     /**
      * Adds an item to the telemetry queue.
      * Data is automatically sanitized.
-     * Returns a promise that resolves when the data is flushed (if immediate flush is triggered).
+     *
+     * NEVER blocks the request path: delivery is fire-and-forget. On serverless,
+     * the flush promise is handed to `waitUntil` (if provided via options) so events
+     * are delivered after the response is sent without adding latency; otherwise it
+     * runs in the background (best-effort, may be cut short when the process freezes).
      */
-    public async push(type: TelemetryType, endpoint: string, data: any): Promise<void> {
+    public push(type: TelemetryType, endpoint: string, data: any): void {
+        // Sampling: drop a fraction of regular request events to cut latency/ingest cost.
+        // Threats are always sent (security-critical).
+        if (type === 'request' && this.sampleRate < 1 && Math.random() > this.sampleRate) {
+            return;
+        }
+
         // Prevent infinite queue growth if backend is unreachable
         if (this.queue.length >= this.MAX_QUEUE_SIZE) {
             // Drop oldest items (FIFO) to make space
             // We drop 10% of the queue to avoid constant shifting on full queue
             const dropCount = Math.ceil(this.MAX_QUEUE_SIZE * 0.1);
             this.queue.splice(0, dropCount);
-            
+
             this.logger?.warn(`[Silker SDK] Telemetry queue full (${this.MAX_QUEUE_SIZE}). Dropped ${dropCount} oldest events.`);
         }
 
         // Sanitize data before queuing to ensure no sensitive info resides in memory/transit
         const sanitizedData = sanitizeSensitiveData(data);
-        const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY);
 
         this.queue.push({
             type,
@@ -118,21 +138,28 @@ class TelemetryClient {
             timestamp: Date.now()
         });
 
-        // In serverless, we must ensure everything is sent before returning
+        this.scheduleFlush();
+    }
+
+    /**
+     * Triggers delivery without ever blocking the caller.
+     */
+    private scheduleFlush(): void {
+        const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY);
+
         if (isServerless) {
-            let attempts = 0;
-            // Wait for any in-progress flush or start a new one
-            while (this.queue.length > 0 && attempts < 5) {
-                if (!this.isFlushing) {
-                    await this.flush();
-                } else {
-                    // Wait for the current flush to finish
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                }
-                attempts++;
+            // Flush immediately, but off the request path. Prefer waitUntil so the
+            // platform keeps the function alive until delivery completes.
+            if (this.isFlushing) return;
+            const flushPromise = this.flush().catch(() => {});
+            if (this.waitUntil) {
+                this.waitUntil(flushPromise);
             }
-        } else if (this.queue.length >= this.MAX_BATCH_SIZE) {
-            // In long-running processes, flush in the background
+            return;
+        }
+
+        // Long-running processes: batch in the background.
+        if (this.queue.length >= this.MAX_BATCH_SIZE) {
             this.flush().catch(() => {});
         }
     }

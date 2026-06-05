@@ -27,7 +27,7 @@ export interface AuditLogEntry {
   /** Zdarzenie Silker */
   event: import('./events').SilkerEvent;
   /** Akcja wykonana na żądaniu */
-  action: 'allowed' | 'blocked' | 'flagged';
+  action: 'allowed' | 'blocked' | 'flagged' | 'redacted';
   /** Powód akcji */
   reason: string;
   /** Poziom ważności */
@@ -38,6 +38,10 @@ export interface AuditLogEntry {
   sessionId?: string;
   /** Opcjonalne dodatkowe metadane */
   metadata?: any;
+  /** Tagi compliance dla raportowania (np. GDPR_ART_32, AI_ACT_RESILIENCE) */
+  complianceTags?: string[];
+  /** Typy wykrytych danych wrażliwych */
+  dataTypesDetected?: string[];
 }
 
 /**
@@ -50,7 +54,7 @@ export interface FileUploadEvent {
   contentType: string;
   /** Rozmiar pliku w bajtach */
   size: number;
-  /** Zawartość pliku */
-  content: Buffer | string;
+  /** Zawartość pliku (edge-safe: bez Node Buffer) */
+  content: Uint8Array | string;
 }
 

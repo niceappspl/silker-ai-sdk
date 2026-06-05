@@ -16,4 +16,8 @@ export interface SilkerEvent {
   userAgent?: string;
   /** Opcjonalne nagłówki HTTP */
   headers?: Record<string, string>;
+  /** Tagi compliance dla raportowania (np. GDPR, AI_ACT_RESILIENCE) */
+  complianceTags?: string[];
+  /** Typy wykrytych danych wrażliwych (np. email, phone, credit_card) */
+  dataTypesDetected?: string[];
 }

@@ -1,4 +1,28 @@
 /**
+ * Strategia obsługi wykrytych danych wrażliwych (PII).
+ */
+export type DataLeakageStrategy = 'block' | 'redact' | 'monitor';
+
+/**
+ * Konfiguracja wykrywania wycieku danych.
+ */
+export interface DataLeakageConfig {
+  strategy: DataLeakageStrategy;
+  piiPatterns?: {
+    email?: boolean;
+    phone?: boolean;
+    creditCard?: boolean;
+    ssn?: boolean;
+    pesel?: boolean;
+  };
+}
+
+/**
+ * Dostępne profile konfiguracyjne.
+ */
+export type ConfigProfile = 'strict' | 'saas' | 'audit';
+
+/**
  * Funkcjonalności Silker AI do włączania/wyłączania.
  */
 export interface SilkerFeatures {
@@ -20,8 +44,8 @@ export interface SilkerFeatures {
   hostHeaderInjectionDetection?: boolean;
   /** Walidacja nagłówków bezpieczeństwa */
   securityHeadersValidation?: boolean;
-  /** Wykrywanie wycieku danych */
-  dataLeakageDetection?: boolean;
+  /** Wykrywanie wycieku danych (boolean lub obiekt konfiguracyjny ze strategią) */
+  dataLeakageDetection?: boolean | DataLeakageConfig;
   /** Walidacja schematu API */
   apiSchemaValidation?: boolean;
   /** Wykrywanie anomalii sesji */
@@ -54,6 +78,20 @@ export interface SilkerFeatures {
   promptInjectionDetection?: boolean;
   /** Automatyczne banowanie adresów IP po wykryciu ataku lub przekroczeniu limitów */
   ipBanning?: boolean;
+  /** Wyłącza legacy web security (CSRF, SSRF, IDOR, Host Header) - dla użytkowników z Cloudflare/WAF */
+  disableLegacySecurity?: boolean;
+}
+
+/**
+ * Konfiguracja telemetrii (wysyłka eventów do platformy).
+ */
+export interface TelemetryOptions {
+  /**
+   * Udział wysyłanych zwykłych request-eventów (0..1).
+   * Threaty są zawsze wysyłane (100%). Domyślnie 1 (wszystkie requesty).
+   * Niższa wartość zmniejsza koszt ingestu i narzut sieciowy przy dużym ruchu.
+   */
+  sampleRate?: number;
 }
 
 /**
@@ -72,6 +110,8 @@ export interface RateLimitConfig {
  * Opcje konfiguracyjne dla Silker AI.
  */
 export interface SilkerOptions {
+  /** Profil konfiguracyjny (opcjonalny, nadpisywany przez explicit features) */
+  profile?: ConfigProfile;
   /** Klucz API wymagany do komunikacji z chmurą */
   apiKey: string;
   /** Identyfikator aplikacji używany do grupowania danych w dashboardzie */
@@ -88,4 +128,12 @@ export interface SilkerOptions {
   allowedHosts?: string[];
   /** Konfiguracja rate limiting (opcjonalne, domyślnie 5 req/min) */
   rateLimit?: RateLimitConfig;
+  /** Konfiguracja telemetrii (sampling request-eventów) */
+  telemetry?: TelemetryOptions;
+  /**
+   * Hook przedłużający życie funkcji serverless (np. Vercel `waitUntil` / Next `after`).
+   * Pozwala dostarczyć telemetrię po wysłaniu odpowiedzi BEZ blokowania ścieżki żądania.
+   * Jeśli nie podano, telemetria jest wysyłana fire-and-forget (nigdy nie blokuje odpowiedzi).
+   */
+  waitUntil?: (promise: Promise<unknown>) => void;
 }

@@ -1,4 +1,4 @@
-import { SilkerEvent, SilkerOptions } from '../types';
+import { SilkerEvent, SilkerOptions, DataLeakageConfig } from '../types';
 import { checkRateLimit } from './rateLimit';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { detectDataLeakage } from './dataLeakage';
@@ -16,6 +16,7 @@ import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection } from './promptInjection';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
+import { isLlmRoute } from './llmContext';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -29,7 +30,32 @@ function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>)
   if (!globalOptions.features) {
     return true;
   }
-  return globalOptions.features[feature] !== false;
+  const featureValue = globalOptions.features[feature];
+  if (typeof featureValue === 'object') {
+    return true;
+  }
+  return featureValue !== false;
+}
+
+/**
+ * Pobiera konfigurację data leakage detection.
+ */
+function getDataLeakageConfig(): DataLeakageConfig | null {
+  if (!globalOptions?.features?.dataLeakageDetection) {
+    return { strategy: 'block' };
+  }
+  const config = globalOptions.features.dataLeakageDetection;
+  if (typeof config === 'boolean') {
+    return config ? { strategy: 'block' } : null;
+  }
+  return config;
+}
+
+/**
+ * Sprawdza czy legacy security jest wyłączone.
+ */
+function isLegacySecurityDisabled(): boolean {
+  return globalOptions?.features?.disableLegacySecurity === true;
 }
 
 /**
@@ -58,7 +84,6 @@ export function isAnomaly(event: SilkerEvent): boolean {
       return true;
     }
 
-
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)
     let scannedPayload = '';
     
@@ -73,6 +98,18 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
+    // PRIORITY: For LLM routes, run prompt injection check FIRST
+    // Block on ANY detection for LLM routes (stricter than generic endpoints)
+    const isLlm = isLlmRoute(url, headers);
+    if (isLlm && scannedPayload && isFeatureEnabled('promptInjectionDetection')) {
+      const injection = detectPromptInjection(scannedPayload);
+      if (injection.detected) {
+        event.complianceTags = [...(event.complianceTags || []), 'AI_ACT_RESILIENCE', 'ISO_A_8_2'];
+        return true;
+      }
+    }
+
+    // Standard payload checks
     if (scannedPayload) {
       if (isFeatureEnabled('sqliDetection')) {
         if (detectSqliHeuristic(scannedPayload)) {
@@ -86,10 +123,12 @@ export function isAnomaly(event: SilkerEvent): boolean {
         }
       }
 
-      if (isFeatureEnabled('promptInjectionDetection')) {
+      // For non-LLM routes, check prompt injection with severity threshold
+      if (!isLlm && isFeatureEnabled('promptInjectionDetection')) {
         const injection = detectPromptInjection(scannedPayload);
         if (injection.detected && (injection.severity === 'high' || injection.severity === 'critical')) {
-            return true;
+          event.complianceTags = [...(event.complianceTags || []), 'AI_ACT_RESILIENCE'];
+          return true;
         }
       }
     }
@@ -104,20 +143,27 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
-    if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
-      return true;
-    }
+    // Legacy Web Security Checks (grouped for easy disabling)
+    if (!isLegacySecurityDisabled()) {
+      if (isFeatureEnabled('csrfDetection') && detectCsrfAttack(event, headers)) {
+        return true;
+      }
 
-    if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
-      return true;
-    }
+      if (isFeatureEnabled('ssrfDetection') && detectSsrfAttack(event)) {
+        return true;
+      }
 
-    if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, scannedPayload)) {
-      return true;
-    }
+      if (isFeatureEnabled('idorDetection') && detectIdorAttack(event, scannedPayload)) {
+        return true;
+      }
 
-    if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers, globalOptions?.allowedHosts)) {
-      return true;
+      if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers, globalOptions?.allowedHosts)) {
+        return true;
+      }
+
+      if (isFeatureEnabled('securityHeadersValidation')) {
+        validateSecurityHeaders(headers);
+      }
     }
 
     if (isFeatureEnabled('accessControlDetection')) {
@@ -172,14 +218,14 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
-    if (isFeatureEnabled('securityHeadersValidation')) {
-      const headerValidation = validateSecurityHeaders(headers);
-    }
-
-    if (isFeatureEnabled('dataLeakageDetection') && (event.method === 'GET' || event.method === 'POST')) {
+    // Data Leakage Detection with strategy support
+    const dataLeakageConfig = getDataLeakageConfig();
+    if (dataLeakageConfig && dataLeakageConfig.strategy === 'block' && (method === 'GET' || method === 'POST')) {
       const leakageCheck = detectDataLeakage(scannedPayload);
       if (leakageCheck.leaked) {
-        const isAuthEndpoint = /\/(login|register|auth|signin|signup)/i.test(event.url);
+        event.complianceTags = [...(event.complianceTags || []), 'GDPR', 'GDPR_ART_32'];
+        
+        const isAuthEndpoint = /\/(login|register|auth|signin|signup)/i.test(url);
         
         const hasHighRiskLeak = leakageCheck.findings.some((finding: string) =>
           finding.includes('Credit Card') ||
@@ -206,14 +252,14 @@ export function isAnomaly(event: SilkerEvent): boolean {
           return true;
         }
 
-        if (event.method === 'GET' && hasApiKeyLeak) {
+        if (method === 'GET' && hasApiKeyLeak) {
           return true;
         }
       }
     }
 
-    if (isFeatureEnabled('apiSchemaValidation') && event.url.includes('/api/') && scannedPayload) {
-      const apiValidation = performApiValidation(event);
+    if (isFeatureEnabled('apiSchemaValidation') && url.includes('/api/') && scannedPayload) {
+      performApiValidation(event);
     }
 
     if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {
@@ -238,8 +284,16 @@ export function isAnomaly(event: SilkerEvent): boolean {
         return true;
       }
     }
+
+    if (isFeatureEnabled('zeroTrustDetection') && detectZeroTrustViolation(event)) {
+      event.complianceTags = [...(event.complianceTags || []), 'NIST_ZT'];
+      return true;
+    }
+
     return false;
   } catch (error) {
     return false;
   }
 }
+
+export { getDataLeakageConfig };

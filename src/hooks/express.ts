@@ -1,10 +1,11 @@
 import { EventEmitter } from 'events';
-import { SilkerEvent, SilkerOptions } from '../types';
-import { isAnomaly, setGlobalOptions, banIp, isIpBanned } from '../detection';
+import { SilkerEvent, SilkerOptions, DataLeakageConfig } from '../types';
+import { isAnomaly, setGlobalOptions, banIp, isIpBanned, getDataLeakageConfig, redactJsonPayload } from '../detection';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { recordPerformanceMetrics } from '../analytics/performance';
 import { createLogger } from '../utils/logger';
 import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
+import { logAuditEvent } from '../monitoring/audit';
 
 const vibeEmitter = new EventEmitter();
 vibeEmitter.setMaxListeners(50);
@@ -65,14 +66,44 @@ export function hookExpress(options: SilkerOptions) {
             }
         };
 
-        if (req.body) addSafeContent(req.body);
-        if (req.query) addSafeContent(req.query);
-
         // Get real IP from proxy headers (Vercel, Cloudflare, etc.)
         const realIp = req.headers['x-real-ip'] || 
                        req.headers['x-forwarded-for']?.split(',')[0].trim() ||
                        req.ip || 
                        req.connection.remoteAddress;
+
+        const start = Date.now();
+        let redactionPerformed = false;
+        let redactedFields: string[] = [];
+        let dataTypesDetected: string[] = [];
+
+        // Check if redaction mode is enabled and apply PII redaction
+        const dataLeakageConfig = getDataLeakageConfig();
+        if (dataLeakageConfig?.strategy === 'redact' && req.body) {
+          const piiPatterns = typeof dataLeakageConfig === 'object' ? dataLeakageConfig.piiPatterns : undefined;
+          const { redactedBody, result } = redactJsonPayload(req.body, piiPatterns);
+          
+          if (result.originalFlagged) {
+            redactionPerformed = true;
+            redactedFields = result.redactedFields;
+            dataTypesDetected = result.dataTypesDetected;
+            
+            // Mutate req.body with redacted version
+            req.body = redactedBody;
+            
+            // Update Content-Length header if present
+            try {
+              const newBodyString = JSON.stringify(redactedBody);
+              const newContentLength = Buffer.byteLength(newBodyString, 'utf8');
+              req.headers['content-length'] = String(newContentLength);
+            } catch {
+              // Ignore serialization errors
+            }
+          }
+        }
+
+        if (req.body) addSafeContent(req.body);
+        if (req.query) addSafeContent(req.query);
 
         const event: SilkerEvent = {
           method: req.method,
@@ -81,13 +112,22 @@ export function hookExpress(options: SilkerOptions) {
           ip: realIp,
           timestamp: Date.now(),
           userAgent: req.get('User-Agent'),
-          headers: req.headers as Record<string, string>
+          headers: req.headers as Record<string, string>,
+          complianceTags: redactionPerformed ? ['GDPR', 'GDPR_ART_32'] : undefined,
+          dataTypesDetected: dataTypesDetected.length > 0 ? dataTypesDetected : undefined,
         };
 
-        (global as any).request = req;
+        // Log redaction event if PII was redacted
+        if (redactionPerformed && options.features?.auditLogging !== false) {
+          logAuditEvent(event, 'redacted', 'PII redacted from request', 'medium', {
+            originalFlagged: true,
+            actionTaken: 'redacted',
+            redactedFields,
+            complianceTags: ['GDPR_ART_32'],
+          });
+        }
 
-        // Przechwytywanie zakończenia requestu dla pomiaru czasu i statusu na samym początku
-        const start = Date.now();
+        (global as any).request = req;
         
         res.on('finish', () => {
           try {
@@ -137,23 +177,16 @@ export function hookExpress(options: SilkerOptions) {
               const threatInfo = detectThreatType(event);
               if (threatInfo) {
                 const duration = Date.now() - start;
-                // Wait for dashboard send with 3s timeout (increased from 1s for better reliability)
-                try {
-                  await Promise.race([
-                    sendThreatToDashboard(
-                      event,
-                      threatInfo.type,
-                      threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
-                      true, // blocked
-                      threatInfo.description,
-                      options,
-                      duration
-                    ),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 3000))
-                  ]);
-                } catch (err) {
-                  // Dashboard send failed or timed out - not critical
-                }
+                // Fire-and-forget: never block the response on telemetry delivery.
+                sendThreatToDashboard(
+                  event,
+                  threatInfo.type,
+                  threatInfo.severity as 'critical' | 'high' | 'medium' | 'low',
+                  true, // blocked
+                  threatInfo.description,
+                  options,
+                  duration
+                );
 
                 return res.status(403).json({
                   error: 'Request blocked by Silker AI',
@@ -181,22 +214,16 @@ export function hookExpress(options: SilkerOptions) {
 
           // Report as threat even if already banned, so dashboard shows activity
           if (options.features?.cloudCommunication !== false && options.appId) {
-            try {
-              await Promise.race([
-                sendThreatToDashboard(
-                  event,
-                  'Banned IP Activity',
-                  'medium',
-                  true,
-                  'Request from a temporarily banned IP address',
-                  options,
-                  Date.now() - start
-                ),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Dashboard timeout')), 3000))
-              ]);
-            } catch (err) {
-              // Ignore timeout or error
-            }
+            // Fire-and-forget: never block the response on telemetry delivery.
+            sendThreatToDashboard(
+              event,
+              'Banned IP Activity',
+              'medium',
+              true,
+              'Request from a temporarily banned IP address',
+              options,
+              Date.now() - start
+            );
           }
 
           return res.status(403).json({

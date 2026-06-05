@@ -45,6 +45,65 @@ describe('logAuditEvent', () => {
     expect(logs[logs.length - 1].metadata).toEqual(metadata);
   });
 
+  it('should log redacted action', () => {
+    logAuditEvent(baseEvent, 'redacted', 'PII redacted', 'medium');
+    const logs = getAuditLogs(10);
+    expect(logs[logs.length - 1].action).toBe('redacted');
+  });
+
+  it('should include compliance tags from event', () => {
+    const eventWithTags: SilkerEvent = {
+      ...baseEvent,
+      complianceTags: ['GDPR', 'GDPR_ART_32'],
+    };
+    logAuditEvent(eventWithTags, 'redacted', 'PII redacted', 'medium');
+    const logs = getAuditLogs(10);
+    expect(logs[logs.length - 1].complianceTags).toContain('GDPR');
+    expect(logs[logs.length - 1].complianceTags).toContain('GDPR_ART_32');
+  });
+
+  it('should include compliance tags from metadata', () => {
+    const metadata = { complianceTags: ['AI_ACT_RESILIENCE'] };
+    logAuditEvent(baseEvent, 'blocked', 'Prompt injection', 'high', metadata);
+    const logs = getAuditLogs(10);
+    expect(logs[logs.length - 1].complianceTags).toContain('AI_ACT_RESILIENCE');
+  });
+
+  it('should merge compliance tags from event and metadata', () => {
+    const eventWithTags: SilkerEvent = {
+      ...baseEvent,
+      complianceTags: ['GDPR'],
+    };
+    const metadata = { complianceTags: ['AI_ACT_RESILIENCE'] };
+    logAuditEvent(eventWithTags, 'blocked', 'Multiple violations', 'critical', metadata);
+    const logs = getAuditLogs(10);
+    expect(logs[logs.length - 1].complianceTags).toContain('GDPR');
+    expect(logs[logs.length - 1].complianceTags).toContain('AI_ACT_RESILIENCE');
+  });
+
+  it('should include data types detected from event', () => {
+    const eventWithDataTypes: SilkerEvent = {
+      ...baseEvent,
+      dataTypesDetected: ['email', 'phone'],
+    };
+    logAuditEvent(eventWithDataTypes, 'redacted', 'PII found', 'medium');
+    const logs = getAuditLogs(10);
+    expect(logs[logs.length - 1].dataTypesDetected).toContain('email');
+    expect(logs[logs.length - 1].dataTypesDetected).toContain('phone');
+  });
+
+  it('should deduplicate compliance tags', () => {
+    const eventWithTags: SilkerEvent = {
+      ...baseEvent,
+      complianceTags: ['GDPR', 'GDPR'],
+    };
+    const metadata = { complianceTags: ['GDPR'] };
+    logAuditEvent(eventWithTags, 'redacted', 'Duplicate tags', 'medium', metadata);
+    const logs = getAuditLogs(10);
+    const gdprCount = logs[logs.length - 1].complianceTags?.filter(t => t === 'GDPR').length;
+    expect(gdprCount).toBe(1);
+  });
+
   it('should enforce max logs limit', () => {
     for (let i = 0; i < 1001; i++) {
       logAuditEvent({ ...baseEvent, url: `/api/test${i}` }, 'allowed', `Test ${i}`);
@@ -179,6 +238,7 @@ describe('getAuditSummary', () => {
     expect(summary.actionBreakdown.blocked).toBeGreaterThan(0);
     expect(summary.actionBreakdown.allowed).toBeGreaterThan(0);
     expect(summary.actionBreakdown.flagged).toBeGreaterThan(0);
+    expect(summary.actionBreakdown.redacted).toBeDefined();
   });
 
   it('should include recent activity', () => {

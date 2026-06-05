@@ -42,7 +42,7 @@ export async function sendThreatToDashboard(
       ip__banning_enabled: options.features?.ipBanning !== false
     };
 
-    await telemetry.push('threat', '/api/threats', threatData);
+    telemetry.push('threat', '/api/threats', threatData);
   } catch (error) {
     const logger = createLogger(options);
     logger.error('Failed to queue threat:', error);
@@ -77,7 +77,7 @@ export async function sendRequestToDashboard(
       app_id: options.appId
     };
 
-    await telemetry.push('request', '/api/requests', requestData);
+    telemetry.push('request', '/api/requests', requestData);
   } catch (error) {
     const logger = createLogger(options);
     logger.error('Failed to queue request:', error);

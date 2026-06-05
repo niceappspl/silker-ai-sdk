@@ -1,0 +1,23 @@
+# Przykład: Silker proxy przed Twoją aplikacją (dowolny backend).
+# Uruchom z katalogu repo: docker compose -f container/docker-compose.example.yml up --build
+services:
+  silker:
+    build:
+      context: ..
+      dockerfile: container/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SILKER_API_KEY: "sk_xxx"          # twój klucz z dashboardu
+      SILKER_APP_ID: "twoj-app-id"
+      SILKER_TARGET: "http://app:3000"  # origin (kontener aplikacji)
+      SILKER_ENDPOINT: "https://silkerai.com"
+    depends_on:
+      - app
+
+  # Przykładowy origin (podmień na swoją aplikację: PHP/Java/Python/...).
+  app:
+    image: hashicorp/http-echo
+    command: ["-text=hello from origin", "-listen=:3000"]
+    expose:
+      - "3000"

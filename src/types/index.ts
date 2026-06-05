@@ -6,5 +6,5 @@ export * from './metrics';
 export * from './config';
 export * from './errors';
 
-export type { RateLimitConfig } from './options';
+export type { RateLimitConfig, DataLeakageStrategy, DataLeakageConfig, ConfigProfile } from './options';
 

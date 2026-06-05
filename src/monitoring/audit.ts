@@ -25,11 +25,21 @@ export function setGlobalOptions(options: { debug?: boolean } | null) {
  */
 export function logAuditEvent(
   event: SilkerEvent,
-  action: 'allowed' | 'blocked' | 'flagged',
+  action: 'allowed' | 'blocked' | 'flagged' | 'redacted',
   reason: string,
   severity: 'low' | 'medium' | 'high' | 'critical' = 'low',
   metadata?: any
 ): void {
+  const complianceTags = [
+    ...(event.complianceTags || []),
+    ...(metadata?.complianceTags || []),
+  ].filter((tag, index, arr) => arr.indexOf(tag) === index);
+
+  const dataTypesDetected = [
+    ...(event.dataTypesDetected || []),
+    ...(metadata?.dataTypesDetected || []),
+  ].filter((type, index, arr) => arr.indexOf(type) === index);
+
   const auditEntry: AuditLogEntry = {
     id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     timestamp: Date.now(),
@@ -37,7 +47,9 @@ export function logAuditEvent(
     action,
     reason,
     severity,
-    metadata
+    metadata,
+    complianceTags: complianceTags.length > 0 ? complianceTags : undefined,
+    dataTypesDetected: dataTypesDetected.length > 0 ? dataTypesDetected : undefined,
   };
 
   auditLogs.push(auditEntry);
@@ -48,7 +60,8 @@ export function logAuditEvent(
 
   if (globalOptions?.debug) {
     const logger = createLogger(globalOptions as any);
-    logger.debug(`AUDIT [${severity.toUpperCase()}]: ${action} - ${reason}`);
+    const tagsInfo = complianceTags.length > 0 ? ` [${complianceTags.join(', ')}]` : '';
+    logger.debug(`AUDIT [${severity.toUpperCase()}]: ${action} - ${reason}${tagsInfo}`);
   }
 }
 
@@ -62,7 +75,7 @@ export function logAuditEvent(
 export function getAuditLogs(
   limit: number = 100,
   severity?: 'low' | 'medium' | 'high' | 'critical',
-  action?: 'allowed' | 'blocked' | 'flagged'
+  action?: 'allowed' | 'blocked' | 'flagged' | 'redacted'
 ): AuditLogEntry[] {
   let filteredLogs = auditLogs;
 
@@ -88,7 +101,7 @@ export function getAuditSummary(): {
   recentActivity: AuditLogEntry[];
 } {
   const severityBreakdown: Record<string, number> = { low: 0, medium: 0, high: 0, critical: 0 };
-  const actionBreakdown: Record<string, number> = { allowed: 0, blocked: 0, flagged: 0 };
+  const actionBreakdown: Record<string, number> = { allowed: 0, blocked: 0, flagged: 0, redacted: 0 };
 
   auditLogs.forEach(log => {
     severityBreakdown[log.severity]++;

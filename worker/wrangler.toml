@@ -1,0 +1,19 @@
+name = "silker-worker"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+
+# Silnik detekcji jest edge-safe (V8) - nie wymaga nodejs_compat.
+
+[vars]
+SILKER_ENDPOINT = "https://silkerai.com"
+# Ustaw per-deployment:
+# SILKER_APP_ID = "twoj-app-id"
+# SILKER_TARGET = "https://origin.twoja-domena.com"
+
+# Klucz API ustaw jako sekret (NIE w pliku):
+#   wrangler secret put SILKER_API_KEY
+
+# Przypnij Worker do swojej domeny:
+# [[routes]]
+# pattern = "twoja-domena.com/*"
+# zone_name = "twoja-domena.com"
