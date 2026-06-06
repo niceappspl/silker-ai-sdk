@@ -19,6 +19,22 @@ Modern apps move fast, especially those powered by AI. Traditional security tool
 
 ---
 
+## 🧩 The Silker AI Platform
+
+This SDK is the runtime layer of a larger security product. The full ecosystem:
+
+| Component | Role |
+| :--- | :--- |
+| **`@silker-ai/agent` (this package)** | Runtime agent embedded in your app. Detects and blocks attacks (SQLi, XSS, SSRF, CSRF, IDOR, path traversal, host-header injection, prompt injection, data leakage, rate limiting), then ships sanitized telemetry to the platform. |
+| **Silker AI Web** (`silker-ai-web`) | Next.js security platform / SOC. Ingests SDK events, enriches and stores them, and provides real-time dashboards, a geographic threat map, an activity timeline, and a GPT-4 security copilot. Manages applications and per-app API keys. |
+| **Pentest Service** (`silker-pentest-service`) | Python REST API for automated penetration testing. Actively probes endpoints and generates graded HTML reports. Triggered from the web platform. |
+
+**Flow:** your app + SDK → `POST /api/ingest` (Silker AI Web) → dashboards, AI copilot, and on-demand pentests.
+
+The SDK is **fail-safe**: if the cloud is unreachable, your app keeps running and requests proceed.
+
+---
+
 ## 📦 Installation
 
 ```bash
