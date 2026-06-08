@@ -5,7 +5,7 @@ compatibility_date = "2024-09-23"
 # Silnik detekcji jest edge-safe (V8) - nie wymaga nodejs_compat.
 
 [vars]
-SILKER_ENDPOINT = "https://silkerai.com"
+SILKER_ENDPOINT = "https://platform.silkerai.com"
 # Ustaw per-deployment:
 # SILKER_APP_ID = "twoj-app-id"
 # SILKER_TARGET = "https://origin.twoja-domena.com"

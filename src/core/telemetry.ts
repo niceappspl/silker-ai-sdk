@@ -23,7 +23,7 @@ interface TelemetryItem {
 }
 
 function normalizeBaseUrl(endpoint: string): string {
-  let base = endpoint || 'https://silkerai.com';
+  let base = endpoint || 'https://platform.silkerai.com';
   if (base.includes('/api')) {
     base = base.replace('/api', '');
   }

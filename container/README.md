@@ -49,7 +49,7 @@ SILKER_API_KEY=sk_xxx SILKER_APP_ID=app SILKER_TARGET=http://localhost:3000 npm 
 | `SILKER_API_KEY` | Klucz API (sk_...) | - (bez niego telemetria off, detekcja działa) |
 | `SILKER_APP_ID` | ID aplikacji w dashboardzie | - |
 | `SILKER_TARGET` | Origin do forwardu | `http://localhost:3000` |
-| `SILKER_ENDPOINT` | URL platformy | `https://silkerai.com` |
+| `SILKER_ENDPOINT` | URL platformy | `https://platform.silkerai.com` |
 | `SILKER_PORT` | Port nasłuchu proxy | `8080` |
 
 ## Wpięcie za istniejący reverse proxy (Nginx/Caddy)

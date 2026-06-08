@@ -23,7 +23,7 @@ import {
 
 const API_KEY = process.env.SILKER_API_KEY || '';
 const APP_ID = process.env.SILKER_APP_ID;
-const ENDPOINT = process.env.SILKER_ENDPOINT || 'https://silkerai.com';
+const ENDPOINT = process.env.SILKER_ENDPOINT || 'https://platform.silkerai.com';
 const TARGET = process.env.SILKER_TARGET || 'http://localhost:3000';
 const PORT = Number(process.env.SILKER_PORT || 8080);
 

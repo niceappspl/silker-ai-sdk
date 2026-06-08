@@ -65,7 +65,7 @@ class TelemetryClient {
 
         try {
             const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://silkerai.com');
+            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://platform.silkerai.com');
             
             if (baseUrl.includes('/api')) {
                 baseUrl = baseUrl.replace('/api', '');
@@ -179,7 +179,7 @@ class TelemetryClient {
             const options = this.options;
 
             const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://silkerai.com');
+            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://platform.silkerai.com');
 
             // Normalize URL - remove /api suffix if present
             if (baseUrl.includes('/api')) {

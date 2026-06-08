@@ -116,7 +116,7 @@ export interface SilkerOptions {
   apiKey: string;
   /** Identyfikator aplikacji używany do grupowania danych w dashboardzie */
   appId?: string;
-  /** Opcjonalny endpoint chmury (domyślnie: https://silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
+  /** Opcjonalny endpoint chmury (domyślnie: https://platform.silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
   endpoint?: string;
   /** Włącza tryb debugowania z dodatkowymi logami */
   debug?: boolean;

@@ -51,7 +51,7 @@ function ensureConfigured(env: Env): void {
 
 function telemetryConfig(env: Env): TelemetryConfig {
   return {
-    endpoint: env.SILKER_ENDPOINT || 'https://silkerai.com',
+    endpoint: env.SILKER_ENDPOINT || 'https://platform.silkerai.com',
     apiKey: env.SILKER_API_KEY,
     appId: env.SILKER_APP_ID,
   };

@@ -11,7 +11,7 @@ services:
       SILKER_API_KEY: "sk_xxx"          # twój klucz z dashboardu
       SILKER_APP_ID: "twoj-app-id"
       SILKER_TARGET: "http://app:3000"  # origin (kontener aplikacji)
-      SILKER_ENDPOINT: "https://silkerai.com"
+      SILKER_ENDPOINT: "https://platform.silkerai.com"
     depends_on:
       - app
 

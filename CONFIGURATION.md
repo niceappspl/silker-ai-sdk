@@ -337,7 +337,7 @@ If upgrading from v1.0.1, remove these deprecated options:
 app.use(middleware({
   apiKey: process.env.SILKER_API_KEY!,
   appId: 'xxx',
-  endpoint: 'https://silkerai.com',
+  endpoint: 'https://platform.silkerai.com',
   debug: true,
   maxPayloadSize: 1048576,
 - dashboardUrl: 'https://dash.silkerai.com',  // ❌ REMOVED - use endpoint
