@@ -6,6 +6,7 @@ import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavio
 import { setGlobalOptions as setAuditOptions } from './monitoring/audit';
 import { setGlobalOptions as setConfigOptions } from './config/runtime';
 import { applyProfile } from './config/profiles';
+import { resolveSilkerOptions, warnMissingApiKeyOnce } from './config/env';
 import { sendThreatToDashboard, sendRequestToDashboard } from './cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from './detection/threatDetection';
 import { hookFetch } from './hooks/fetch';
@@ -76,38 +77,32 @@ function validateOptions(options: SilkerOptions): boolean {
 
 /**
  * Inicjalizuje Silker AI z podanymi opcjami.
- * Weryfikuje połączenie z chmurą, konfiguruje hooki dla fetch i Express,
- * oraz uruchamia tryb proxy jeśli jest włączony.
- * @param options - Opcje konfiguracyjne Silker AI
- * @throws {SilkerError} Jeśli brakuje klucza API, połączenie z chmurą nie powiodło się lub SDK jest już zainicjalizowany
+ * Konfiguracja jest opcjonalna — apiKey/appId/endpoint są czytane z env
+ * (SILKER_API_KEY, SILKER_APP_ID, SILKER_ENDPOINT) jeśli nie podano ich jawnie.
+ * Bez klucza API SDK działa w trybie detection-only (bez telemetrii) — nigdy nie rzuca.
+ * @param inputOptions - Opcje konfiguracyjne Silker AI (opcjonalne)
  */
 async function initSilker(inputOptions: Partial<SilkerOptions> = {}): Promise<void> {
   try {
-    const opts = inputOptions as SilkerOptions;
     if (isInitialized) {
-      const logger = createLogger(opts);
+      const logger = createLogger(inputOptions as SilkerOptions);
       logger.warn('[Silker SDK] SDK is already initialized. Skipping re-initialization.');
       return;
     }
 
-    // Apply profile defaults (user overrides take precedence)
-    const options = applyProfile(opts);
+    // Resolve env config, then apply profile defaults (user overrides take precedence)
+    const options = applyProfile(resolveSilkerOptions(inputOptions));
 
     if (!validateOptions(options)) {
       return;
     }
 
     const logger = createLogger(options);
-    const apiKey = options.apiKey || process.env.SILKER_API_KEY;
-    
-    if (!apiKey) {
-      logger.error('[Silker SDK] API key required. SDK will not function without it. Provide via options.apiKey or SILKER_API_KEY environment variable.');
-      return;
-    }
 
-    if (!/^sk_[a-zA-Z0-9_-]{32,}$/.test(apiKey)) {
-      logger.error('[Silker SDK] Invalid API key format. Expected: sk_xxxxxxxxxxxxx (at least 32 characters). SDK will not function properly.');
-      return;
+    if (!options.apiKey) {
+      warnMissingApiKeyOnce(logger);
+    } else if (!/^sk_[a-zA-Z0-9_-]{32,}$/.test(options.apiKey)) {
+      logger.warn('[Silker SDK] Invalid API key format. Expected: sk_xxxxxxxxxxxxx (at least 32 characters). Telemetry may be rejected by the platform.');
     }
 
     if (!options.maxPayloadSize) {
@@ -132,7 +127,7 @@ async function initSilker(inputOptions: Partial<SilkerOptions> = {}): Promise<vo
     vibeEmitter.on('workflow', async (event: SilkerEvent) => {
       try {
         if (isAnomaly(event)) {
-          if (options.features?.cloudCommunication !== false && options.appId) {
+          if (options.features?.cloudCommunication !== false && options.apiKey) {
             setGlobalOptionsForThreat(options);
             const threatInfo = detectThreatType(event);
             if (threatInfo) {

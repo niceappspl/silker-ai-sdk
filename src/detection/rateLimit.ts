@@ -5,8 +5,8 @@ const banMap = new Map<string, { banUntil: number }>();
 
 let rateLimitConfig: RateLimitConfig = {
   windowMs: 60000,
-  maxRequests: 5,
-  banDurationMs: 300000 // Default 5 minutes
+  maxRequests: 60,
+  banDurationMs: 60000
 };
 
 /**

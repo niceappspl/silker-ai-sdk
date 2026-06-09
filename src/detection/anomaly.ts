@@ -8,8 +8,6 @@ import { detectComplianceViolation } from './compliance';
 import { checkThreatIntelligence } from './threatIntelligence';
 import { detectZeroTrustViolation } from './zeroTrust';
 import { detectSessionAnomalies } from '../analytics/userBehavior';
-import { validateSecurityHeaders } from '../validation/securityHeaders';
-import { performApiValidation } from '../validation/apiSchema';
 import { checkCryptographicFailures, detectWeakEncryption } from './cryptographic';
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
@@ -20,33 +18,71 @@ import { isLlmRoute } from './llmContext';
 
 let globalOptions: SilkerOptions | null = null;
 
+type FeatureKey = keyof NonNullable<SilkerOptions['features']>;
+
 /**
- * Sprawdza czy funkcjonalność jest włączona (domyślnie true - włączona).
+ * Domyślny stan funkcjonalności gdy użytkownik nie ustawił ich jawnie.
+ * Detektory generujące dużo false positives na normalnym ruchu produkcyjnym
+ * są OPT-IN (false) — włącza się je jawnie przez options.features.
  */
-function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>): boolean {
-  if (!globalOptions) {
-    return true;
+export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
+  // Włączone domyślnie (niski poziom false positives)
+  rateLimit: true,
+  sqliDetection: true,
+  xssDetection: true,
+  pathTraversalDetection: true,
+  promptInjectionDetection: true,
+  dataLeakageDetection: true,
+  fileUploadDetection: true,
+  ipBanning: true,
+  auditLogging: true,
+  cloudCommunication: true,
+  // Opt-in (wysokie ryzyko false positives na produkcyjnych API)
+  csrfDetection: false,
+  ssrfDetection: false,
+  idorDetection: false,
+  hostHeaderInjectionDetection: false,
+  securityHeadersValidation: false,
+  apiSchemaValidation: false,
+  sessionAnomaliesDetection: false,
+  thirdPartyDetection: false,
+  complianceDetection: false,
+  threatIntelligence: false,
+  zeroTrustDetection: false,
+  accessControlDetection: false,
+  cryptographicValidation: false,
+  vulnerableComponentsDetection: false,
+  authenticationValidation: false,
+  softwareIntegrityValidation: false,
+  disableLegacySecurity: false,
+};
+
+/**
+ * Sprawdza czy funkcjonalność jest włączona.
+ * Jawna wartość użytkownika (boolean/obiekt) wygrywa; undefined → DEFAULT_FEATURES.
+ */
+function isFeatureEnabled(feature: FeatureKey): boolean {
+  const featureValue = globalOptions?.features?.[feature];
+  if (featureValue === undefined) {
+    return DEFAULT_FEATURES[feature] ?? false;
   }
-  if (!globalOptions.features) {
-    return true;
-  }
-  const featureValue = globalOptions.features[feature];
   if (typeof featureValue === 'object') {
     return true;
   }
-  return featureValue !== false;
+  return featureValue === true;
 }
 
 /**
  * Pobiera konfigurację data leakage detection.
+ * false → null (wyłączone); undefined/true → domyślna strategia 'block'; obiekt → bez zmian.
  */
 function getDataLeakageConfig(): DataLeakageConfig | null {
-  if (!globalOptions?.features?.dataLeakageDetection) {
-    return { strategy: 'block' };
+  const config = globalOptions?.features?.dataLeakageDetection;
+  if (config === false) {
+    return null;
   }
-  const config = globalOptions.features.dataLeakageDetection;
-  if (typeof config === 'boolean') {
-    return config ? { strategy: 'block' } : null;
+  if (config === undefined || config === true) {
+    return { strategy: 'block' };
   }
   return config;
 }
@@ -160,10 +196,6 @@ export function isAnomaly(event: SilkerEvent): boolean {
       if (isFeatureEnabled('hostHeaderInjectionDetection') && detectHostHeaderInjection(event, headers, globalOptions?.allowedHosts)) {
         return true;
       }
-
-      if (isFeatureEnabled('securityHeadersValidation')) {
-        validateSecurityHeaders(headers);
-      }
     }
 
     if (isFeatureEnabled('accessControlDetection')) {
@@ -256,10 +288,6 @@ export function isAnomaly(event: SilkerEvent): boolean {
           return true;
         }
       }
-    }
-
-    if (isFeatureEnabled('apiSchemaValidation') && url.includes('/api/') && scannedPayload) {
-      performApiValidation(event);
     }
 
     if (isFeatureEnabled('sessionAnomaliesDetection') && detectSessionAnomalies(event)) {

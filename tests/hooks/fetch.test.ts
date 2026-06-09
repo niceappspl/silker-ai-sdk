@@ -3,6 +3,8 @@ import { hookFetch, resetFetchHook } from '../../src/hooks/fetch';
 import { SilkerOptions } from '../../src/types';
 import { clearRateLimitState } from '../../src/detection/rateLimit';
 import { setGlobalOptions } from '../../src/detection/anomaly';
+import { runWithRequestContext } from '../../src/utils/requestContext';
+import * as dashboard from '../../src/cloud/dashboard';
 
 describe('hookFetch', () => {
   const mockOptions: SilkerOptions = {
@@ -44,7 +46,6 @@ describe('hookFetch', () => {
     resetFetchHook();
     clearRateLimitState();
     setGlobalOptions(null);
-    delete (global as any).request;
     originalFetch = global.fetch;
     nock.cleanAll();
     nock.disableNetConnect();
@@ -90,12 +91,12 @@ describe('hookFetch', () => {
     expect(data.data).toEqual([]);
   });
 
-  it('should block requests with SQL injection', async () => {
+  it('should block requests with SQL injection when blockOutgoing is enabled', async () => {
     nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: true, alertId: 'alert-123' });
 
-    hookFetch(mockOptions);
+    hookFetch({ ...mockOptions, blockOutgoing: true });
 
     const response = await global.fetch('https://api.example.com/search', {
       method: 'POST',
@@ -108,12 +109,12 @@ describe('hookFetch', () => {
     expect(data.error).toBe('Request blocked by Silker AI');
   });
 
-  it('should block requests with XSS', async () => {
+  it('should block requests with XSS when blockOutgoing is enabled', async () => {
     nock('https://test-silker.com')
       .post('/api')
       .reply(200, { block: true, alertId: 'alert-xss' });
 
-    hookFetch(mockOptions);
+    hookFetch({ ...mockOptions, blockOutgoing: true });
 
     const response = await global.fetch('https://api.example.com/comment', {
       method: 'POST',
@@ -122,6 +123,60 @@ describe('hookFetch', () => {
     });
 
     expect(response.status).toBe(403);
+  });
+
+  it('should NOT block anomalous outgoing requests by default (monitor-only)', async () => {
+    const threatSpy = jest.spyOn(dashboard, 'sendThreatToDashboard').mockResolvedValue();
+
+    hookFetch(mockOptions);
+
+    const response = await global.fetch('https://api.example.com/search', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer token' },
+      body: JSON.stringify({ query: "'; DROP TABLE users; --" })
+    });
+
+    expect(response.status).toBe(200);
+    expect(mockFetch).toHaveBeenCalled();
+    expect(threatSpy).toHaveBeenCalled();
+    expect(threatSpy.mock.calls[0][3]).toBe(false); // blocked = false
+
+    threatSpy.mockRestore();
+  });
+
+  it('should detect SSRF on outgoing requests and report it (monitor-only by default)', async () => {
+    const threatSpy = jest.spyOn(dashboard, 'sendThreatToDashboard').mockResolvedValue();
+
+    // ssrfDetection not explicitly set — outgoing SSRF check is active by default
+    hookFetch({ ...mockOptions, features: { ...mockOptions.features, ssrfDetection: undefined } });
+
+    const response = await global.fetch('http://169.254.169.254/latest/meta-data', {
+      headers: { 'Authorization': 'Bearer token' }
+    });
+
+    expect(response.status).toBe(200);
+    expect(mockFetch).toHaveBeenCalled();
+    expect(threatSpy).toHaveBeenCalled();
+
+    threatSpy.mockRestore();
+  });
+
+  it('should read client IP from AsyncLocalStorage request context', async () => {
+    const requestSpy = jest.spyOn(dashboard, 'sendRequestToDashboard').mockResolvedValue();
+
+    hookFetch(mockOptions);
+
+    await runWithRequestContext({ ip: '203.0.113.7' }, async () => {
+      await global.fetch('https://api.example.com/users', {
+        headers: { 'Authorization': 'Bearer token' }
+      });
+    });
+
+    expect(requestSpy).toHaveBeenCalled();
+    const eventArg = requestSpy.mock.calls[0][0];
+    expect(eventArg.ip).toBe('203.0.113.7');
+
+    requestSpy.mockRestore();
   });
 
   it('should handle cloud connection failure gracefully for safe requests', async () => {

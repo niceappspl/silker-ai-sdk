@@ -1,10 +1,12 @@
 import { SilkerEvent, SilkerOptions } from '../types';
-import { isAnomaly, setGlobalOptions, getDataLeakageConfig, redactPii } from '../detection';
+import { isAnomaly, setGlobalOptions, getDataLeakageConfig, redactPii, detectSsrfAttack } from '../detection';
 import { sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { logAuditEvent } from '../monitoring/audit';
 import { createLogger } from '../utils/logger';
 import { recordPerformanceMetrics } from '../analytics/performance';
+import { resolveSilkerOptions, warnMissingApiKeyOnce } from '../config/env';
+import { getRequestContext } from '../utils/requestContext';
 
 let globalOptions: SilkerOptions | null = null;
 let originalFetchBackup: typeof global.fetch | null = null;
@@ -35,9 +37,12 @@ function safeStringify(obj: any): string {
 /**
  * Przechwytuje globalną funkcję fetch i dodaje monitorowanie bezpieczeństwa.
  * Wszystkie wywołania fetch są sprawdzane pod kątem anomalii przed wykonaniem.
- * @param options - Opcje konfiguracyjne Silker
+ * Domyślnie działa w trybie monitor-only (telemetria bez blokowania) —
+ * blokowanie wychodzących żądań wymaga ustawienia `blockOutgoing: true`.
+ * @param inputOptions - Opcje konfiguracyjne Silker (opcjonalne, env fallback)
  */
-export function hookFetch(options: SilkerOptions) {
+export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
+  const options = resolveSilkerOptions(inputOptions);
   try {
     if (originalFetchBackup !== null) {
       return;
@@ -47,6 +52,11 @@ export function hookFetch(options: SilkerOptions) {
     setGlobalOptions(options);
     const logger = createLogger(options);
 
+    const telemetryEnabled = options.features?.cloudCommunication !== false && !!options.apiKey;
+    if (!options.apiKey) {
+      warnMissingApiKeyOnce(logger);
+    }
+
     originalFetchBackup = global.fetch;
 
     global.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
@@ -54,7 +64,7 @@ export function hookFetch(options: SilkerOptions) {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     const method = init?.method || 'GET';
 
-    const ip = (global as any).request?.ip || (global as any).req?.connection?.remoteAddress;
+    const ip = getRequestContext()?.ip;
 
     let modifiedInit = init;
     let redactionPerformed = false;
@@ -109,55 +119,55 @@ export function hookFetch(options: SilkerOptions) {
       });
     }
 
-    if (isAnomaly(event)) {
-      logger.debug('Anomaly detected, blocking request');
+    // SSRF is checked explicitly for OUTGOING requests (this is where it matters),
+    // regardless of the incoming-request default, unless explicitly disabled.
+    const ssrfDetected = options.features?.ssrfDetection !== false && detectSsrfAttack(event);
+    const anomaly = isAnomaly(event) || ssrfDetected;
+
+    if (anomaly) {
+      // Monitor-only by default: report telemetry but do not block,
+      // unless `blockOutgoing: true` is explicitly set.
+      const shouldBlock = options.blockOutgoing === true;
+      logger.debug(shouldBlock ? 'Anomaly detected, blocking request' : 'Anomaly detected (monitor-only)');
 
       const isAuditEnabled = options.features?.auditLogging !== false;
       if (isAuditEnabled) {
         logAuditEvent(event, 'flagged', 'Security anomaly detected', 'high');
       }
 
-      if (options.features?.cloudCommunication !== false && options.appId) {
+      let threatType: string | undefined;
+      if (telemetryEnabled) {
         setGlobalOptionsForThreat(options);
         const threatInfo = detectThreatType(event);
         if (threatInfo) {
+          threatType = threatInfo.type;
           // Fire-and-forget: never block the request path on telemetry delivery.
           sendThreatToDashboard(
             event,
             threatInfo.type,
             threatInfo.severity,
-            true,
+            shouldBlock,
             threatInfo.description,
             options,
             Date.now() - start
           );
-
-          if (isAuditEnabled) {
-            logAuditEvent(event, 'blocked', `Threat blocked: ${threatInfo.type}`, 'critical');
-          }
-
-          return new Response(JSON.stringify({
-            error: 'Request blocked by Silker AI',
-            reason: 'Security threat detected',
-            type: threatInfo.type
-          }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-          });
         }
       }
 
-      if (isAuditEnabled) {
-        logAuditEvent(event, 'blocked', 'Security anomaly detected', 'high');
-      }
+      if (shouldBlock) {
+        if (isAuditEnabled) {
+          logAuditEvent(event, 'blocked', threatType ? `Threat blocked: ${threatType}` : 'Security anomaly detected', 'critical');
+        }
 
-      return new Response(JSON.stringify({
-        error: 'Request blocked by Silker AI',
-        reason: 'Security threat detected'
-      }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      });
+        return new Response(JSON.stringify({
+          error: 'Request blocked by Silker AI',
+          reason: 'Security threat detected',
+          ...(threatType ? { type: threatType } : {})
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     } else {
       if (options.features?.auditLogging !== false) {
         logAuditEvent(event, 'allowed', 'Request passed security checks', 'low');
@@ -172,7 +182,7 @@ export function hookFetch(options: SilkerOptions) {
         recordPerformanceMetrics(event, duration, response.status);
 
         // Send request metrics to dashboard if enabled (fire-and-forget, never blocks)
-        if (options.features?.cloudCommunication !== false && options.appId) {
+        if (telemetryEnabled) {
             sendRequestToDashboard(event, response.status, duration, options);
         }
 

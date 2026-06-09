@@ -25,19 +25,22 @@ export async function sendThreatToDashboard(
   try {
     telemetry.configure(options);
 
+    const urlPath = event.url?.split('?')[0] || '/';
+    const queryString = event.url?.split('?')[1] || '';
+
     const threatData = {
       type: threatType,
       severity,
       blocked,
       description,
       ip: event.ip || 'unknown',
-      endpoint: event.url || '/',
+      endpoint: urlPath,
       method: event.method || 'UNKNOWN',
       headers: event.headers || {},
       body: event.payload || '',
-      query: event.url.split('?')[1] || '',
+      query: queryString,
       user_agent: event.userAgent || 'unknown',
-      app_id: options.appId,
+      ...(options.appId ? { app_id: options.appId } : {}),
       response_time: responseTime,
       ip__banning_enabled: options.features?.ipBanning !== false
     };
@@ -68,13 +71,16 @@ export async function sendRequestToDashboard(
     telemetry.configure(options);
 
     const requestData = {
-      endpoint: event.url || '/',
+      endpoint: event.url?.split('?')[0] || '/',
       method: event.method || 'GET',
       status_code: statusCode,
       response_time: responseTime,
       ip: event.ip || 'unknown',
       user_agent: event.userAgent || 'unknown',
-      app_id: options.appId
+      headers: event.headers || {},
+      body: event.payload || '',
+      query: event.url?.split('?')[1] || '',
+      ...(options.appId ? { app_id: options.appId } : {})
     };
 
     telemetry.push('request', '/api/requests', requestData);

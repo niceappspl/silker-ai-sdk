@@ -1,4 +1,4 @@
-import { checkRateLimit, clearRateLimitState, banIp, unbanIp, isIpBanned } from '../../src/detection/rateLimit';
+import { checkRateLimit, clearRateLimitState, setRateLimitConfig, banIp, unbanIp, isIpBanned } from '../../src/detection/rateLimit';
 import { SilkerEvent } from '../../src/types';
 
 describe('checkRateLimit', () => {
@@ -10,6 +10,8 @@ describe('checkRateLimit', () => {
 
   beforeEach(() => {
     clearRateLimitState();
+    // Use a small limit so tests remain fast and independent of global default
+    setRateLimitConfig({ maxRequests: 5, windowMs: 60000, banDurationMs: 300000 });
   });
 
   it('should return false when IP is missing', () => {

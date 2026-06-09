@@ -1,6 +1,6 @@
 {
   "name": "@silker-ai/agent",
-  "version": "1.0.2",
+  "version": "1.0.25",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,11 +32,9 @@
   },
   "dependencies": {
     "axios": "^1.6.0",
-    "events": "^3.3.0",
-    "http-proxy": "^1.18.1"
+    "events": "^3.3.0"
   },
   "devDependencies": {
-    "@types/http-proxy": "^1.17.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",
     "jest": "^29.0.0",

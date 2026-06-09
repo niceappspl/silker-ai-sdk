@@ -6,25 +6,29 @@ import { recordPerformanceMetrics } from '../analytics/performance';
 import { createLogger } from '../utils/logger';
 import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
 import { logAuditEvent } from '../monitoring/audit';
+import { resolveSilkerOptions, warnMissingApiKeyOnce } from '../config/env';
+import { applyProfile } from '../config/profiles';
+import { runWithRequestContext } from '../utils/requestContext';
 
 const vibeEmitter = new EventEmitter();
 vibeEmitter.setMaxListeners(50);
-let isListenerRegistered = false;
 
 /**
  * Tworzy middleware Express.js dla Silker.
  * Przechwytuje żądania Express, sprawdza je pod kątem anomalii i blokuje podejrzane żądania.
- * @param options - Opcje konfiguracyjne Silker
+ * Konfiguracja jest opcjonalna — apiKey/appId/endpoint są czytane z env
+ * (SILKER_API_KEY, SILKER_APP_ID, SILKER_ENDPOINT) jeśli nie podano ich jawnie.
+ * @param inputOptions - Opcje konfiguracyjne Silker (opcjonalne)
  * @returns Middleware Express.js
  */
-export function hookExpress(options: SilkerOptions) {
+export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
+  const options = applyProfile(resolveSilkerOptions(inputOptions));
   setGlobalOptions(options);
   const logger = createLogger(options);
 
-  if (!isListenerRegistered) {
-    // Listener usunięty stąd, bo wysyłamy teraz w res.on('finish')
-    // vibeEmitter.on('request', ...) - logic moved to finish handler
-    isListenerRegistered = true;
+  const telemetryEnabled = options.features?.cloudCommunication !== false && !!options.apiKey;
+  if (!options.apiKey) {
+    warnMissingApiKeyOnce(logger);
   }
 
   logger.info('Silker middleware initialized');
@@ -127,8 +131,6 @@ export function hookExpress(options: SilkerOptions) {
           });
         }
 
-        (global as any).request = req;
-        
         res.on('finish', () => {
           try {
               // Skip if this request was already reported as a threat
@@ -139,7 +141,7 @@ export function hookExpress(options: SilkerOptions) {
               // Record performance metrics locally for health checks
               recordPerformanceMetrics(event, duration, res.statusCode);
 
-              if (options.features?.cloudCommunication !== false && options.appId) {
+              if (telemetryEnabled) {
                 sendRequestToDashboard(event, res.statusCode, duration, options);
               }
           } catch (err) {
@@ -171,7 +173,7 @@ export function hookExpress(options: SilkerOptions) {
             (req as any)._silkerThreatReported = true;
 
             // Send threat to dashboard with timeout
-            if (options.features?.cloudCommunication !== false && options.appId) {
+            if (telemetryEnabled) {
               setGlobalOptionsForThreat(options);
 
               const threatInfo = detectThreatType(event);
@@ -213,7 +215,7 @@ export function hookExpress(options: SilkerOptions) {
           (req as any)._silkerThreatReported = true;
 
           // Report as threat even if already banned, so dashboard shows activity
-          if (options.features?.cloudCommunication !== false && options.appId) {
+          if (telemetryEnabled) {
             // Fire-and-forget: never block the response on telemetry delivery.
             sendThreatToDashboard(
               event,
@@ -232,7 +234,9 @@ export function hookExpress(options: SilkerOptions) {
           });
         }
 
-        next();
+        // Run the downstream chain inside the request context so the fetch hook
+        // can read the client IP without relying on global mutable state.
+        return runWithRequestContext({ ip: realIp }, () => next());
     } catch (error) {
         logger.error('Silker middleware error:', error);
         // Always fail open to protect user application unless explicitly configured otherwise

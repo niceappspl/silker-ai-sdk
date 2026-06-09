@@ -53,45 +53,6 @@ class TelemetryClient {
         if (!this.flushInterval) {
             this.startFlushLoop();
         }
-        // Initial sync of configuration and bans
-        this.syncWithDashboard().catch(err => {
-            this.logger?.debug('[Silker SDK] Initial dashboard sync failed:', err.message);
-        });
-    }
-
-    private async syncWithDashboard() {
-        if (!this.options) return;
-        const options = this.options;
-
-        try {
-            const isDev = process.env.NODE_ENV === 'development' || process.env.SILKER_DEV === 'true';
-            let baseUrl = options.endpoint || (isDev ? 'http://localhost:3000' : 'https://platform.silkerai.com');
-            
-            if (baseUrl.includes('/api')) {
-                baseUrl = baseUrl.replace('/api', '');
-            }
-            baseUrl = baseUrl.replace(/\/$/, '');
-
-            const syncUrl = `${baseUrl}/api/dashboard/sync`;
-
-            const response = await axios.post(syncUrl, { 
-                appId: options.appId,
-                timestamp: Date.now()
-            }, {
-                headers: {
-                    'x-api-key': options.apiKey,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 2000
-            });
-
-            if (response.data?.bannedIps) {
-                syncBans(response.data.bannedIps);
-                this.logger?.debug(`[Silker SDK] Synced ${response.data.bannedIps.length} banned IPs from dashboard`);
-            }
-        } catch (error: any) {
-            // Non-critical, ignore
-        }
     }
 
     private startFlushLoop() {
@@ -212,7 +173,10 @@ class TelemetryClient {
             // We expect the next request or the current request's push to handle it
             if (!isServerless && this.queue.length > 0) {
                 this.isFlushing = false;
-                setTimeout(() => this.flush(), 10);
+                const continueTimer = setTimeout(() => this.flush(), 10);
+                if (continueTimer.unref) {
+                    continueTimer.unref();
+                }
                 return;
             }
 
@@ -238,7 +202,10 @@ class TelemetryClient {
                 this.logger?.warn(`[Silker SDK] Flush failed, retrying (${retryCount + 1}/3)...`);
                 this.isFlushing = false;
                 // Wait with exponential backoff: 1s, 2s, 4s
-                setTimeout(() => this.flush(retryCount + 1), 1000 * Math.pow(2, retryCount));
+                const retryTimer = setTimeout(() => this.flush(retryCount + 1), 1000 * Math.pow(2, retryCount));
+                if (retryTimer.unref) {
+                    retryTimer.unref();
+                }
                 return;
             }
 

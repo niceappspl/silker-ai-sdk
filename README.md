@@ -45,31 +45,25 @@ SILKER_API_KEY=sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Step 4 — Initialize Silker
 
-#### Next.js (App Router)
-
-Create `middleware.ts` in your project root:
-
-```typescript
-// middleware.ts
-import { middleware } from '@silker-ai/agent';
-
-export const config = { matcher: '/api/:path*' };
-
-export default middleware();
-```
-
-That's it. Silker reads `SILKER_API_KEY` automatically from your environment.
-
----
-
-#### Express
+#### Express (zero-config)
 
 ```typescript
 import express from 'express';
 import { middleware } from '@silker-ai/agent';
 
 const app = express();
+app.use(express.json());
 app.use(middleware()); // reads SILKER_API_KEY from process.env
+```
+
+That's it. With `SILKER_API_KEY` set, telemetry flows to your dashboard.
+Without a key, the SDK logs a single warning and runs in detection-only mode
+(attacks are still blocked, no telemetry) — it never crashes your app.
+
+You can also configure explicitly:
+
+```typescript
+app.use(middleware({ apiKey: process.env.SILKER_API_KEY }));
 ```
 
 ---
@@ -81,7 +75,34 @@ import { initSilker } from '@silker-ai/agent';
 
 await initSilker(); // reads SILKER_API_KEY from process.env
 
-// All fetch() calls and incoming requests are now monitored
+// All outgoing fetch() calls are now monitored
+```
+
+---
+
+#### Next.js
+
+The exported `middleware` is an Express-style handler (`(req, res, next)`) and
+**does not work in Next.js `middleware.ts`** (Edge runtime uses a different API).
+
+To use Silker with Next.js, run it behind a [custom Express server](https://nextjs.org/docs/pages/guides/custom-server):
+
+```typescript
+// server.ts
+import express from 'express';
+import next from 'next';
+import { middleware } from '@silker-ai/agent';
+
+const app = next({ dev: process.env.NODE_ENV !== 'production' });
+const handle = app.getRequestHandler();
+
+app.prepare().then(() => {
+  const server = express();
+  server.use(express.json());
+  server.use(middleware()); // reads SILKER_API_KEY from process.env
+  server.all('*', (req, res) => handle(req, res));
+  server.listen(3000);
+});
 ```
 
 ---
@@ -115,41 +136,60 @@ The wizard:
 
 ## What gets protected
 
+**On by default** (low false-positive rate, safe for production APIs):
+
 | Attack | Detected | Blocked |
 |---|---|---|
 | SQL Injection | ✓ | ✓ |
 | XSS (Cross-Site Scripting) | ✓ | ✓ |
 | Path Traversal | ✓ | ✓ |
 | Prompt Injection (LLM) | ✓ | ✓ |
-| SSRF | ✓ | ✓ |
-| CSRF | ✓ | ✓ |
-| IDOR | ✓ | ✓ |
-| Host Header Injection | ✓ | ✓ |
 | Rate Limiting / Brute Force | ✓ | ✓ |
 | Data Leakage (PII, API keys) | ✓ | redact/block |
+| Malicious File Upload | ✓ | ✓ |
+| SSRF (outgoing `fetch` calls) | ✓ | opt-in (`blockOutgoing`) |
+
+**Opt-in** (these tend to flag normal traffic on production APIs, so they're
+disabled unless you explicitly turn them on in `features`):
+
+`csrfDetection`, `ssrfDetection` (incoming), `idorDetection`,
+`hostHeaderInjectionDetection`, `accessControlDetection`,
+`authenticationValidation`, `cryptographicValidation`,
+`vulnerableComponentsDetection`, `softwareIntegrityValidation`,
+`sessionAnomaliesDetection`, `thirdPartyDetection`, `complianceDetection`,
+`threatIntelligence`, `zeroTrustDetection`
 
 ---
 
 ## Advanced configuration (optional)
 
-By default, Silker uses sensible defaults for all settings. You only need to configure if you want to customize behavior:
-
 ```typescript
 import { middleware } from '@silker-ai/agent';
 
-export default middleware({
+app.use(middleware({
   // apiKey defaults to process.env.SILKER_API_KEY
   debug: true, // logs blocked requests to console
 
-  // Override specific features (all enabled by default):
+  // Opt into advanced detectors (disabled by default):
   features: {
-    sqliDetection: true,
-    xssDetection: true,
-    promptInjectionDetection: true,
-    rateLimit: true,
-    // ... see CONFIGURATION.md for full list
+    csrfDetection: true,
+    idorDetection: true,
+    zeroTrustDetection: true,
+    // ... see CONFIGURATION.md for the full list and defaults
   }
-});
+}));
+```
+
+### Outgoing request monitoring (`fetch` hook)
+
+When initialized via `initSilker()`, Silker also monitors outgoing `fetch()`
+calls (including SSRF to internal addresses / cloud metadata endpoints).
+By default this is **monitor-only**: anomalies are reported to your dashboard
+but the request is never blocked. To actively block malicious outgoing
+requests, opt in:
+
+```typescript
+await initSilker({ blockOutgoing: true });
 ```
 
 Full list of options: [CONFIGURATION.md](./CONFIGURATION.md)
@@ -180,9 +220,9 @@ Visible in your dashboard: threats, requests, map, AI analysis
 | Runtime | Status |
 |---|---|
 | Node.js ≥ 14 | ✅ |
-| Next.js (App Router) | ✅ |
-| Next.js (Pages Router) | ✅ |
 | Express / NestJS | ✅ |
+| Next.js (custom Express server) | ✅ |
+| Next.js Edge `middleware.ts` | ❌ not supported (Express-style API) |
 | Vercel / AWS Lambda | ✅ (optimized flush) |
 | Bun / Deno | ⚠️ experimental |
 

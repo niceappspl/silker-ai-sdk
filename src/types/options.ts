@@ -100,9 +100,9 @@ export interface TelemetryOptions {
 export interface RateLimitConfig {
   /** Okno czasowe w milisekundach (domyślnie 60000 = 1 minuta) */
   windowMs?: number;
-  /** Maksymalna liczba żądań w oknie czasowym (domyślnie 5) */
+  /** Maksymalna liczba żądań w oknie czasowym (domyślnie 60 = ~1 req/sek) */
   maxRequests?: number;
-  /** Czas trwania blokady IP w milisekundach po przekroczeniu limitu (domyślnie 300000 = 5 minut) */
+  /** Czas trwania blokady IP w milisekundach po przekroczeniu limitu (domyślnie 60000 = 1 minuta) */
   banDurationMs?: number;
 }
 
@@ -112,11 +112,11 @@ export interface RateLimitConfig {
 export interface SilkerOptions {
   /** Profil konfiguracyjny (opcjonalny, nadpisywany przez explicit features) */
   profile?: ConfigProfile;
-  /** Klucz API wymagany do komunikacji z chmurą */
-  apiKey: string;
-  /** Identyfikator aplikacji używany do grupowania danych w dashboardzie */
+  /** Klucz API do komunikacji z chmurą (domyślnie: process.env.SILKER_API_KEY; bez klucza SDK działa w trybie detection-only) */
+  apiKey?: string;
+  /** Identyfikator aplikacji używany do grupowania danych w dashboardzie (domyślnie: process.env.SILKER_APP_ID; opcjonalny — platforma rozwiązuje app po kluczu API) */
   appId?: string;
-  /** Opcjonalny endpoint chmury (domyślnie: https://platform.silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
+  /** Opcjonalny endpoint chmury (domyślnie: process.env.SILKER_ENDPOINT, potem https://platform.silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
   endpoint?: string;
   /** Włącza tryb debugowania z dodatkowymi logami */
   debug?: boolean;
@@ -126,8 +126,10 @@ export interface SilkerOptions {
   maxPayloadSize?: number;
   /** Lista dozwolonych hostów dla walidacji Host header (opcjonalne, domyślnie brak walidacji) */
   allowedHosts?: string[];
-  /** Konfiguracja rate limiting (opcjonalne, domyślnie 5 req/min) */
+  /** Konfiguracja rate limiting (opcjonalne, domyślnie 60 req/min) */
   rateLimit?: RateLimitConfig;
+  /** Blokowanie WYCHODZĄCYCH żądań fetch po wykryciu anomalii (domyślnie false — tryb monitor-only, tylko telemetria) */
+  blockOutgoing?: boolean;
   /** Konfiguracja telemetrii (sampling request-eventów) */
   telemetry?: TelemetryOptions;
   /**
