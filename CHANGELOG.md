@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - 2026-06-08
+## [1.0.0] - 2026-06-09
 ### Initial public release
 - Runtime middleware for Next.js, Express, Node.js
 - OWASP Top 10 detection (SQLi, XSS, SSRF, prompt injection, and more)
