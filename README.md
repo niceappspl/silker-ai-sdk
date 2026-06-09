@@ -1,41 +1,26 @@
 # @silker-ai/agent
 
-**The Security Layer for AI-First Applications.**  
-Silker AI is a lightweight, high-performance runtime security agent designed to protect modern JavaScript/TypeScript applications. It provides real-time protection against common web attacks and AI-specific threats without the complexity of a traditional WAF.
+**Runtime security for AI-powered web apps.**  
+Detects and blocks attacks in real-time — SQLi, XSS, prompt injection, SSRF, IDOR, and more.  
+Zero code changes to your business logic. Telemetry flows to your [Silker AI dashboard](https://platform.silkerai.com).
 
-[![Version](https://img.shields.io/npm/v/@silker-ai/agent)](https://www.npmjs.com/package/@silker-ai/agent)
-[![License](https://img.shields.io/npm/l/@silker-ai/agent)](https://github.com/silker/agent)
-
----
-
-## 🚀 Why Silker AI?
-
-Modern apps move fast, especially those powered by AI. Traditional security tools are often too slow, too heavy, or blind to AI-specific risks like prompt injection. Silker AI lives inside your application runtime, giving you:
-
-- **Zero-Latency Protection**: Heuristic-based detection that blocks attacks in milliseconds.
-- **AI Safety**: First-class protection against Prompt Injection and LLM manipulation.
-- **Serverless Optimized**: Deeply integrated with Vercel and AWS Lambda to ensure 100% telemetry delivery.
-- **Privacy First**: Sensitive data (PII, API keys) is automatically masked before leaving your server.
+[![npm](https://img.shields.io/npm/v/@silker-ai/agent)](https://www.npmjs.com/package/@silker-ai/agent)
 
 ---
 
-## 🧩 The Silker AI Platform
+## Get started in 2 minutes
 
-This SDK is the runtime layer of a larger security product. The full ecosystem:
+### Step 1 — Create an account and get your API key
 
-| Component | Role |
-| :--- | :--- |
-| **`@silker-ai/agent` (this package)** | Runtime agent embedded in your app. Detects and blocks attacks (SQLi, XSS, SSRF, CSRF, IDOR, path traversal, host-header injection, prompt injection, data leakage, rate limiting), then ships sanitized telemetry to the platform. |
-| **Silker AI Web** (`silker-ai-web`) | Next.js security platform / SOC. Ingests SDK events, enriches and stores them, and provides real-time dashboards, a geographic threat map, an activity timeline, and a GPT-4 security copilot. Manages applications and per-app API keys. |
-| **Pentest Service** (`silker-pentest-service`) | Python REST API for automated penetration testing. Actively probes endpoints and generates graded HTML reports. Triggered from the web platform. |
+1. Go to [platform.silkerai.com](https://platform.silkerai.com) and sign up (free)
+2. Click **New Application** → give it a name (e.g. "my-saas-app")
+3. Open **Configuration** → copy your API key: `sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Flow:** your app + SDK → `POST /api/ingest` (Silker AI Web) → dashboards, AI copilot, and on-demand pentests.
-
-The SDK is **fail-safe**: if the cloud is unreachable, your app keeps running and requests proceed.
+> Your API key is unique to each application. Keep it secret — treat it like a password.
 
 ---
 
-## 📦 Installation
+### Step 2 — Install
 
 ```bash
 npm install @silker-ai/agent
@@ -43,105 +28,191 @@ npm install @silker-ai/agent
 
 ---
 
-## 🔧 Quick Start
+### Step 3 — Add your API key to environment variables
 
-### Next.js (Server-side & API)
-Silker AI automatically hooks into global `fetch` and provides middleware for API routes.
+Create or edit `.env.local` (Next.js) or `.env` (Express/Node):
 
-```typescript
-// app/layout.tsx or a central init file
-import { initSilker } from '@silker-ai/agent';
-
-initSilker({
-  apiKey: process.env.SILKER_API_KEY!,
-  appId: 'my-nextjs-app',
-  features: {
-    xssDetection: true,
-    promptInjectionDetection: true
-  }
-});
+```bash
+# .env.local
+SILKER_API_KEY=sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-### Express.js
-Drop Silker into your middleware stack for instant protection.
+> **Never put the API key directly in your code.** Always use environment variables.  
+> On Vercel: Settings → Environment Variables → add `SILKER_API_KEY`.  
+> On other platforms: set it wherever you manage your app's env vars.
+
+---
+
+### Step 4 — Initialize Silker
+
+#### Next.js (App Router)
+
+Create `middleware.ts` in your project root:
+
+```typescript
+// middleware.ts
+import { middleware } from '@silker-ai/agent';
+
+export const config = { matcher: '/api/:path*' };
+
+export default middleware();
+```
+
+That's it. Silker reads `SILKER_API_KEY` automatically from your environment.
+
+---
+
+#### Express
 
 ```typescript
 import express from 'express';
 import { middleware } from '@silker-ai/agent';
 
 const app = express();
-
-app.use(middleware({
-  apiKey: process.env.SILKER_API_KEY!,
-  appId: 'my-express-api'
-}));
+app.use(middleware()); // reads SILKER_API_KEY from process.env
 ```
 
-### Generic Node.js / Serverless
-Protect any Node.js process (scripts, cron jobs, background tasks).
+---
+
+#### Generic Node.js / Serverless
 
 ```typescript
-import SilkerAI from '@silker-ai/agent';
+import { initSilker } from '@silker-ai/agent';
 
-await SilkerAI.init({ apiKey: 'your_sk_key' });
+await initSilker(); // reads SILKER_API_KEY from process.env
 
-// All outgoing fetch() calls are now monitored for data leaks and anomalies.
-const response = await fetch('https://api.external.com/data');
+// All fetch() calls and incoming requests are now monitored
 ```
 
 ---
 
-## 🛠 Features
+### Step 5 — Verify it works
 
-### 🛡️ Core Security
-- **SQL Injection (SQLi)**: Advanced heuristic analysis of queries and payloads.
-- **Cross-Site Scripting (XSS)**: Deep inspection of HTML entities and obfuscated scripts.
-- **Path Traversal**: Prevents unauthorized access to local files (`../etc/passwd`).
-- **Rate Limiting & IP Banning**: Protects against brute-force and DoS.
+1. Deploy your app (or run locally)
+2. Make a request to your API (e.g. `curl http://localhost:3000/api/test`)
+3. Open your [Silker AI dashboard](https://platform.silkerai.com/apps) → your app → **Dashboard**
+4. You should see the request appear within seconds
 
-### 🧠 AI & LLM Protection
-- **Prompt Injection Detection**: Blocks "jailbreaks" and "ignore previous instructions" attacks.
-- **Input/Output Monitoring**: Scans both prompts sent to LLMs and their responses.
-
-### 🔐 Advanced Detection
-- **Data Leakage (DLP)**: Detects API keys, Credit Card numbers, SSNs, and Secrets in transit.
-- **SSRF & CSRF Prevention**: Blocks forged requests to internal and external networks.
-- **IDOR Detection**: Identifies unauthorized object reference manipulation.
-- **Host Header Injection**: Prevents cache poisoning and password reset attacks.
+If the status badge shows **Live** (green) — you're protected. ✓
 
 ---
 
-## 🌐 Dashboard & Telemetry
+## CLI setup wizard (optional)
 
-Silker AI connects to a real-time dashboard for threat visibility.
+If you prefer guided setup:
 
-- **Intelligent Flush**: In environments like Vercel, the agent ensures all security events are successfully sent before the process terminates.
-- **Performance Insights**: Monitor response times and find slow endpoints automatically.
-- **Audit Logs**: Keep a tamper-proof record of every blocked attempt for compliance (GDPR/HIPAA).
+```bash
+npx @silker-ai/agent init
+```
 
----
-
-## 💻 Compatibility
-
-| Environment | Status | Notes |
-| :--- | :--- | :--- |
-| **Node.js** | ✅ Supported | Version 14.x and higher. |
-| **Next.js** | ✅ Supported | API Routes, Middleware, Server Actions. |
-| **Vercel / Lambda**| ✅ Optimized | Specialized "Serverless Flush" mechanism. |
-| **Express / NestJS**| ✅ Supported | Via standard middleware. |
-| **Bun / Deno** | ⚠️ Experimental | Core features work; full testing in progress. |
+The wizard:
+- Detects your framework (Next.js, Express, Node.js)
+- Asks for your API key and saves it to `.env.local`
+- Shows the exact code snippet to add
+- Installs the package if not already installed
 
 ---
 
-## 📖 Documentation
+## What gets protected
 
-For detailed configuration options, see our [Configuration Guide](./CONFIGURATION.md) or visit [docs.silkerai.com](https://silkerai.com/docs).
+| Attack | Detected | Blocked |
+|---|---|---|
+| SQL Injection | ✓ | ✓ |
+| XSS (Cross-Site Scripting) | ✓ | ✓ |
+| Path Traversal | ✓ | ✓ |
+| Prompt Injection (LLM) | ✓ | ✓ |
+| SSRF | ✓ | ✓ |
+| CSRF | ✓ | ✓ |
+| IDOR | ✓ | ✓ |
+| Host Header Injection | ✓ | ✓ |
+| Rate Limiting / Brute Force | ✓ | ✓ |
+| Data Leakage (PII, API keys) | ✓ | redact/block |
 
 ---
 
-## ⚖️ License
+## Advanced configuration (optional)
 
-Proprietary Software. All rights reserved. For commercial inquiries, contact [sales@silkerai.com](mailto:sales@silkerai.com).
+By default, Silker uses sensible defaults for all settings. You only need to configure if you want to customize behavior:
+
+```typescript
+import { middleware } from '@silker-ai/agent';
+
+export default middleware({
+  // apiKey defaults to process.env.SILKER_API_KEY
+  debug: true, // logs blocked requests to console
+
+  // Override specific features (all enabled by default):
+  features: {
+    sqliDetection: true,
+    xssDetection: true,
+    promptInjectionDetection: true,
+    rateLimit: true,
+    // ... see CONFIGURATION.md for full list
+  }
+});
+```
+
+Full list of options: [CONFIGURATION.md](./CONFIGURATION.md)
 
 ---
-**Silker AI** - Runtime Security for the AI Era.
+
+## How it works
+
+```
+Your app receives a request
+       ↓
+Silker inspects it in ~0ms (heuristic, no network call)
+       ↓
+Clean request → passes through to your handler
+Malicious request → blocked (403), event logged
+       ↓
+Telemetry sent async to platform.silkerai.com/api/ingest
+       ↓
+Visible in your dashboard: threats, requests, map, AI analysis
+```
+
+**Fail-safe:** if the Silker platform is unreachable, your app continues working normally. Security events are dropped (not your traffic).
+
+---
+
+## Compatibility
+
+| Runtime | Status |
+|---|---|
+| Node.js ≥ 14 | ✅ |
+| Next.js (App Router) | ✅ |
+| Next.js (Pages Router) | ✅ |
+| Express / NestJS | ✅ |
+| Vercel / AWS Lambda | ✅ (optimized flush) |
+| Bun / Deno | ⚠️ experimental |
+
+---
+
+## Frequently asked questions
+
+**Do I need to change my business logic?**  
+No. Silker wraps your existing request handler. Zero changes to your routes.
+
+**Does it slow down my app?**  
+Detection runs in ~0ms (heuristic, in-process). Telemetry is sent asynchronously after the response — it never blocks your users.
+
+**What if my API key is leaked?**  
+Immediately regenerate it in the dashboard (Configuration → Regenerate). The old key stops working instantly.
+
+**Can I use multiple API keys for multiple apps?**  
+Yes. Create a separate application in the dashboard for each project. Each gets its own key and its own dashboard.
+
+**Is there a free tier?**  
+Yes. Create an account at [platform.silkerai.com](https://platform.silkerai.com).
+
+---
+
+## Support
+
+- Docs: [silkerai.com/docs](https://silkerai.com/docs)
+- Email: [support@silkerai.com](mailto:support@silkerai.com)
+- Dashboard: [platform.silkerai.com](https://platform.silkerai.com)
+
+---
+
+Proprietary Software. © 2026 Silker AI. All rights reserved.
