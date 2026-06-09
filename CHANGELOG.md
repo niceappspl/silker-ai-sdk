@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0] - 2026-06-09
+### Dashboard-managed detection config
+- The dashboard is now the source of truth for detection features: toggling protection in the Silker panel updates the running SDK on the next telemetry sync (~5s), no redeploy needed
+- Config is delivered over the existing ingest response (no extra requests); opt out with `remoteConfig: false` to keep config in code/env only
+
 ## [1.1.0] - 2026-06-09
 ### Zero-config init & safer defaults
 - `middleware()` works with no arguments: `SILKER_API_KEY`, `SILKER_APP_ID` and `SILKER_ENDPOINT` are resolved from env

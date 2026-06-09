@@ -1,4 +1,4 @@
-import { isAnomaly, setGlobalOptions, getDataLeakageConfig, DEFAULT_FEATURES } from '../../src/detection/anomaly';
+import { isAnomaly, setGlobalOptions, getDataLeakageConfig, applyRemoteFeatures, DEFAULT_FEATURES } from '../../src/detection/anomaly';
 import { clearRateLimitState } from '../../src/detection/rateLimit';
 import { SilkerEvent } from '../../src/types';
 
@@ -93,6 +93,42 @@ describe('Feature defaults', () => {
 
     it('should return the config object when provided', () => {
       setGlobalOptions({ features: { dataLeakageDetection: { strategy: 'redact' } } });
+      expect(getDataLeakageConfig()).toEqual({ strategy: 'redact' });
+    });
+  });
+
+  describe('applyRemoteFeatures (dashboard-managed config)', () => {
+    it('should disable a detector when the dashboard turns it off', () => {
+      const sqli: SilkerEvent = {
+        method: 'POST',
+        url: '/api/login',
+        payload: "'; DROP TABLE users; --",
+        ip: '10.10.10.5',
+        timestamp: Date.now()
+      };
+      expect(isAnomaly(sqli)).toBe(true);
+
+      applyRemoteFeatures({ sqliDetection: false });
+
+      const sqli2: SilkerEvent = { ...sqli, ip: '10.10.10.6', timestamp: Date.now() };
+      expect(isAnomaly(sqli2)).toBe(false);
+    });
+
+    it('should enable an opt-in detector when the dashboard turns it on', () => {
+      applyRemoteFeatures({ ssrfDetection: true });
+      const event: SilkerEvent = {
+        method: 'GET',
+        url: 'http://localhost:8080/internal',
+        ip: '10.10.10.7',
+        timestamp: Date.now()
+      };
+      expect(isAnomaly(event)).toBe(true);
+    });
+
+    it('should ignore non-boolean values and null payloads', () => {
+      setGlobalOptions({ features: { dataLeakageDetection: { strategy: 'redact' } } });
+      applyRemoteFeatures(null);
+      applyRemoteFeatures({ dataLeakageDetection: 'block' as unknown as boolean });
       expect(getDataLeakageConfig()).toEqual({ strategy: 'redact' });
     });
   });

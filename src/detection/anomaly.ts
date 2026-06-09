@@ -103,6 +103,24 @@ export function setGlobalOptions(options: SilkerOptions | null) {
 }
 
 /**
+ * Stosuje konfigurację funkcjonalności pobraną z dashboardu (zwracaną w odpowiedzi ingest).
+ * Dashboard jest źródłem prawdy — nadpisuje lokalne flagi, dzięki czemu użytkownik może
+ * włączać/wyłączać ochronę z panelu bez redeployu aplikacji.
+ * Pomija wartości inne niż boolean (np. obiekt dataLeakage ustawiony jawnie w kodzie zostaje).
+ */
+export function applyRemoteFeatures(features: Record<string, unknown> | null | undefined): void {
+  if (!features || typeof features !== 'object') return;
+  if (!globalOptions) globalOptions = {};
+  const merged = { ...(globalOptions.features ?? {}) } as Record<string, unknown>;
+  for (const [key, value] of Object.entries(features)) {
+    if (typeof value === 'boolean') {
+      merged[key] = value;
+    }
+  }
+  globalOptions.features = merged as SilkerOptions['features'];
+}
+
+/**
  * Sprawdza czy zdarzenie zawiera anomalie bezpieczeństwa.
  * Wykonuje szereg testów bezpieczeństwa: rate limiting, SQLi, XSS, OWASP Top 10,
  * wyciek danych, upload plików, compliance, threat intelligence i zero-trust.

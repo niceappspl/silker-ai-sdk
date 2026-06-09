@@ -130,6 +130,13 @@ export interface SilkerOptions {
   rateLimit?: RateLimitConfig;
   /** Blokowanie WYCHODZĄCYCH żądań fetch po wykryciu anomalii (domyślnie false — tryb monitor-only, tylko telemetria) */
   blockOutgoing?: boolean;
+  /**
+   * Pobieranie konfiguracji funkcjonalności z dashboardu (domyślnie true).
+   * Gdy true, flagi `features` zarządzane w panelu Silker nadpisują lokalne ustawienia
+   * przy każdej synchronizacji telemetrii — bez potrzeby redeployu.
+   * Ustaw `false`, aby trzymać konfigurację wyłącznie w kodzie/env.
+   */
+  remoteConfig?: boolean;
   /** Konfiguracja telemetrii (sampling request-eventów) */
   telemetry?: TelemetryOptions;
   /**

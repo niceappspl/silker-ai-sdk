@@ -3,6 +3,7 @@ import { SilkerOptions } from '../types';
 import { sanitizeSensitiveData } from './sanitization';
 import { createLogger, Logger } from '../utils/logger';
 import { syncBans } from '../detection/rateLimit';
+import { applyRemoteFeatures } from '../detection/anomaly';
 
 type TelemetryType = 'threat' | 'request';
 
@@ -164,6 +165,12 @@ class TelemetryClient {
             // Update local ban list from dashboard response
             if (response.data?.data?.bannedIps) {
                 syncBans(response.data.data.bannedIps);
+            }
+
+            // Apply detection config managed in the dashboard (source of truth),
+            // unless the integrator opted out by setting remoteConfig: false.
+            if (this.options?.remoteConfig !== false && response.data?.data?.config?.features) {
+                applyRemoteFeatures(response.data.data.config.features);
             }
 
             // On success, remove the batch from queue
