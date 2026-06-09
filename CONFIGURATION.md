@@ -48,7 +48,7 @@ app.use(middleware({
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `appId` | `string` | `undefined` | Application ID for dashboard grouping |
-| `endpoint` | `string` | Auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://api.silkerai.com` prod) |
+| `endpoint` | `string` | Auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://platform.silkerai.com` prod) |
 | `debug` | `boolean` | `false` | Enable detailed console logging for debugging |
 | `maxPayloadSize` | `number` | `1048576` | Maximum payload size to scan in bytes (1MB default) |
 | `features` | `object` | All true | Feature toggles object to disable specific checks |
@@ -130,7 +130,7 @@ app.use(middleware({
   
   // Optional Main Options
   appId: 'd6bd4319-5aa9-49c8-b760-b4dfce661cbc',
-  endpoint: 'https://api.silkerai.com',
+  endpoint: 'https://platform.silkerai.com',
   debug: false,
   maxPayloadSize: 1048576, // 1MB
 
@@ -200,7 +200,7 @@ Optimized for security and performance.
 app.use(middleware({
   apiKey: process.env.SILKER_API_KEY!,
   appId: 'prod-app',
-  endpoint: 'https://api.silkerai.com',
+  endpoint: 'https://platform.silkerai.com',
   debug: false,
   maxPayloadSize: 102400, // 100KB
   // All features enabled by default
@@ -259,14 +259,11 @@ app.use(middleware({
 SILKER_API_KEY=sk_your_api_key_here
 ```
 
-### Optional Environment Variables
+### Environment Variables
 
 ```bash
-# Application ID (recommended for multi-app setups)
-SILKER_APP_ID=d6bd4319-5aa9-49c8-b760-b4dfce661cbc
-
-# Custom endpoint (optional)
-SILKER_ENDPOINT=https://api.silkerai.com
+# API Key (required) — get from platform.silkerai.com
+SILKER_API_KEY=sk_your_api_key_here
 
 # Environment (auto-detected)
 NODE_ENV=production
@@ -354,7 +351,7 @@ app.use(middleware({
 ## Support
 
 - **Documentation**: [https://docs.silkerai.com](https://docs.silkerai.com)
-- **API Reference**: [https://api.silkerai.com/docs](https://api.silkerai.com/docs)
+- **API Reference**: [https://silkerai.com/docs](https://silkerai.com/docs)
 - **GitHub**: [https://github.com/silker/agent](https://github.com/silker/agent)
 - **Issues**: [https://github.com/silker/agent/issues](https://github.com/silker/agent/issues)
 
