@@ -50,8 +50,7 @@ function setGlobalOptions(options: SilkerOptions | null) {
  */
 function validateOptions(options: SilkerOptions): boolean {
     if (!options || typeof options !== 'object') {
-        defaultLogger.error('[Silker SDK] SilkerOptions are required and must be an object. SDK will not initialize.');
-        return false;
+        return true; // empty options are valid — apiKey read from env
     }
 
     const MAX_ALLOWED_PAYLOAD = 100 * 1024 * 1024; // 100MB
@@ -82,16 +81,17 @@ function validateOptions(options: SilkerOptions): boolean {
  * @param options - Opcje konfiguracyjne Silker AI
  * @throws {SilkerError} Jeśli brakuje klucza API, połączenie z chmurą nie powiodło się lub SDK jest już zainicjalizowany
  */
-async function initSilker(inputOptions: SilkerOptions): Promise<void> {
+async function initSilker(inputOptions: Partial<SilkerOptions> = {}): Promise<void> {
   try {
+    const opts = inputOptions as SilkerOptions;
     if (isInitialized) {
-      const logger = createLogger(inputOptions);
+      const logger = createLogger(opts);
       logger.warn('[Silker SDK] SDK is already initialized. Skipping re-initialization.');
       return;
     }
 
     // Apply profile defaults (user overrides take precedence)
-    const options = applyProfile(inputOptions);
+    const options = applyProfile(opts);
 
     if (!validateOptions(options)) {
       return;
@@ -159,7 +159,7 @@ async function initSilker(inputOptions: SilkerOptions): Promise<void> {
     
     isInitialized = true;
   } catch (error) {
-    const logger = createLogger(inputOptions);
+    const logger = createLogger(inputOptions as SilkerOptions);
     logger.error('[Silker SDK] Critical error during initialization. SDK will not function:', error);
   }
 }

@@ -1,9 +1,12 @@
 {
   "name": "@silker-ai/agent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "silker": "./dist/cli/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
