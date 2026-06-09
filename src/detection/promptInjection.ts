@@ -69,6 +69,54 @@ const ENCODING_OBFUSCATION = [
   /&#\d{2,4};/g,
 ];
 
+/**
+ * Grupy klasyfikujące prompt injection na podtypy (2024-2026).
+ * Wymagają dość konkretnego frazowania, żeby ograniczyć false-positive
+ * na normalnych wiadomościach do LLM. Bez flagi `g` (stabilne `.test()`).
+ */
+
+/** jailbreak: DAN / developer mode / unfiltered roleplay / "ignore your guidelines". */
+const JAILBREAK_SUBTYPE = [
+  /\bDAN\b/i,
+  /do\s+anything\s+now/i,
+  /developer\s+mode/i,
+  /you\s+are\s+now\s+(a|an|in|acting|going|going\s+to)/i,
+  /(roleplay|role-play|act|acting|pretend)\s+(as\s+)?(an?\s+)?(unfiltered|unrestricted|uncensored|jailbroken|evil|amoral|lawless)/i,
+  /ignore\s+(your|all|any|every)\s+(guidelines?|policies|policy|restrictions?|rules?|safety|filters?)/i,
+  /pretend\s+(that\s+)?(you\s+)?(have|with)\s+no\s+(restrictions?|rules?|filters?|limits?|guidelines?)/i,
+  /no\s+(longer|more)\s+(bound|restricted|limited)\s+by/i,
+  /without\s+(any\s+)?(restrictions?|limitations?|filters?|ethics?)/i,
+  /bypass\s+(safety|ethics|guidelines?|filters?)/i,
+];
+
+/** system_prompt_extraction: próby wyciągnięcia system promptu / instrukcji. */
+const SYSTEM_PROMPT_EXTRACTION_SUBTYPE = [
+  /repeat\s+(the\s+)?(words?|text|everything|sentence)\s+above/i,
+  /(print|reveal|show|output|display|give\s+me|tell\s+me|repeat)\s+(me\s+)?(your|the)\s+(system\s+)?(prompt|instructions?|rules?|programming|configuration)/i,
+  /what\s+(are|is|were)\s+your\s+(initial|original|system|first|exact)\s+(prompt|instructions?|message|rules?)/i,
+  /ignore\s+everything\s+(else\s+)?and\s+(output|print|reveal|show|repeat)\s+(your\s+|the\s+)?(system\s+)?(prompt|instructions?)/i,
+  /what('?s| is| was)\s+(written|said|stated)\s+(at|in)\s+the\s+(top|beginning|start)/i,
+];
+
+/** data_exfiltration_via_llm: prośby o zakodowanie/przetłumaczenie system promptu. */
+const DATA_EXFIL_SUBTYPE = [
+  /(base64|hex|rot13|binary|morse)\s*[- ]?\s*(encode|encoded)?\s+(your|the|all)\s+(system\s+)?(prompt|instructions?)/i,
+  /(encode|convert)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+(in|to|into|as)\s+(base64|hex|rot13|binary)/i,
+  /(translate|convert)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+(in)?to\s+\w+/i,
+  /(spell|write)\s+out\s+(your|the)\s+(system\s+)?(prompt|instructions?)/i,
+];
+
+/** instruction_override: nadpisanie instrukcji + delimiter/role injection. */
+const INSTRUCTION_OVERRIDE_SUBTYPE = [
+  /ignore\s+(the\s+)?(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/i,
+  /disregard\s+(the\s+)?(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/i,
+  /forget\s+(everything|all|what|previous|prior).{0,20}(above|before|instructions?)/i,
+  /override\s+(previous|system|all).{0,20}(instructions?|prompts?|rules?)/i,
+  /<\/?system>/i,
+  /\[\/?system\]/i,
+  /###\s*system\s*:/i,
+];
+
 const CHAIN_MANIPULATION = [
   /step\s+1\s*:\s*ignore/gi,
   /first\s*,?\s*ignore/gi,
@@ -176,6 +224,10 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     { patterns: ENCODING_OBFUSCATION, weight: 6, name: 'Encoding Obfuscation' },
     { patterns: CHAIN_MANIPULATION, weight: 9, name: 'Chain Manipulation' },
     { patterns: MULTILINGUAL_ATTACKS, weight: 11, name: 'Multilingual Attack' },
+    { patterns: JAILBREAK_SUBTYPE, weight: 20, name: 'Jailbreak Attempt' },
+    { patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE, weight: 15, name: 'Prompt Extraction' },
+    { patterns: DATA_EXFIL_SUBTYPE, weight: 20, name: 'Data Exfiltration' },
+    { patterns: INSTRUCTION_OVERRIDE_SUBTYPE, weight: 15, name: 'Instruction Override' },
   ];
 
   for (const check of checks) {
@@ -216,6 +268,52 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
   }
 
   return result;
+}
+
+/** Podtyp wykrytego prompt injection (do grupowania w dashboardzie "AI Security"). */
+export type PromptInjectionSubtype =
+  | 'jailbreak'
+  | 'system_prompt_extraction'
+  | 'instruction_override'
+  | 'data_exfiltration_via_llm';
+
+interface PromptInjectionClassification {
+  detected: boolean;
+  subtype?: PromptInjectionSubtype;
+  severity?: 'critical' | 'high' | 'medium';
+}
+
+/**
+ * Klasyfikuje prompt injection na konkretny podtyp + severity.
+ * Kolejność grup ustala priorytet (najbardziej krytyczne/specyficzne pierwsze).
+ * Severity: data_exfiltration_via_llm=critical, pozostałe=high.
+ *
+ * @param payload - Treść do sklasyfikowania
+ * @returns Wynik z podtypem i severity jeśli wykryto
+ */
+export function classifyPromptInjection(payload: string): PromptInjectionClassification {
+  if (!payload || typeof payload !== 'string') {
+    return { detected: false };
+  }
+
+  const groups: Array<{
+    subtype: PromptInjectionSubtype;
+    severity: 'critical' | 'high' | 'medium';
+    patterns: RegExp[];
+  }> = [
+    { subtype: 'data_exfiltration_via_llm', severity: 'critical', patterns: DATA_EXFIL_SUBTYPE },
+    { subtype: 'system_prompt_extraction', severity: 'high', patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE },
+    { subtype: 'jailbreak', severity: 'high', patterns: JAILBREAK_SUBTYPE },
+    { subtype: 'instruction_override', severity: 'high', patterns: INSTRUCTION_OVERRIDE_SUBTYPE },
+  ];
+
+  for (const group of groups) {
+    if (group.patterns.some(pattern => pattern.test(payload))) {
+      return { detected: true, subtype: group.subtype, severity: group.severity };
+    }
+  }
+
+  return { detected: false };
 }
 
 /**

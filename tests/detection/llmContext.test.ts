@@ -32,6 +32,15 @@ describe('LLM Context Detection', () => {
         expect(isLlmRoute('http://localhost:3000/v1/chat/completions')).toBe(true);
         expect(isLlmRoute('http://localhost:3000/v1/completions')).toBe(true);
         expect(isLlmRoute('http://localhost:3000/v1/messages')).toBe(true);
+        expect(isLlmRoute('http://localhost:3000/v1/responses')).toBe(true);
+      });
+
+      it('should detect modern agent/assistant routes', () => {
+        expect(isLlmRoute('/api/agent')).toBe(true);
+        expect(isLlmRoute('/api/copilot')).toBe(true);
+        expect(isLlmRoute('/api/assistant')).toBe(true);
+        expect(isLlmRoute('/api/ai/stream')).toBe(true);
+        expect(isLlmRoute('http://localhost:3000/messages')).toBe(true);
       });
 
       it('should not detect non-LLM routes', () => {

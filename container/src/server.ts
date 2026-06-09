@@ -133,10 +133,20 @@ async function relayResponse(upstream: Response, res: ServerResponse): Promise<v
   res.end(buffer);
 }
 
+const HEALTH_PATH = '/_silker/health';
+
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
   const start = Date.now();
   let headers: Record<string, string> = {};
   let body: Buffer = Buffer.alloc(0);
+
+  // Health probe served by the proxy itself (never forwarded to origin) —
+  // used by Docker HEALTHCHECK / orchestrators.
+  if ((req.url || '').split('?')[0] === HEALTH_PATH) {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', target: TARGET }));
+    return;
+  }
 
   try {
     headers = toHeaderRecord(req);

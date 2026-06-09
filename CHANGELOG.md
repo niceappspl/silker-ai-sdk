@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2026-06-09
+### Next.js Edge adapter & deeper LLM/AI threat detection
+- New `@silker-ai/agent/next` subpath export: `nextMiddleware(options?)` returns an App Router / Edge-runtime compatible `(request) => Promise<Response>` handler built on the edge-safe core (parity with the Cloudflare Worker, fail-open, fire-and-forget telemetry). `next` is an optional peer dependency — the SDK builds and tests without it
+- Expanded LLM/AI prompt-injection detection with classified subtypes via `classifyPromptInjection`: `jailbreak` (high), `system_prompt_extraction` (high), `instruction_override` (high), `data_exfiltration_via_llm` (critical); threats keep `type: "Prompt Injection"` and carry the subtype in the description for the dashboard "AI Security" breakdown
+- Broader LLM route coverage: `/v1/responses`, `/api/agent`, `/api/copilot`, `/api/assistant`, `/messages`
+
 ## [1.2.0] - 2026-06-09
 ### Dashboard-managed detection config
 - The dashboard is now the source of truth for detection features: toggling protection in the Silker panel updates the running SDK on the next telemetry sync (~5s), no redeploy needed

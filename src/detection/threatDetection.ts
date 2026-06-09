@@ -1,6 +1,7 @@
 import { SilkerEvent, SilkerOptions } from '../types';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
-import { detectPromptInjection } from './promptInjection';
+import { classifyPromptInjection } from './promptInjection';
+import { isLlmRoute } from './llmContext';
 import { checkRateLimit } from './rateLimit';
 import { detectDataLeakage } from './dataLeakage';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
@@ -82,7 +83,21 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   }
 
   // 4. Prompt Injection
+  // Typ pozostaje "Prompt Injection" (dashboard "AI Security" matchuje ILIKE '%prompt injection%').
+  // Podtyp (jailbreak / system_prompt_extraction / instruction_override / data_exfiltration_via_llm)
+  // trafia do description, żeby panel mógł rozbić zagrożenia po klasie ataku.
   if (isFeatureEnabled('promptInjectionDetection')) {
+    const classification = classifyPromptInjection(payloadStr);
+    if (classification.detected && classification.subtype) {
+      const onLlmRoute = isLlmRoute(url, headers);
+      const context = onLlmRoute ? `on LLM route ${url}` : `in ${url}`;
+      return {
+        type: 'Prompt Injection',
+        severity: classification.severity ?? 'high',
+        description: `Prompt injection (${classification.subtype}) detected ${context}`,
+      };
+    }
+
     const promptPatterns = [
       /ignore\s+(all\s+)?previous\s+instructions/i,
       /print\s+everything\s+above/i,
