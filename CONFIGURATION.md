@@ -47,8 +47,11 @@ Without a resolvable `apiKey`, the SDK runs in detection-only mode (no telemetry
 | `appId` | `string` | `process.env.SILKER_APP_ID` | Optional — the platform resolves the app from the API key |
 | `endpoint` | `string` | `process.env.SILKER_ENDPOINT`, then auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://platform.silkerai.com` prod) |
 | `debug` | `boolean` | `false` | Enable detailed console logging for debugging |
-| `maxPayloadSize` | `number` | `1048576` | Maximum payload size to scan in bytes (1MB default) |
+| `maxPayloadSize` | `number` | `102400` | Maximum payload size to scan in bytes (100KB default, shared by the Express hook, the Edge core and `isAnomaly`) |
 | `blockOutgoing` | `boolean` | `false` | Block anomalous OUTGOING `fetch()` calls (default: monitor-only, telemetry without blocking) |
+| `trustProxy` | `boolean` | `true` | Trust proxy headers (`x-forwarded-for`, `x-real-ip`) for client IP resolution. **Set to `false` if your app is NOT behind a trusted proxy** — otherwise XFF is client-spoofable and IP-keyed bans / rate limits are unreliable. With `false`, the socket remote address is used |
+| `store` | `SilkerStateStore` | in-memory | Optional shared state store (e.g. Redis) for distributing rate-limit counters and IP bans across instances. See [Distributed state store](#distributed-state-store-redis) |
+| `threatIntel` | `{ ips?, domains? }` | — | Extra threat-intelligence IPs/domains merged with the (small) builtin baseline lists |
 | `features` | `object` | See below | Feature toggles object to enable/disable specific checks |
 
 ---
@@ -85,7 +88,8 @@ Most of these are opt-in because they flag legitimate traffic on many production
 | **Auth Failures** | `authenticationValidation` | Detects weak authentication mechanisms and brute-force attempts. | `false` (opt-in) |
 | **Integrity Failures** | `softwareIntegrityValidation` | Verifies integrity of software updates and critical data flows. | `false` (opt-in) |
 | **Logging Failures** | `auditLogging` | Ensures critical security events are logged for audit trails. | `true` |
-| **SSRF** | `ssrfDetection` | Server-Side Request Forgery prevention for INCOMING requests. Outgoing `fetch()` calls are always checked for SSRF unless this is explicitly `false`. | `false` (opt-in) |
+| **SSRF (incoming)** | `ssrfDetection` | Server-Side Request Forgery detection for INCOMING requests (flags requests whose URL targets internal addresses). Opt-in — noisy on many APIs. | `false` (opt-in) |
+| **SSRF (outgoing)** | `outboundSsrfProtection` | SSRF protection for OUTGOING `fetch()` calls (internal addresses, cloud metadata endpoints) — the primary purpose of the fetch hook, hence default ON. Backward compat: an explicit `ssrfDetection: false` also disables outbound. | `true` |
 | **Injection** | *Covered by `sqliDetection`* | (See Core Security) | `true` |
 
 ### Advanced Security
@@ -102,14 +106,57 @@ Specialized protection for modern applications and APIs.
 | **File Upload** | `fileUploadDetection` | Scans uploaded files for malware and validates file types/extensions. | `true` |
 | **Third Party** | `thirdPartyDetection` | Monitors and validates interactions with third-party APIs and services. | `false` (opt-in) |
 | **Compliance** | `complianceDetection` | Checks for violations of GDPR, HIPAA, and other regulatory requirements. | `false` (opt-in) |
-| **Threat Intel** | `threatIntelligence` | Checks IPs and signatures against global threat intelligence feeds. | `false` (opt-in) |
-| **Zero Trust** | `zeroTrustDetection` | Enforces strict verification for every request, assuming no trust by default. | `false` (opt-in) |
+| **Threat Intel** | `threatIntelligence` | Checks IPs/domains/user-agents against a **baseline builtin list** (a handful of seed entries + known scanner user-agents). This is a heuristic baseline, not a live feed — extend it with your own lists via the top-level `threatIntel: { ips, domains }` option. | `false` (opt-in) |
+| **Zero Trust** | `zeroTrustDetection` | Enforces strict verification for every request (auth headers, origin, confirmation tokens for destructive ops). Heuristic baseline. The business-hours check is **off by default** (nonsense for global APIs) — enable explicitly via `performZeroTrustCheck(event, { businessHoursCheck: true })`. | `false` (opt-in) |
 
 ### Monitoring
 
 | Feature | Key | Description | Default |
 |---------|-----|-------------|---------|
 | **Cloud Communication** | `cloudCommunication` | Sends sanitized security events to Silker Cloud for analysis and dashboard reporting. | `true` |
+
+---
+
+## Distributed state store (Redis)
+
+By default, rate-limit counters and IP bans are kept in process memory.
+For multi-instance deployments, pass a `store` implementing `SilkerStateStore`
+to share that state (e.g. via Redis):
+
+```typescript
+import { createClient } from 'redis';
+import { middleware, SilkerStateStore } from '@silker-ai/agent';
+
+const redis = createClient({ url: process.env.REDIS_URL });
+await redis.connect();
+
+const redisStore: SilkerStateStore = {
+  async incr(key, windowMs) {
+    const count = await redis.incr(key);
+    if (count === 1) await redis.pExpire(key, windowMs);
+    return count;
+  },
+  async get(key) {
+    return redis.get(key);
+  },
+  async set(key, value, ttlMs) {
+    await redis.set(key, value, ttlMs ? { PX: ttlMs } : undefined);
+  },
+  async delete(key) {
+    await redis.del(key);
+  },
+};
+
+app.use(middleware({ store: redisStore }));
+```
+
+**Consistency tradeoff:** `isAnomaly` is synchronous, so the external store is
+never awaited on the request path. The local in-memory state stays
+authoritative for the block/allow decision; increments and bans are mirrored
+to the external store fire-and-forget, and shared counters/bans are pulled
+back best-effort. State across instances is therefore **eventually
+consistent** — a single instance may briefly let traffic through above the
+shared limit before the shared counter propagates.
 
 ---
 
@@ -273,15 +320,14 @@ app.use(middleware(config));
 
 ### maxPayloadSize
 
-- **Default**: 1048576 bytes (1MB)
-- **Recommended**: 1048576 - 5242880 bytes (1-5MB)
-- **Impact**: Larger payloads = slower scanning
-- **Best Practice**: Set to the maximum expected request size
+- **Default**: 102400 bytes (100KB) — one shared limit across the Express hook, the Edge core and `isAnomaly`
+- **Impact**: Larger payloads = slower scanning (regex/heuristics are CPU-bound)
+- **Best Practice**: keep the default unless attacks hide deeper in very large bodies
 
 ```typescript
-maxPayloadSize: 1048576  // Fast  - 1MB
-maxPayloadSize: 5242880  // Medium - 5MB
-maxPayloadSize: 10485760 // Slow  - 10MB
+maxPayloadSize: 102400   // Fast   - 100KB (default)
+maxPayloadSize: 1048576  // Medium - 1MB
+maxPayloadSize: 5242880  // Slow   - 5MB
 ```
 
 ### Feature Impact

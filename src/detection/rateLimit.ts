@@ -1,4 +1,5 @@
 import { SilkerEvent, RateLimitConfig } from '../types';
+import { SilkerStateStore } from '../state/store';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const banMap = new Map<string, { banUntil: number }>();
@@ -8,6 +9,25 @@ let rateLimitConfig: RateLimitConfig = {
   maxRequests: 300,   // 300 req/min per IP — catches brute-force, not normal users
   banDurationMs: 300000  // 5-min ban (was 1 min — too short to matter)
 };
+
+/**
+ * Opcjonalny zewnętrzny store (np. Redis) do współdzielenia liczników/banów
+ * między instancjami. Lokalne Mapy pozostają autorytatywne dla sync decyzji;
+ * mirror jest best-effort fire-and-forget (eventual consistency).
+ */
+let externalStore: SilkerStateStore | null = null;
+
+/** Ustawia (lub usuwa) zewnętrzny store stanu. */
+export function setExternalStore(store: SilkerStateStore | null): void {
+  externalStore = store;
+}
+
+const BAN_KEY_PREFIX = 'silker:ban:';
+const RATE_KEY_PREFIX = 'silker:rate:';
+
+function swallow(promise: Promise<unknown>): void {
+  promise.catch(() => {});
+}
 
 /**
  * Ustawia globalną konfigurację rate limiting.
@@ -58,6 +78,11 @@ export function banIp(ip: string | undefined, durationMs?: number): void {
   
   const duration = durationMs || rateLimitConfig.banDurationMs || 300000;
   banMap.set(ip, { banUntil: Date.now() + duration });
+
+  // Mirror bana do zewnętrznego store (best-effort, nie blokuje).
+  if (externalStore) {
+    swallow(externalStore.set(`${BAN_KEY_PREFIX}${ip}`, String(Date.now() + duration), duration));
+  }
 }
 
 /**
@@ -67,6 +92,9 @@ export function banIp(ip: string | undefined, durationMs?: number): void {
 export function unbanIp(ip: string | undefined): void {
   if (!ip) return;
   banMap.delete(ip);
+  if (externalStore) {
+    swallow(externalStore.delete(`${BAN_KEY_PREFIX}${ip}`));
+  }
 }
 
 /**
@@ -120,7 +148,28 @@ export function checkRateLimit(event: SilkerEvent, shouldBan: boolean = true): b
   }
 
   current.count++;
-  
+
+  // Mirror do zewnętrznego store: dosyłamy inkrement i best-effort zaciągamy
+  // współdzielony licznik/bany (fire-and-forget — sync decyzja zapada lokalnie).
+  if (externalStore) {
+    const localEntry = current;
+    swallow(
+      externalStore.incr(`${RATE_KEY_PREFIX}${key}`, windowMs).then(sharedCount => {
+        if (sharedCount > localEntry.count) {
+          localEntry.count = sharedCount;
+        }
+      })
+    );
+    swallow(
+      externalStore.get(`${BAN_KEY_PREFIX}${event.ip}`).then(banUntil => {
+        const until = banUntil ? Number(banUntil) : 0;
+        if (until > Date.now()) {
+          banMap.set(event.ip!, { banUntil: until });
+        }
+      })
+    );
+  }
+
   if (current.count > maxRequests) {
     // Automatically ban IP if rate limit is exceeded and enabled
     if (shouldBan) {

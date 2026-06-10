@@ -1,3 +1,5 @@
+import type { SilkerStateStore } from '../state/store';
+
 /**
  * Strategia obsługi wykrytych danych wrażliwych (PII).
  */
@@ -36,8 +38,14 @@ export interface SilkerFeatures {
   pathTraversalDetection?: boolean;
   /** Wykrywanie ataków CSRF */
   csrfDetection?: boolean;
-  /** Wykrywanie ataków SSRF */
+  /** Wykrywanie ataków SSRF w żądaniach PRZYCHODZĄCYCH (opt-in, domyślnie false) */
   ssrfDetection?: boolean;
+  /**
+   * Ochrona SSRF dla WYCHODZĄCYCH żądań fetch (hook fetch) — domyślnie TRUE
+   * (to główny cel hooka). Jawne `ssrfDetection: false` wyłącza również outbound
+   * (poszanowanie intencji użytkownika, backward compat).
+   */
+  outboundSsrfProtection?: boolean;
   /** Wykrywanie ataków IDOR */
   idorDetection?: boolean;
   /** Wykrywanie host header injection */
@@ -80,6 +88,16 @@ export interface SilkerFeatures {
   ipBanning?: boolean;
   /** Wyłącza legacy web security (CSRF, SSRF, IDOR, Host Header) - dla użytkowników z Cloudflare/WAF */
   disableLegacySecurity?: boolean;
+}
+
+/**
+ * Dodatkowe listy threat intelligence użytkownika, scalane z wbudowanymi.
+ */
+export interface ThreatIntelConfig {
+  /** Dodatkowe adresy IP traktowane jako znane zagrożenia */
+  ips?: string[];
+  /** Dodatkowe domeny traktowane jako złośliwe */
+  domains?: string[];
 }
 
 /**
@@ -128,6 +146,23 @@ export interface SilkerOptions {
   allowedHosts?: string[];
   /** Konfiguracja rate limiting (opcjonalne, domyślnie 60 req/min) */
   rateLimit?: RateLimitConfig;
+  /**
+   * Czy ufać nagłówkom proxy (x-forwarded-for / x-real-ip) przy ustalaniu IP klienta.
+   * Domyślnie true (zachowanie dotychczasowe — wymagane za Vercel/Cloudflare/LB).
+   * UWAGA: bez zaufanego proxy nagłówek XFF jest podszywalny przez klienta —
+   * bany i rate limity per-IP są wtedy zawodne. Jeśli aplikacja NIE stoi za proxy,
+   * ustaw `trustProxy: false` (użyty zostanie adres socketu).
+   */
+  trustProxy?: boolean;
+  /**
+   * Opcjonalny zewnętrzny magazyn stanu (np. Redis) do współdzielenia liczników
+   * rate limitu i banów IP między instancjami. Lokalna pamięć pozostaje
+   * autorytatywna dla synchronicznej decyzji; zewnętrzny store jest mirrorowany
+   * best-effort (eventual consistency). Zob. SilkerStateStore.
+   */
+  store?: SilkerStateStore;
+  /** Dodatkowe listy threat intelligence (IP/domeny) scalane z wbudowanymi */
+  threatIntel?: ThreatIntelConfig;
   /** Blokowanie WYCHODZĄCYCH żądań fetch po wykryciu anomalii (domyślnie false — tryb monitor-only, tylko telemetria) */
   blockOutgoing?: boolean;
   /**

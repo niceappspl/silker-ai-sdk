@@ -53,11 +53,11 @@ function getSnippet(framework: string, apiKey: string): { file: string; code: st
   if (framework === 'nextjs') {
     return {
       file: 'middleware.ts',
-      code: `import { middleware } from '@silker-ai/agent';
+      code: `import { nextMiddleware } from '@silker-ai/agent/next';
+
+export const middleware = nextMiddleware();
 
 export const config = { matcher: '/api/:path*' };
-
-export default middleware();
 // Add to .env.local:${keyLine}
 `,
     };

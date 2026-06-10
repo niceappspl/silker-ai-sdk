@@ -7,6 +7,7 @@ import { createLogger } from '../utils/logger';
 import { recordPerformanceMetrics } from '../analytics/performance';
 import { resolveSilkerOptions, warnMissingApiKeyOnce } from '../config/env';
 import { getRequestContext } from '../utils/requestContext';
+import { isFeatureEnabled } from '../detection/features';
 
 let globalOptions: SilkerOptions | null = null;
 let originalFetchBackup: typeof global.fetch | null = null;
@@ -119,9 +120,15 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
       });
     }
 
-    // SSRF is checked explicitly for OUTGOING requests (this is where it matters),
-    // regardless of the incoming-request default, unless explicitly disabled.
-    const ssrfDetected = options.features?.ssrfDetection !== false && detectSsrfAttack(event);
+    // SSRF for OUTGOING requests is the primary purpose of this hook, so it is
+    // governed by the dedicated `outboundSsrfProtection` feature (default TRUE in
+    // DEFAULT_FEATURES) — separate from incoming `ssrfDetection` (default false).
+    // Backward compat: an explicit `ssrfDetection: false` also disables outbound.
+    const outboundSsrfEnabled =
+      options.features?.ssrfDetection === false
+        ? false
+        : isFeatureEnabled(options, 'outboundSsrfProtection');
+    const ssrfDetected = outboundSsrfEnabled && detectSsrfAttack(event);
     const anomaly = isAnomaly(event) || ssrfDetected;
 
     if (anomaly) {
@@ -138,7 +145,15 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
       let threatType: string | undefined;
       if (telemetryEnabled) {
         setGlobalOptionsForThreat(options);
-        const threatInfo = detectThreatType(event);
+        // Outbound SSRF jest wykrywany lokalnie (osobny feature flag), więc
+        // klasyfikujemy go wprost — detectThreatType gateuje SSRF na incoming fladze.
+        const threatInfo = ssrfDetected
+          ? {
+              type: 'SSRF',
+              severity: 'critical' as const,
+              description: `Server-side request forgery attempt detected in ${url}`,
+            }
+          : detectThreatType(event);
         if (threatInfo) {
           threatType = threatInfo.type;
           // Fire-and-forget: never block the request path on telemetry delivery.

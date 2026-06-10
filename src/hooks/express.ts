@@ -9,6 +9,7 @@ import { logAuditEvent } from '../monitoring/audit';
 import { resolveSilkerOptions, warnMissingApiKeyOnce } from '../config/env';
 import { applyProfile } from '../config/profiles';
 import { runWithRequestContext } from '../utils/requestContext';
+import { DEFAULT_SCAN_LIMIT_BYTES } from '../detection/features';
 
 const vibeEmitter = new EventEmitter();
 vibeEmitter.setMaxListeners(50);
@@ -50,8 +51,9 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
           return next();
         }
         
-        // Limit payload size for analysis to avoid blocking event loop
-        const MAX_ANALYSIS_SIZE = 10240; // 10KB
+        // Limit payload size for analysis to avoid blocking event loop.
+        // Shared default (100KB) — overridable via options.maxPayloadSize.
+        const maxAnalysisSize = options.maxPayloadSize || DEFAULT_SCAN_LIMIT_BYTES;
 
         const payloadParts: string[] = [];
 
@@ -60,8 +62,8 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
             if (!obj) return;
             try {
                 const str = JSON.stringify(obj);
-                if (str.length > MAX_ANALYSIS_SIZE) {
-                    payloadParts.push(str.substring(0, MAX_ANALYSIS_SIZE));
+                if (str.length > maxAnalysisSize) {
+                    payloadParts.push(str.substring(0, maxAnalysisSize));
                 } else {
                     payloadParts.push(str);
                 }
@@ -70,11 +72,17 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
             }
         };
 
-        // Get real IP from proxy headers (Vercel, Cloudflare, etc.)
-        const realIp = req.headers['x-real-ip'] || 
-                       req.headers['x-forwarded-for']?.split(',')[0].trim() ||
-                       req.ip || 
-                       req.connection.remoteAddress;
+        // Client IP resolution:
+        // - trustProxy (default true): honor proxy headers (Vercel, Cloudflare, LB).
+        //   WARNING: without a trusted proxy in front, XFF is client-spoofable.
+        // - trustProxy: false — ignore XFF/x-real-ip, use the socket remote address.
+        const socketIp = req.socket?.remoteAddress || req.connection?.remoteAddress;
+        const realIp = options.trustProxy !== false
+            ? (req.headers['x-real-ip'] ||
+               req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+               req.ip ||
+               socketIp)
+            : (socketIp || req.ip);
 
         const start = Date.now();
         let redactionPerformed = false;

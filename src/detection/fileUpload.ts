@@ -43,23 +43,25 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
   let content = '';
 
   try {
-    // Attempt to parse payload if it's a string JSON, usually from middleware
-    const payload = event.payload ? JSON.parse(event.payload) : {};
+    // Attempt to parse payload if it's a string JSON, usually from middleware.
+    // Bez multera/body-parsera body multipart bywa {}, pusty lub surowy string —
+    // brak metadanych pliku NIE jest zagrożeniem (flagujemy tylko realne wskaźniki ataku).
+    let payload: any = {};
+    if (event.payload) {
+      try {
+        payload = JSON.parse(event.payload);
+      } catch {
+        // Surowe (nie-JSON) body — np. niesparsowany multipart. Nic do analizy.
+        payload = {};
+      }
+    }
 
-    if (payload.file || payload.files) {
+    if (payload && (payload.file || payload.files)) {
       const fileData = payload.file || payload.files[0];
       filename = fileData?.filename || fileData?.name || '';
       contentType = fileData?.contentType || fileData?.type || '';
       size = fileData?.size || 0;
       content = fileData?.content || fileData?.data || '';
-    }
-
-    // Check for multipart uploads without actual file metadata (often bypass attempt)
-    const contentTypeHeader = event.headers?.['content-type'] || event.headers?.['Content-Type'] || '';
-    if (contentTypeHeader.includes('multipart/form-data')) {
-      if (!filename && !contentType) {
-        issues.push('Multipart upload detected but no file information provided');
-      }
     }
 
     // Size validation (10MB hard limit for analysis)
@@ -141,8 +143,8 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
     }
 
   } catch (error) {
-    // Fail open or closed? For security, we should probably flag it.
-    issues.push('File upload validation failed');
+    // Fail open: błąd wewnętrzny walidatora nie może blokować legalnych uploadów.
+    // Realne zagrożenia są flagowane przez konkretne wskaźniki powyżej.
   }
 
   return { safe: issues.length === 0, issues };

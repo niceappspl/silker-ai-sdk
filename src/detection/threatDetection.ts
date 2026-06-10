@@ -15,6 +15,7 @@ import { checkCryptographicFailures, detectWeakEncryption } from './cryptographi
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
+import { FeatureKey, isFeatureEnabled as isFeatureEnabledShared } from './features';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -22,11 +23,12 @@ export function setGlobalOptionsForThreat(options: SilkerOptions | null) {
   globalOptions = options;
 }
 
-function isFeatureEnabled(feature: keyof NonNullable<SilkerOptions['features']>): boolean {
-  if (!globalOptions || !globalOptions.features) {
-    return true; // Default enabled if options or features missing
-  }
-  return globalOptions.features[feature] !== false;
+/**
+ * Współdzielony helper z ./features — ta sama semantyka co w isAnomaly:
+ * undefined → DEFAULT_FEATURES (opt-in detektory są domyślnie wyłączone).
+ */
+function isFeatureEnabled(feature: FeatureKey): boolean {
+  return isFeatureEnabledShared(globalOptions, feature);
 }
 
 export interface ThreatInfo {

@@ -1,4 +1,4 @@
-import { checkThreatIntelligence } from '../../src/detection/threatIntelligence';
+import { checkThreatIntelligence, configureThreatIntel } from '../../src/detection/threatIntelligence';
 import { SilkerEvent } from '../../src/types';
 
 describe('checkThreatIntelligence', () => {
@@ -174,6 +174,30 @@ describe('checkThreatIntelligence', () => {
         userAgent: 'SQLMAP/1.0'
       };
       const result = checkThreatIntelligence(event);
+      expect(result.threat).toBe(true);
+    });
+  });
+
+  describe('User-extended lists (options.threatIntel)', () => {
+    afterEach(() => {
+      configureThreatIntel(undefined); // reset to builtin lists
+    });
+
+    it('should flag a custom IP merged with builtin lists', () => {
+      configureThreatIntel({ ips: ['203.0.113.99'] });
+      const result = checkThreatIntelligence({ ...baseEvent, ip: '203.0.113.99' });
+      expect(result.threat).toBe(true);
+    });
+
+    it('should flag a custom domain merged with builtin lists', () => {
+      configureThreatIntel({ domains: ['Evil-Corp.example' ] });
+      const result = checkThreatIntelligence({ ...baseEvent, url: 'https://evil-corp.example/api' });
+      expect(result.threat).toBe(true);
+    });
+
+    it('should keep builtin entries after merging custom lists', () => {
+      configureThreatIntel({ ips: ['203.0.113.99'] });
+      const result = checkThreatIntelligence({ ...baseEvent, ip: '185.220.101.1' });
       expect(result.threat).toBe(true);
     });
   });

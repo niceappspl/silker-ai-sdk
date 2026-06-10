@@ -4,6 +4,7 @@ import { sanitizeSensitiveData } from './sanitization';
 import { createLogger, Logger } from '../utils/logger';
 import { syncBans } from '../detection/rateLimit';
 import { applyRemoteFeatures } from '../detection/anomaly';
+import { SDK_VERSION } from '../version';
 
 type TelemetryType = 'threat' | 'request';
 
@@ -155,7 +156,7 @@ class TelemetryClient {
                 headers: {
                     'x-api-key': options.apiKey,
                     'Content-Type': 'application/json',
-                    'x-silker-client-version': '1.0.24'
+                    'x-silker-client-version': SDK_VERSION
                 },
                 timeout: isServerless ? 10000 : 5000 // Higher timeout for serverless batches
             });

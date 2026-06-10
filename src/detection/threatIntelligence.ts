@@ -1,15 +1,30 @@
-import { SilkerEvent } from '../types';
+import { SilkerEvent, ThreatIntelConfig } from '../types';
 
-// Database of known malicious IPs (Example list - in production this would be synced from API)
-const knownThreatIPs = new Set([
+// Baseline list of known malicious IPs (small builtin seed — extend via options.threatIntel.ips)
+const builtinThreatIPs = [
   '185.220.101.1', '185.220.101.2',
   '104.236.0.0', '104.236.255.255',
-]);
+];
 
-// Database of known malicious domains (Example list)
-const knownMaliciousDomains = new Set([
+// Baseline list of known malicious domains (extend via options.threatIntel.domains)
+const builtinMaliciousDomains = [
   'malicious-site.com', 'phishing-domain.net', 'malware-host.org',
-]);
+];
+
+let knownThreatIPs = new Set(builtinThreatIPs);
+let knownMaliciousDomains = new Set(builtinMaliciousDomains);
+
+/**
+ * Scala listy threat intelligence użytkownika (options.threatIntel) z wbudowanymi.
+ * Wywoływane przy setGlobalOptions — konfiguracja per proces.
+ */
+export function configureThreatIntel(config?: ThreatIntelConfig): void {
+  knownThreatIPs = new Set([...builtinThreatIPs, ...(config?.ips ?? [])]);
+  knownMaliciousDomains = new Set([
+    ...builtinMaliciousDomains,
+    ...(config?.domains ?? []).map(domain => domain.toLowerCase()),
+  ]);
+}
 
 /**
  * Sprawdza zdarzenie pod kątem znanych zagrożeń z bazy threat intelligence.

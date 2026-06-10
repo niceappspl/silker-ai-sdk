@@ -17,9 +17,13 @@ import {
   ThreatInfo,
 } from '../detection/threatDetection';
 import { SilkerOptions, SilkerEvent, SilkerFeatures } from '../types';
+import { DEFAULT_SCAN_LIMIT_BYTES } from '../detection/features';
 
-/** Maksymalny rozmiar body skanowanego pod kątem zagrożeń (ochrona przed DoS/latencją). */
-export const MAX_BODY_SCAN_BYTES = 50 * 1024; // 50KB
+/**
+ * Maksymalny rozmiar body skanowanego pod kątem zagrożeń (ochrona przed DoS/latencją).
+ * Współdzielony limit ze wszystkimi powłokami (express hook, isAnomaly) — 100KB.
+ */
+export const MAX_BODY_SCAN_BYTES = DEFAULT_SCAN_LIMIT_BYTES;
 
 /**
  * Domyślny zestaw funkcji dla powłok edge/proxy (Worker, kontener).
@@ -71,8 +75,10 @@ export function inspectEvent(event: SilkerEvent): InspectResult {
 /**
  * Buduje `SilkerEvent` ze standardowego Web `Request` (Worker, Node 18+, edge).
  * Body czytane jest z klona (oryginał pozostaje do forwardu) i przycinane do limitu.
+ * @param maxBytes - Opcjonalny limit skanu (domyślnie MAX_BODY_SCAN_BYTES; powłoka
+ *   może przekazać `options.maxPayloadSize` użytkownika)
  */
-export async function eventFromRequest(request: Request, ip?: string): Promise<SilkerEvent> {
+export async function eventFromRequest(request: Request, ip?: string, maxBytes: number = MAX_BODY_SCAN_BYTES): Promise<SilkerEvent> {
   const headers: Record<string, string> = {};
   request.headers.forEach((value, key) => {
     headers[key] = value;
@@ -84,7 +90,7 @@ export async function eventFromRequest(request: Request, ip?: string): Promise<S
   if (method !== 'GET' && method !== 'HEAD') {
     try {
       const text = await request.clone().text();
-      bodyText = text.length > MAX_BODY_SCAN_BYTES ? text.slice(0, MAX_BODY_SCAN_BYTES) : text;
+      bodyText = text.length > maxBytes ? text.slice(0, maxBytes) : text;
     } catch {
       // Brak/niereadable body - pomijamy skan body.
     }
@@ -99,7 +105,7 @@ export async function eventFromRequest(request: Request, ip?: string): Promise<S
   }
 
   const combined = `${bodyText} ${queryText}`.trim();
-  const payload = combined.length > 0 ? combined.slice(0, MAX_BODY_SCAN_BYTES) : undefined;
+  const payload = combined.length > 0 ? combined.slice(0, maxBytes) : undefined;
 
   const resolvedIp =
     ip ||
@@ -125,5 +131,6 @@ export {
   buildRequestItem,
   sendEvents,
   type TelemetryConfig,
+  type IngestResponseData,
 } from './telemetry';
 export type { SilkerOptions, SilkerEvent, ThreatInfo };

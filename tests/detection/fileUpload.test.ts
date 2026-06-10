@@ -244,14 +244,43 @@ describe('validateFileUpload', () => {
   });
 
   describe('Multipart form data', () => {
-    it('should detect multipart without file info', () => {
+    it('should NOT flag multipart without parsed file metadata (Express without multer)', () => {
       const event: SilkerEvent = {
         ...baseEvent,
         payload: JSON.stringify({}),
+        headers: { 'content-type': 'multipart/form-data; boundary=----x' }
+      };
+      const result = validateFileUpload(event);
+      expect(result.safe).toBe(true);
+      expect(result.issues.length).toBe(0);
+    });
+
+    it('should NOT flag multipart with raw (non-JSON) body', () => {
+      const event: SilkerEvent = {
+        ...baseEvent,
+        payload: '------x\r\nContent-Disposition: form-data; name="file"; filename="photo.png"\r\n\r\nbinary',
+        headers: { 'content-type': 'multipart/form-data; boundary=----x' }
+      };
+      const result = validateFileUpload(event);
+      expect(result.safe).toBe(true);
+    });
+
+    it('should still flag multipart with dangerous filename in metadata', () => {
+      const event: SilkerEvent = {
+        ...baseEvent,
+        payload: JSON.stringify({
+          file: {
+            filename: '../../../etc/passwd',
+            contentType: 'text/plain',
+            size: 100,
+            content: 'base64content'
+          }
+        }),
         headers: { 'content-type': 'multipart/form-data' }
       };
       const result = validateFileUpload(event);
-      expect(result.issues.some(i => i.includes('Multipart upload'))).toBe(true);
+      expect(result.safe).toBe(false);
+      expect(result.issues.some(i => i.includes('Dangerous filename') || i.includes('path traversal'))).toBe(true);
     });
   });
 
@@ -351,12 +380,30 @@ describe('detectFileUploadAttack', () => {
     expect(detectFileUploadAttack(event)).toBe(true);
   });
 
-  it('should detect multipart content type', () => {
+  it('should NOT flag multipart with empty body (no suspicious indicators)', () => {
     const event: SilkerEvent = {
       ...baseEvent,
       method: 'POST',
       url: '/api/data',
       payload: JSON.stringify({}),
+      headers: { 'content-type': 'multipart/form-data' }
+    };
+    expect(detectFileUploadAttack(event)).toBe(false);
+  });
+
+  it('should flag multipart with dangerous filename in metadata', () => {
+    const event: SilkerEvent = {
+      ...baseEvent,
+      method: 'POST',
+      url: '/api/data',
+      payload: JSON.stringify({
+        file: {
+          filename: 'shell.php<>.png',
+          contentType: 'image/png',
+          size: 100,
+          content: 'base64content'
+        }
+      }),
       headers: { 'content-type': 'multipart/form-data' }
     };
     expect(detectFileUploadAttack(event)).toBe(true);

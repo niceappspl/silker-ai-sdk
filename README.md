@@ -49,16 +49,22 @@ SILKER_API_KEY=sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ```typescript
 import express from 'express';
-import { middleware } from '@silker-ai/agent';
+import { initSilker, middleware } from '@silker-ai/agent';
 
 const app = express();
 app.use(express.json());
-app.use(middleware()); // reads SILKER_API_KEY from process.env
+app.use(middleware()); // protects INCOMING traffic (reads SILKER_API_KEY from process.env)
+await initSilker();    // additionally hooks OUTGOING fetch() (SSRF protection)
 ```
 
 That's it. With `SILKER_API_KEY` set, telemetry flows to your dashboard.
 Without a key, the SDK logs a single warning and runs in detection-only mode
 (attacks are still blocked, no telemetry) — it never crashes your app.
+
+> **Note:** `middleware()` protects **incoming** requests only. Calling
+> `initSilker()` additionally hooks the global `fetch()` so **outgoing**
+> requests are checked for SSRF (internal addresses, cloud metadata endpoints).
+> We recommend calling both.
 
 You can also configure explicitly:
 
@@ -80,12 +86,26 @@ await initSilker(); // reads SILKER_API_KEY from process.env
 
 ---
 
-#### Next.js
+#### Next.js (Edge `middleware.ts`)
 
-The exported `middleware` is an Express-style handler (`(req, res, next)`) and
-**does not work in Next.js `middleware.ts`** (Edge runtime uses a different API).
+Since v1.3.0 Silker ships a native Next.js App Router / Edge runtime adapter
+via the `@silker-ai/agent/next` subpath:
 
-To use Silker with Next.js, run it behind a [custom Express server](https://nextjs.org/docs/pages/guides/custom-server):
+```typescript
+// middleware.ts (project root)
+import { nextMiddleware } from '@silker-ai/agent/next';
+
+export const middleware = nextMiddleware(); // reads SILKER_API_KEY from process.env
+
+export const config = { matcher: '/api/:path*' };
+```
+
+The adapter is fail-open (never breaks your app), sends telemetry
+fire-and-forget, and applies dashboard-managed feature config and banned IPs
+from the ingest response (disable with `remoteConfig: false`).
+
+Alternatively, you can still run the Express-style `middleware()` behind a
+[custom Express server](https://nextjs.org/docs/pages/guides/custom-server):
 
 ```typescript
 // server.ts
@@ -192,6 +212,31 @@ requests, opt in:
 await initSilker({ blockOutgoing: true });
 ```
 
+Outbound SSRF checking is governed by the `outboundSsrfProtection` feature
+(default **on**). Setting `ssrfDetection: false` explicitly also disables it.
+
+### Client IP & proxies (`trustProxy`)
+
+By default Silker trusts proxy headers (`x-forwarded-for`, `x-real-ip`) to
+resolve the client IP — required behind Vercel, Cloudflare or a load balancer.
+
+**If your app is NOT behind a trusted proxy, set `trustProxy: false`** —
+otherwise clients can spoof `x-forwarded-for` and IP-keyed bans / rate limits
+become unreliable:
+
+```typescript
+app.use(middleware({ trustProxy: false })); // use the socket remote address
+```
+
+### Distributed rate limiting (`store`)
+
+Rate-limit counters and IP bans live in process memory by default. For
+multi-instance deployments you can plug a shared store (e.g. Redis) via the
+`store` option implementing the `SilkerStateStore` interface — see
+[CONFIGURATION.md](./CONFIGURATION.md) for the interface and a Redis example.
+The local memory stays authoritative for the synchronous block/allow decision;
+the external store is mirrored best-effort (eventual consistency).
+
 Full list of options: [CONFIGURATION.md](./CONFIGURATION.md)
 
 ---
@@ -222,7 +267,7 @@ Visible in your dashboard: threats, requests, map, AI analysis
 | Node.js ≥ 14 | ✅ |
 | Express / NestJS | ✅ |
 | Next.js (custom Express server) | ✅ |
-| Next.js Edge `middleware.ts` | ❌ not supported (Express-style API) |
+| Next.js Edge `middleware.ts` | ✅ via `@silker-ai/agent/next` (v1.3.0+) |
 | Vercel / AWS Lambda | ✅ (optimized flush) |
 | Bun / Deno | ⚠️ experimental |
 

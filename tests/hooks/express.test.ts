@@ -173,6 +173,72 @@ describe('hookExpress', () => {
     requestSpy.mockRestore();
   });
 
+  it('should use x-forwarded-for by default (trustProxy: true)', async () => {
+    const requestSpy = jest.spyOn(dashboard, 'sendRequestToDashboard').mockResolvedValue();
+
+    const middleware = hookExpress(mockOptions);
+    const req: any = {
+      method: 'GET',
+      originalUrl: '/api/users',
+      ip: '10.0.0.1',
+      socket: { remoteAddress: '10.0.0.1' },
+      get: jest.fn().mockReturnValue('Mozilla/5.0'),
+      headers: { 'x-forwarded-for': '203.0.113.50, 10.0.0.1' },
+      body: {}
+    };
+    const res: any = {
+      statusCode: 200,
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+      on: jest.fn()
+    };
+    const next = jest.fn();
+
+    await middleware(req, res, next);
+    expect(next).toHaveBeenCalled();
+
+    const finishCall = res.on.mock.calls.find((c: any[]) => c[0] === 'finish');
+    finishCall[1]();
+
+    expect(requestSpy).toHaveBeenCalled();
+    expect(requestSpy.mock.calls[0][0].ip).toBe('203.0.113.50');
+
+    requestSpy.mockRestore();
+  });
+
+  it('should ignore spoofable proxy headers when trustProxy is false', async () => {
+    const requestSpy = jest.spyOn(dashboard, 'sendRequestToDashboard').mockResolvedValue();
+
+    const middleware = hookExpress({ ...mockOptions, trustProxy: false });
+    const req: any = {
+      method: 'GET',
+      originalUrl: '/api/users',
+      ip: '10.0.0.1',
+      socket: { remoteAddress: '198.51.100.7' },
+      get: jest.fn().mockReturnValue('Mozilla/5.0'),
+      headers: { 'x-forwarded-for': '203.0.113.50', 'x-real-ip': '203.0.113.51' },
+      body: {}
+    };
+    const res: any = {
+      statusCode: 200,
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+      on: jest.fn()
+    };
+    const next = jest.fn();
+
+    await middleware(req, res, next);
+    expect(next).toHaveBeenCalled();
+
+    const finishCall = res.on.mock.calls.find((c: any[]) => c[0] === 'finish');
+    finishCall[1]();
+
+    expect(requestSpy).toHaveBeenCalled();
+    expect(requestSpy.mock.calls[0][0].ip).toBe('198.51.100.7');
+
+    requestSpy.mockRestore();
+  });
+
   it('should run detection-only (no telemetry) when no apiKey can be resolved', async () => {
     const requestSpy = jest.spyOn(dashboard, 'sendRequestToDashboard').mockResolvedValue();
 

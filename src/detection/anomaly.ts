@@ -12,64 +12,28 @@ import { checkCryptographicFailures, detectWeakEncryption } from './cryptographi
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
-import { detectPromptInjection } from './promptInjection';
+import { detectPromptInjection, shouldBlockPromptInjectionOnLlmRoute } from './promptInjection';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
 import { isLlmRoute } from './llmContext';
+import {
+  DEFAULT_FEATURES,
+  DEFAULT_SCAN_LIMIT_BYTES,
+  FeatureKey,
+  isFeatureEnabled as isFeatureEnabledShared,
+} from './features';
+import { configureThreatIntel } from './threatIntelligence';
+import { setExternalStore } from './rateLimit';
 
 let globalOptions: SilkerOptions | null = null;
 
-type FeatureKey = keyof NonNullable<SilkerOptions['features']>;
+export { DEFAULT_FEATURES };
 
 /**
- * Domyślny stan funkcjonalności gdy użytkownik nie ustawił ich jawnie.
- * Detektory generujące dużo false positives na normalnym ruchu produkcyjnym
- * są OPT-IN (false) — włącza się je jawnie przez options.features.
- */
-export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
-  // Włączone domyślnie (niski poziom false positives)
-  rateLimit: true,
-  sqliDetection: true,
-  xssDetection: true,
-  pathTraversalDetection: true,
-  promptInjectionDetection: true,
-  dataLeakageDetection: true,
-  fileUploadDetection: true,
-  ipBanning: true,
-  auditLogging: true,
-  cloudCommunication: true,
-  // Opt-in (wysokie ryzyko false positives na produkcyjnych API)
-  csrfDetection: false,
-  ssrfDetection: false,
-  idorDetection: false,
-  hostHeaderInjectionDetection: false,
-  securityHeadersValidation: false,
-  apiSchemaValidation: false,
-  sessionAnomaliesDetection: false,
-  thirdPartyDetection: false,
-  complianceDetection: false,
-  threatIntelligence: false,
-  zeroTrustDetection: false,
-  accessControlDetection: false,
-  cryptographicValidation: false,
-  vulnerableComponentsDetection: false,
-  authenticationValidation: false,
-  softwareIntegrityValidation: false,
-  disableLegacySecurity: false,
-};
-
-/**
- * Sprawdza czy funkcjonalność jest włączona.
- * Jawna wartość użytkownika (boolean/obiekt) wygrywa; undefined → DEFAULT_FEATURES.
+ * Sprawdza czy funkcjonalność jest włączona (współdzielony helper z ./features
+ * związany z globalnymi opcjami tego modułu).
  */
 function isFeatureEnabled(feature: FeatureKey): boolean {
-  const featureValue = globalOptions?.features?.[feature];
-  if (featureValue === undefined) {
-    return DEFAULT_FEATURES[feature] ?? false;
-  }
-  if (typeof featureValue === 'object') {
-    return true;
-  }
-  return featureValue === true;
+  return isFeatureEnabledShared(globalOptions, feature);
 }
 
 /**
@@ -100,6 +64,8 @@ function isLegacySecurityDisabled(): boolean {
  */
 export function setGlobalOptions(options: SilkerOptions | null) {
   globalOptions = options;
+  configureThreatIntel(options?.threatIntel);
+  setExternalStore(options?.store ?? null);
 }
 
 /**
@@ -137,7 +103,7 @@ export function applyRemoteFeatures(features: Record<string, unknown> | null | u
 export function isAnomaly(event: SilkerEvent): boolean {
   try {
     const { method, url, payload, ip, headers } = event;
-    const maxPayloadSize = globalOptions?.maxPayloadSize || 1048576; // Default 1MB
+    const maxPayloadSize = globalOptions?.maxPayloadSize || DEFAULT_SCAN_LIMIT_BYTES;
 
     // Rate limiting check (lightweight, do first)
     const ipBanningEnabled = isFeatureEnabled('ipBanning');
@@ -159,12 +125,14 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
-    // PRIORITY: For LLM routes, run prompt injection check FIRST
-    // Block on ANY detection for LLM routes (stricter than generic endpoints)
+    // PRIORITY: For LLM routes, run prompt injection check FIRST.
+    // Block on medium+ severity, or a low-severity match that still carries a
+    // high-confidence override/jailbreak signal. Pure persona-roleplay (low
+    // severity, no override signal) is allowed — see shouldBlockPromptInjectionOnLlmRoute.
     const isLlm = isLlmRoute(url, headers);
     if (isLlm && scannedPayload && isFeatureEnabled('promptInjectionDetection')) {
       const injection = detectPromptInjection(scannedPayload);
-      if (injection.detected) {
+      if (shouldBlockPromptInjectionOnLlmRoute(injection)) {
         event.complianceTags = [...(event.complianceTags || []), 'AI_ACT_RESILIENCE', 'ISO_A_8_2'];
         return true;
       }
@@ -277,7 +245,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
 
     // Data Leakage Detection with strategy support
     const dataLeakageConfig = getDataLeakageConfig();
-    if (dataLeakageConfig && dataLeakageConfig.strategy === 'block' && (method === 'GET' || method === 'POST')) {
+    if (dataLeakageConfig && dataLeakageConfig.strategy === 'block') {
       const leakageCheck = detectDataLeakage(scannedPayload);
       if (leakageCheck.leaked) {
         event.complianceTags = [...(event.complianceTags || []), 'GDPR', 'GDPR_ART_32'];
@@ -301,14 +269,32 @@ export function isAnomaly(event: SilkerEvent): boolean {
           finding.includes('JWT Token')
         );
 
+        // High-confidence secrets (provider API keys, client secrets, private keys,
+        // DB connection strings) block regardless of HTTP method — leaking them in
+        // a POST body is just as dangerous as in a GET query string.
+        // Stripe test/publishable keys are excluded (not secret material).
+        const hasHighConfidenceSecret = leakageCheck.findings.some((finding: string) =>
+          finding.includes('Secret') ||
+          (finding.includes('API Key (') &&
+            !finding.includes('Stripe Test Key') &&
+            !finding.includes('Stripe Publishable Key'))
+        );
+
         if (hasHighRiskLeak) {
           return true;
         }
 
+        if (hasHighConfidenceSecret) {
+          return true;
+        }
+
+        // Generic password fields on auth endpoints stay allowed (login/register flows).
         if (hasPasswordLeak && !isAuthEndpoint) {
           return true;
         }
 
+        // Generic API keys / JWT tokens: block only in GET (query string / URL leak).
+        // POST bodies legitimately carry JWTs (refresh flows) and generic key-like strings.
         if (method === 'GET' && hasApiKeyLeak) {
           return true;
         }

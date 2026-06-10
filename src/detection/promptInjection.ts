@@ -5,6 +5,13 @@ interface PromptInjectionResult {
   patterns: string[];
   severity: 'low' | 'medium' | 'high' | 'critical';
   score: number;
+  /**
+   * True when a high-confidence override/jailbreak/extraction/obfuscation signal
+   * matched (as opposed to standalone persona-roleplay or generic chain phrasing).
+   * Used by the LLM-route blocking policy to escalate low-severity matches that
+   * still carry a genuine injection intent, while letting benign roleplay pass.
+   */
+  overrideSignal: boolean;
 }
 
 const INSTRUCTION_OVERRIDE_PATTERNS = [
@@ -18,7 +25,13 @@ const INSTRUCTION_OVERRIDE_PATTERNS = [
 const SYSTEM_PROMPT_MANIPULATION = [
   /system\s*:\s*(you\s+are|act\s+as|new\s+role|mode\s+change)/gi,
   /you\s+are\s+now\s+(a|an|in|acting)/gi,
-  /new\s+(instructions?|role|mode|system)/gi,
+  // "new instructions/role/mode/system" only when it is an injection directive:
+  // a directive colon/equals ("new instructions: …"), an activation verb
+  // ("follow/enter/switch to … new role"), or an assignment ("your new role is …").
+  // This avoids matching benign nouns like "the new instructions for assembling …".
+  /new\s+(instructions?|role|mode|system)\s*[:=]/gi,
+  /(follow|obey|use|apply|load|enter|activate|adopt|switch\s+to|here\s+are|here'?s|these\s+are)\s+(the\s+|your\s+|my\s+)?new\s+(instructions?|role|mode|system)\b/gi,
+  /your\s+new\s+(role|mode|persona|identity|instructions?|system\s+prompt)\s+(is|are|will\s+be)\b/gi,
   /switch\s+to\s+(developer|admin|root|debug)\s+mode/gi,
   /enable\s+(developer|admin|debug|god)\s+mode/gi,
   /jailbreak\s+(mode|activated|enabled)/gi,
@@ -208,26 +221,31 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     patterns: [],
     severity: 'low',
     score: 0,
+    overrideSignal: false,
   };
 
   if (!payload || typeof payload !== 'string') {
     return result;
   }
 
+  // `override: true` marks high-confidence injection categories (override,
+  // jailbreak, extraction, exfiltration, delimiter/system manipulation,
+  // encoding, multilingual). Pure persona-roleplay and generic chain phrasing
+  // are `false`: detected, but not enough on their own to block an LLM route.
   const checks = [
-    { patterns: INSTRUCTION_OVERRIDE_PATTERNS, weight: 10, name: 'Instruction Override' },
-    { patterns: SYSTEM_PROMPT_MANIPULATION, weight: 15, name: 'System Prompt Manipulation' },
-    { patterns: ROLE_MANIPULATION, weight: 7, name: 'Role Manipulation' },
-    { patterns: DELIMITER_INJECTION, weight: 12, name: 'Delimiter Injection' },
-    { patterns: JAILBREAK_ATTEMPTS, weight: 20, name: 'Jailbreak Attempt' },
-    { patterns: PROMPT_EXTRACTION, weight: 8, name: 'Prompt Extraction' },
-    { patterns: ENCODING_OBFUSCATION, weight: 6, name: 'Encoding Obfuscation' },
-    { patterns: CHAIN_MANIPULATION, weight: 9, name: 'Chain Manipulation' },
-    { patterns: MULTILINGUAL_ATTACKS, weight: 11, name: 'Multilingual Attack' },
-    { patterns: JAILBREAK_SUBTYPE, weight: 20, name: 'Jailbreak Attempt' },
-    { patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE, weight: 15, name: 'Prompt Extraction' },
-    { patterns: DATA_EXFIL_SUBTYPE, weight: 20, name: 'Data Exfiltration' },
-    { patterns: INSTRUCTION_OVERRIDE_SUBTYPE, weight: 15, name: 'Instruction Override' },
+    { patterns: INSTRUCTION_OVERRIDE_PATTERNS, weight: 10, name: 'Instruction Override', override: true },
+    { patterns: SYSTEM_PROMPT_MANIPULATION, weight: 15, name: 'System Prompt Manipulation', override: true },
+    { patterns: ROLE_MANIPULATION, weight: 7, name: 'Role Manipulation', override: false },
+    { patterns: DELIMITER_INJECTION, weight: 12, name: 'Delimiter Injection', override: true },
+    { patterns: JAILBREAK_ATTEMPTS, weight: 20, name: 'Jailbreak Attempt', override: true },
+    { patterns: PROMPT_EXTRACTION, weight: 8, name: 'Prompt Extraction', override: true },
+    { patterns: ENCODING_OBFUSCATION, weight: 6, name: 'Encoding Obfuscation', override: true },
+    { patterns: CHAIN_MANIPULATION, weight: 9, name: 'Chain Manipulation', override: false },
+    { patterns: MULTILINGUAL_ATTACKS, weight: 11, name: 'Multilingual Attack', override: true },
+    { patterns: JAILBREAK_SUBTYPE, weight: 20, name: 'Jailbreak Attempt', override: true },
+    { patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE, weight: 15, name: 'Prompt Extraction', override: true },
+    { patterns: DATA_EXFIL_SUBTYPE, weight: 20, name: 'Data Exfiltration', override: true },
+    { patterns: INSTRUCTION_OVERRIDE_SUBTYPE, weight: 15, name: 'Instruction Override', override: true },
   ];
 
   for (const check of checks) {
@@ -237,6 +255,9 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
         result.detected = true;
         result.patterns.push(check.name);
         result.score += check.weight * matches.length;
+        if (check.override) {
+          result.overrideSignal = true;
+        }
         break;
       }
     }
@@ -248,6 +269,7 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     result.detected = true;
     result.patterns.push('Token Smuggling / Obfuscation');
     result.score += smuggling.score;
+    result.overrideSignal = true;
   }
 
   const obfuscated = detectObfuscatedKeywords(payload);
@@ -255,6 +277,7 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     result.detected = true;
     result.patterns.push(`Obfuscated Keywords: ${obfuscated.keywords.join(', ')}`);
     result.score += 15; // High weight for deliberate obfuscation
+    result.overrideSignal = true;
   }
 
   if (result.score >= 20) {
@@ -268,6 +291,29 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
   }
 
   return result;
+}
+
+/**
+ * LLM-route blocking decision for prompt injection.
+ *
+ * Replaces the old "block on ANY detection" policy, which flagged benign UX
+ * roleplay ("act as a translator", "pretend you are a pirate", "simulate a dice
+ * roll"). Those score at low severity with no override signal and are now allowed.
+ *
+ * Block when severity is medium or higher, OR when a low-severity match still
+ * carries a high-confidence override/jailbreak/extraction/obfuscation signal
+ * (e.g. a lone `base64: …` blob). Roleplay COMBINED with an override signal
+ * ("roleplay as a jailbroken AI", "imagine you are … without any restrictions")
+ * escalates via the high-weight categories and is still blocked.
+ *
+ * @param result - Output of {@link detectPromptInjection}
+ * @returns true if the request should be blocked on an LLM route
+ */
+export function shouldBlockPromptInjectionOnLlmRoute(result: PromptInjectionResult): boolean {
+  if (!result.detected) {
+    return false;
+  }
+  return result.severity !== 'low' || result.overrideSignal;
 }
 
 /** Podtyp wykrytego prompt injection (do grupowania w dashboardzie "AI Security"). */
@@ -387,6 +433,10 @@ export function detectJailbreak(payload?: string): boolean {
   ];
 
   for (const pattern of jailbreakIndicators) {
+    // Wzorce współdzielone (moduł) mają flagę `g` — `.test()` na takim regexie
+    // jest stanowy (lastIndex), co dawało losowe false negatives przy kolejnych
+    // wywołaniach. Reset lastIndex gwarantuje deterministyczny wynik.
+    pattern.lastIndex = 0;
     if (pattern.test(payload)) {
       return true;
     }

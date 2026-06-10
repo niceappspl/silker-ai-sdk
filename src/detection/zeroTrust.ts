@@ -1,12 +1,22 @@
 import { SilkerEvent } from '../types';
 
+/** Konfiguracja sprawdzeń zero-trust. */
+export interface ZeroTrustCheckConfig {
+  /**
+   * Wymaga dodatkowej weryfikacji poza "godzinami pracy" (6-23 czasu serwera).
+   * Domyślnie WYŁĄCZONE — dla globalnych API ruch nocny jest normalny.
+   */
+  businessHoursCheck?: boolean;
+}
+
 /**
  * Wykonuje weryfikację zgodności z zasadami zero-trust.
  * Sprawdza autentykację, weryfikację pochodzenia, user-agent i dodatkowe potwierdzenia dla operacji destrukcyjnych.
  * @param event - Zdarzenie do sprawdzenia
+ * @param config - Opcjonalna konfiguracja (businessHoursCheck domyślnie off)
  * @returns Obiekt z flagą weryfikacji i listą brakujących wymagań
  */
-export function performZeroTrustCheck(event: SilkerEvent): { verified: boolean; requirements: string[] } {
+export function performZeroTrustCheck(event: SilkerEvent, config?: ZeroTrustCheckConfig): { verified: boolean; requirements: string[] } {
   const requirements: string[] = [];
 
   const authHeaders = ['authorization', 'x-api-key', 'authentication'];
@@ -42,10 +52,13 @@ export function performZeroTrustCheck(event: SilkerEvent): { verified: boolean; 
     }
   }
 
-  const now = new Date();
-  const hour = now.getHours();
-  if (hour < 6 || hour > 23) {
-    requirements.push('Access outside normal business hours requires additional verification');
+  // Heurystyka "godzin pracy" jest jawnie opt-in — globalne API mają legalny ruch 24/7.
+  if (config?.businessHoursCheck === true) {
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 6 || hour > 23) {
+      requirements.push('Access outside normal business hours requires additional verification');
+    }
   }
 
   return { verified: requirements.length === 0, requirements };

@@ -199,23 +199,33 @@ describe('performZeroTrustCheck', () => {
       jest.useRealTimers();
     });
 
-    it('should require additional verification outside business hours', () => {
+    it('should be disabled by default (global APIs have legitimate 24/7 traffic)', () => {
       jest.setSystemTime(new Date('2024-01-01T03:00:00Z'));
       const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
       const result = performZeroTrustCheck(event);
+      expect(result.requirements).not.toContain('Access outside normal business hours requires additional verification');
+    });
+
+    it('should require additional verification outside business hours when explicitly enabled', () => {
+      jest.setSystemTime(new Date('2024-01-01T03:00:00Z'));
+      const event: SilkerEvent = {
+        ...baseEvent,
+        headers: {}
+      };
+      const result = performZeroTrustCheck(event, { businessHoursCheck: true });
       expect(result.requirements).toContain('Access outside normal business hours requires additional verification');
     });
 
-    it('should allow access during business hours', () => {
+    it('should allow access during business hours when enabled', () => {
       jest.setSystemTime(new Date('2024-01-01T12:00:00Z'));
       const event: SilkerEvent = {
         ...baseEvent,
         headers: {}
       };
-      const result = performZeroTrustCheck(event);
+      const result = performZeroTrustCheck(event, { businessHoursCheck: true });
       expect(result.requirements).not.toContain('Access outside normal business hours requires additional verification');
     });
   });

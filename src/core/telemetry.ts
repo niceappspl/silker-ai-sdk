@@ -5,6 +5,7 @@
  */
 import { SilkerEvent } from '../types';
 import { ThreatInfo } from '../detection/threatDetection';
+import { SDK_VERSION } from '../version';
 
 export interface TelemetryConfig {
   /** Bazowy URL platformy, np. https://silkerai.com */
@@ -84,24 +85,35 @@ export function buildRequestItem(
   };
 }
 
+/** Dane zwracane przez `/api/ingest` (konfiguracja zdalna + bany). */
+export interface IngestResponseData {
+  bannedIps?: { ip: string; until: string }[];
+  config?: { features?: Record<string, unknown> };
+}
+
 /**
  * Wysyła batch eventów do `/api/ingest`. Fire-and-forget po stronie wywołującego
  * (w Workerze opakuj w `ctx.waitUntil`). Nigdy nie rzuca.
+ * Zwraca dane z odpowiedzi ingestu (remote config / bany) lub null —
+ * powłoka może je zaaplikować (np. `applyRemoteFeatures` / `syncBans`).
  */
-export async function sendEvents(config: TelemetryConfig, events: TelemetryItem[]): Promise<void> {
-  if (!config.apiKey || events.length === 0) return;
+export async function sendEvents(config: TelemetryConfig, events: TelemetryItem[]): Promise<IngestResponseData | null> {
+  if (!config.apiKey || events.length === 0) return null;
   const ingestUrl = `${normalizeBaseUrl(config.endpoint)}/api/ingest`;
   try {
-    await fetch(ingestUrl, {
+    const response = await fetch(ingestUrl, {
       method: 'POST',
       headers: {
         'x-api-key': config.apiKey,
         'content-type': 'application/json',
-        'x-silker-client-version': 'core-1.0.0',
+        'x-silker-client-version': SDK_VERSION,
       },
       body: JSON.stringify({ events }),
     });
+    const json = (await response.json().catch(() => null)) as { data?: IngestResponseData } | null;
+    return json?.data ?? null;
   } catch {
     // Telemetria jest best-effort - nie wpływa na ruch usera.
+    return null;
   }
 }

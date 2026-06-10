@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
-import { SilkerOptions, SilkerFeatures, SilkerEvent, ConfigProfile, DataLeakageConfig, DataLeakageStrategy } from './types';
+import { SilkerOptions, SilkerFeatures, SilkerEvent, ConfigProfile, DataLeakageConfig, DataLeakageStrategy, ThreatIntelConfig } from './types';
+import { InMemoryStateStore, SilkerStateStore } from './state/store';
 import { SilkerError } from './types/errors';
 import { isAnomaly, setGlobalOptions as setDetectionOptions } from './detection';
 import { setGlobalOptions as setAnalyticsOptions } from './analytics/userBehavior';
@@ -204,7 +205,8 @@ export {
   performApiValidation,
   validateSecurityHeaders,
   analyzeUserBehavior,
-  SilkerError
+  SilkerError,
+  InMemoryStateStore
 };
 
 export type {
@@ -214,4 +216,6 @@ export type {
   ConfigProfile,
   DataLeakageConfig,
   DataLeakageStrategy,
+  SilkerStateStore,
+  ThreatIntelConfig,
 };

@@ -22,8 +22,11 @@ import {
   sendEvents,
   EDGE_SAFE_FEATURES,
   type TelemetryConfig,
+  type IngestResponseData,
 } from '../core';
 import { resolveSilkerOptions } from '../config/env';
+import { applyRemoteFeatures } from '../detection/anomaly';
+import { syncBans } from '../detection/rateLimit';
 import { SilkerOptions } from '../types';
 
 /** Minimalny kształt `NextResponse` którego używamy (unika twardej zależności od `next`). */
@@ -87,6 +90,18 @@ export function nextMiddleware(
     features: { ...EDGE_SAFE_FEATURES, ...options.features },
   });
 
+  // Aplikuje remote config / bany z odpowiedzi ingestu (parytet z node telemetry).
+  // Funkcje operują na stanie in-memory — edge-safe (bez API Node-only).
+  const applyIngestResponse = (data: IngestResponseData | null): void => {
+    if (!data) return;
+    if (data.bannedIps) {
+      syncBans(data.bannedIps);
+    }
+    if (resolved.remoteConfig !== false && data.config?.features) {
+      applyRemoteFeatures(data.config.features);
+    }
+  };
+
   return async (request: Request): Promise<Response> => {
     const NextResponse = getNextResponse();
     const start = Date.now();
@@ -97,14 +112,14 @@ export function nextMiddleware(
         configured = true;
       }
 
-      const event = await eventFromRequest(request, resolveIp(request));
+      const event = await eventFromRequest(request, resolveIp(request), resolved.maxPayloadSize);
       const result = inspectEvent(event);
 
       if (result.blocked && result.threat) {
         const item = buildThreatItem(event, result.threat, resolved.appId, Date.now() - start);
         // Fire-and-forget: Edge runtime utrzymuje isolate krótko po response;
         // nie await-ujemy na ścieżce żądania.
-        void sendEvents(telemetryConfig(resolved), [item]);
+        void sendEvents(telemetryConfig(resolved), [item]).then(applyIngestResponse).catch(() => {});
 
         return NextResponse.json(
           { error: 'Request blocked by Silker AI', type: result.threat.type },
@@ -113,9 +128,9 @@ export function nextMiddleware(
       }
 
       const item = buildRequestItem(event, 200, Date.now() - start, resolved.appId);
-      void sendEvents(telemetryConfig(resolved), [item]);
-      // Parytet z Workerem: zdalna konfiguracja z dashboardu nie jest aplikowana
-      // na warstwie edge (telemetria nie czyta odpowiedzi ingestu) — bez over-engineeringu.
+      // Odpowiedź ingestu niesie remote config (features z dashboardu) i bany —
+      // aplikujemy je fire-and-forget, chyba że `remoteConfig: false`.
+      void sendEvents(telemetryConfig(resolved), [item]).then(applyIngestResponse).catch(() => {});
       return NextResponse.next();
     } catch {
       // Fail-open: nigdy nie psujemy aplikacji usera.
