@@ -118,6 +118,13 @@ export function applyRemoteFeatures(features: Record<string, unknown> | null | u
     }
   }
   globalOptions.features = merged as SilkerOptions['features'];
+
+  // Apply rate limit threshold from dashboard if provided as a number.
+  const maxReqs = (features as Record<string, unknown>)['rateLimitMaxRequests'];
+  if (typeof maxReqs === 'number' && maxReqs > 0) {
+    const { setRateLimitConfig } = require('./rateLimit') as typeof import('./rateLimit');
+    setRateLimitConfig({ maxRequests: maxReqs });
+  }
 }
 
 /**

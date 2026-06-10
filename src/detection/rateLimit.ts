@@ -5,8 +5,8 @@ const banMap = new Map<string, { banUntil: number }>();
 
 let rateLimitConfig: RateLimitConfig = {
   windowMs: 60000,
-  maxRequests: 60,
-  banDurationMs: 60000
+  maxRequests: 300,   // 300 req/min per IP — catches brute-force, not normal users
+  banDurationMs: 300000  // 5-min ban (was 1 min — too short to matter)
 };
 
 /**
@@ -110,7 +110,7 @@ export function checkRateLimit(event: SilkerEvent, shouldBan: boolean = true): b
 
   const now = Date.now();
   const windowMs = rateLimitConfig.windowMs || 60000;
-  const maxRequests = rateLimitConfig.maxRequests || 5;
+  const maxRequests = rateLimitConfig.maxRequests || 300;
   const key = `${event.ip}:${Math.floor(now / windowMs)}`;
   let current = rateLimitMap.get(key);
 
