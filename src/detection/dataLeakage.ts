@@ -183,7 +183,7 @@ export function detectDataLeakage(payload?: string, response?: any): { leaked: b
   }
 
   // 8. Wykrywanie kluczy prywatnych (RSA, DSA, EC)
-  // Bez flagi `g` — sprawdzamy tylko istnienie (stanowy lastIndex przy .test() jest pułapką).
+  // Bez flagi `g` - sprawdzamy tylko istnienie (stanowy lastIndex przy .test() jest pułapką).
   const privateKeyPattern = /-----BEGIN (RSA |DSA |EC )?PRIVATE KEY-----/;
   if (privateKeyPattern.test(contentToCheck)) {
     findings.push('Private Key: -----BEGIN PRIVATE KEY-----');

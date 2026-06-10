@@ -88,7 +88,7 @@ await initSilker();
 
 async function main() {
   print('');
-  print(colors.bold(colors.red('  ◆ Silker AI') + colors.dim(' — setup wizard')));
+  print(colors.bold(colors.red('  ◆ Silker AI') + colors.dim(' - setup wizard')));
   print(colors.dim('  Runtime security for your web app'));
   print('');
 

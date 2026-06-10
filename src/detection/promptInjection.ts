@@ -433,7 +433,7 @@ export function detectJailbreak(payload?: string): boolean {
   ];
 
   for (const pattern of jailbreakIndicators) {
-    // Wzorce współdzielone (moduł) mają flagę `g` — `.test()` na takim regexie
+    // Wzorce współdzielone (moduł) mają flagę `g` - `.test()` na takim regexie
     // jest stanowy (lastIndex), co dawało losowe false negatives przy kolejnych
     // wywołaniach. Reset lastIndex gwarantuje deterministyczny wynik.
     pattern.lastIndex = 0;

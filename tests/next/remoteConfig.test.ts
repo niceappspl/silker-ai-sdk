@@ -1,6 +1,6 @@
 /**
  * Testy aplikowania remote config (features z dashboardu) i banów z odpowiedzi
- * ingestu w adapterze Edge (parytet z node telemetry). Osobny plik — świeży
+ * ingestu w adapterze Edge (parytet z node telemetry). Osobny plik - świeży
  * rejestr modułów (flaga `configured` w src/next jest per proces).
  */
 jest.mock(
@@ -40,7 +40,7 @@ describe('nextMiddleware remote config (ingest response)', () => {
 
   beforeEach(() => {
     clearRateLimitState();
-    // Reset detection state to defaults — applyRemoteFeatures mutates global options.
+    // Reset detection state to defaults - applyRemoteFeatures mutates global options.
     setGlobalOptions({ features: {} });
   });
 
@@ -59,7 +59,7 @@ describe('nextMiddleware remote config (ingest response)', () => {
     expect(first.__type).toBe('next');
     await drainAsync();
 
-    // sqliDetection disabled remotely — the SQLi payload must now pass through.
+    // sqliDetection disabled remotely - the SQLi payload must now pass through.
     const second = (await middleware(new Request(SQLI_URL))) as any;
     expect(second.__type).toBe('next');
   });
@@ -75,7 +75,7 @@ describe('nextMiddleware remote config (ingest response)', () => {
     expect(first.__type).toBe('next');
     await drainAsync();
 
-    // Remote config ignored — SQLi stays blocked.
+    // Remote config ignored - SQLi stays blocked.
     const second = (await middleware(new Request(SQLI_URL))) as any;
     expect(second.__type).toBe('json');
     expect(second.status).toBe(403);

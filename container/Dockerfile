@@ -23,7 +23,7 @@ ENV NODE_ENV=production
 ENV SILKER_PORT=8080
 EXPOSE 8080
 
-# Drop privileges — the bundled server has no write needs.
+# Drop privileges - the bundled server has no write needs.
 USER node
 
 # Container-level health probe (served by the proxy, not forwarded to origin).

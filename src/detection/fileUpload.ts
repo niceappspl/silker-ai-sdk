@@ -44,14 +44,14 @@ export function validateFileUpload(event: SilkerEvent): { safe: boolean; issues:
 
   try {
     // Attempt to parse payload if it's a string JSON, usually from middleware.
-    // Bez multera/body-parsera body multipart bywa {}, pusty lub surowy string —
+    // Bez multera/body-parsera body multipart bywa {}, pusty lub surowy string -
     // brak metadanych pliku NIE jest zagrożeniem (flagujemy tylko realne wskaźniki ataku).
     let payload: any = {};
     if (event.payload) {
       try {
         payload = JSON.parse(event.payload);
       } catch {
-        // Surowe (nie-JSON) body — np. niesparsowany multipart. Nic do analizy.
+        // Surowe (nie-JSON) body - np. niesparsowany multipart. Nic do analizy.
         payload = {};
       }
     }

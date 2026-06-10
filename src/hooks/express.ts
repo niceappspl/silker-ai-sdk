@@ -17,7 +17,7 @@ vibeEmitter.setMaxListeners(50);
 /**
  * Tworzy middleware Express.js dla Silker.
  * Przechwytuje żądania Express, sprawdza je pod kątem anomalii i blokuje podejrzane żądania.
- * Konfiguracja jest opcjonalna — apiKey/appId/endpoint są czytane z env
+ * Konfiguracja jest opcjonalna - apiKey/appId/endpoint są czytane z env
  * (SILKER_API_KEY, SILKER_APP_ID, SILKER_ENDPOINT) jeśli nie podano ich jawnie.
  * @param inputOptions - Opcje konfiguracyjne Silker (opcjonalne)
  * @returns Middleware Express.js
@@ -52,7 +52,7 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
         }
         
         // Limit payload size for analysis to avoid blocking event loop.
-        // Shared default (100KB) — overridable via options.maxPayloadSize.
+        // Shared default (100KB) - overridable via options.maxPayloadSize.
         const maxAnalysisSize = options.maxPayloadSize || DEFAULT_SCAN_LIMIT_BYTES;
 
         const payloadParts: string[] = [];
@@ -75,7 +75,7 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
         // Client IP resolution:
         // - trustProxy (default true): honor proxy headers (Vercel, Cloudflare, LB).
         //   WARNING: without a trusted proxy in front, XFF is client-spoofable.
-        // - trustProxy: false — ignore XFF/x-real-ip, use the socket remote address.
+        // - trustProxy: false - ignore XFF/x-real-ip, use the socket remote address.
         const socketIp = req.socket?.remoteAddress || req.connection?.remoteAddress;
         const realIp = options.trustProxy !== false
             ? (req.headers['x-real-ip'] ||

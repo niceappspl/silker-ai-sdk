@@ -151,7 +151,7 @@ function pct(value: number): string {
 }
 
 function printConsole(results: BenchmarkResults): void {
-  console.log(`\nSilker AI detection benchmark — @silker-ai/agent v${results.version}`);
+  console.log(`\nSilker AI detection benchmark - @silker-ai/agent v${results.version}`);
   console.log(`Generated: ${results.generatedAt}\n`);
 
   const table = results.datasets.map((d) => ({
@@ -170,7 +170,7 @@ function printConsole(results: BenchmarkResults): void {
 
   for (const d of results.datasets) {
     if (d.misclassified.length === 0) continue;
-    console.log(`\nMisclassified — ${d.name} [${d.policy}] (${d.misclassified.length}):`);
+    console.log(`\nMisclassified - ${d.name} [${d.policy}] (${d.misclassified.length}):`);
     for (const m of d.misclassified) {
       const kind = m.expected === 'attack' ? 'FALSE NEGATIVE' : 'FALSE POSITIVE';
       const snippet = m.text.length > 70 ? `${m.text.slice(0, 70)}…` : m.text;
@@ -203,7 +203,7 @@ function toMarkdown(results: BenchmarkResults): string {
   lines.push(`## Misclassified samples`);
   for (const d of results.datasets) {
     lines.push('');
-    lines.push(`### ${d.name} — ${d.policy}`);
+    lines.push(`### ${d.name} - ${d.policy}`);
     if (d.misclassified.length === 0) {
       lines.push('');
       lines.push(`_No misclassifications._`);

@@ -113,13 +113,13 @@ describe('Feature defaults', () => {
 
   describe('shared isFeatureEnabled helper (anomaly + threatDetection agree)', () => {
     it('resolves an undefined opt-in detector to OFF in both modules', () => {
-      // zeroTrustDetection left undefined — opt-in, so DEFAULT_FEATURES.zeroTrustDetection=false
+      // zeroTrustDetection left undefined - opt-in, so DEFAULT_FEATURES.zeroTrustDetection=false
       setGlobalOptions({ features: {} });
       setGlobalOptionsForThreat({ features: {} });
 
       expect(isFeatureEnabled({ features: {} }, 'zeroTrustDetection')).toBe(false);
 
-      // Event that would trip zero-trust (no auth headers) — must NOT be flagged
+      // Event that would trip zero-trust (no auth headers) - must NOT be flagged
       const event: SilkerEvent = {
         method: 'GET',
         url: '/api/secret-data',
@@ -172,7 +172,7 @@ describe('Feature defaults', () => {
     });
 
     it('blocks a POST body containing a Stripe live key', () => {
-      // Synthetic key built at runtime (no literal secret in source) — still
+      // Synthetic key built at runtime (no literal secret in source) - still
       // matches the detector pattern /sk_live_[a-zA-Z0-9]{24,}/.
       const syntheticStripeKey = 'sk_live_' + 'x'.repeat(24);
       const event: SilkerEvent = {

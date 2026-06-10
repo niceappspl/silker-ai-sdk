@@ -4,7 +4,7 @@ import { SilkerEvent } from '../types';
 export interface ZeroTrustCheckConfig {
   /**
    * Wymaga dodatkowej weryfikacji poza "godzinami pracy" (6-23 czasu serwera).
-   * Domyślnie WYŁĄCZONE — dla globalnych API ruch nocny jest normalny.
+   * Domyślnie WYŁĄCZONE - dla globalnych API ruch nocny jest normalny.
    */
   businessHoursCheck?: boolean;
 }
@@ -52,7 +52,7 @@ export function performZeroTrustCheck(event: SilkerEvent, config?: ZeroTrustChec
     }
   }
 
-  // Heurystyka "godzin pracy" jest jawnie opt-in — globalne API mają legalny ruch 24/7.
+  // Heurystyka "godzin pracy" jest jawnie opt-in - globalne API mają legalny ruch 24/7.
   if (config?.businessHoursCheck === true) {
     const now = new Date();
     const hour = now.getHours();

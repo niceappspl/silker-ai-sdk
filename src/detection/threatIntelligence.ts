@@ -1,6 +1,6 @@
 import { SilkerEvent, ThreatIntelConfig } from '../types';
 
-// Baseline list of known malicious IPs (small builtin seed — extend via options.threatIntel.ips)
+// Baseline list of known malicious IPs (small builtin seed - extend via options.threatIntel.ips)
 const builtinThreatIPs = [
   '185.220.101.1', '185.220.101.2',
   '104.236.0.0', '104.236.255.255',
@@ -16,7 +16,7 @@ let knownMaliciousDomains = new Set(builtinMaliciousDomains);
 
 /**
  * Scala listy threat intelligence użytkownika (options.threatIntel) z wbudowanymi.
- * Wywoływane przy setGlobalOptions — konfiguracja per proces.
+ * Wywoływane przy setGlobalOptions - konfiguracja per proces.
  */
 export function configureThreatIntel(config?: ThreatIntelConfig): void {
   knownThreatIPs = new Set([...builtinThreatIPs, ...(config?.ips ?? [])]);

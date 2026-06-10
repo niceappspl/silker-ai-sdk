@@ -73,10 +73,10 @@ function telemetryConfig(options: SilkerOptions): TelemetryConfig {
  * export const middleware = nextMiddleware();
  * ```
  *
- * Konfiguracja jest opcjonalna — `apiKey`/`appId`/`endpoint` są czytane z env
+ * Konfiguracja jest opcjonalna - `apiKey`/`appId`/`endpoint` są czytane z env
  * (`SILKER_API_KEY`, `SILKER_APP_ID`, `SILKER_ENDPOINT`) jeśli nie podano jawnie.
  * Bazowy zestaw funkcji to `EDGE_SAFE_FEATURES` (niskie false-positive na edge),
- * scalony z `options.features`. Adapter NIGDY nie rzuca — przy błędzie przepuszcza
+ * scalony z `options.features`. Adapter NIGDY nie rzuca - przy błędzie przepuszcza
  * żądanie (fail-open). Telemetria jest fire-and-forget (nie blokuje odpowiedzi).
  *
  * @param options - Opcje konfiguracyjne Silker (opcjonalne)
@@ -91,7 +91,7 @@ export function nextMiddleware(
   });
 
   // Aplikuje remote config / bany z odpowiedzi ingestu (parytet z node telemetry).
-  // Funkcje operują na stanie in-memory — edge-safe (bez API Node-only).
+  // Funkcje operują na stanie in-memory - edge-safe (bez API Node-only).
   const applyIngestResponse = (data: IngestResponseData | null): void => {
     if (!data) return;
     if (data.bannedIps) {
@@ -128,7 +128,7 @@ export function nextMiddleware(
       }
 
       const item = buildRequestItem(event, 200, Date.now() - start, resolved.appId);
-      // Odpowiedź ingestu niesie remote config (features z dashboardu) i bany —
+      // Odpowiedź ingestu niesie remote config (features z dashboardu) i bany -
       // aplikujemy je fire-and-forget, chyba że `remoteConfig: false`.
       void sendEvents(telemetryConfig(resolved), [item]).then(applyIngestResponse).catch(() => {});
       return NextResponse.next();

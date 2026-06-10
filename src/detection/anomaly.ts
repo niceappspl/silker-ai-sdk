@@ -70,7 +70,7 @@ export function setGlobalOptions(options: SilkerOptions | null) {
 
 /**
  * Stosuje konfigurację funkcjonalności pobraną z dashboardu (zwracaną w odpowiedzi ingest).
- * Dashboard jest źródłem prawdy — nadpisuje lokalne flagi, dzięki czemu użytkownik może
+ * Dashboard jest źródłem prawdy - nadpisuje lokalne flagi, dzięki czemu użytkownik może
  * włączać/wyłączać ochronę z panelu bez redeployu aplikacji.
  * Pomija wartości inne niż boolean (np. obiekt dataLeakage ustawiony jawnie w kodzie zostaje).
  */
@@ -128,7 +128,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
     // PRIORITY: For LLM routes, run prompt injection check FIRST.
     // Block on medium+ severity, or a low-severity match that still carries a
     // high-confidence override/jailbreak signal. Pure persona-roleplay (low
-    // severity, no override signal) is allowed — see shouldBlockPromptInjectionOnLlmRoute.
+    // severity, no override signal) is allowed - see shouldBlockPromptInjectionOnLlmRoute.
     const isLlm = isLlmRoute(url, headers);
     if (isLlm && scannedPayload && isFeatureEnabled('promptInjectionDetection')) {
       const injection = detectPromptInjection(scannedPayload);
@@ -270,7 +270,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
         );
 
         // High-confidence secrets (provider API keys, client secrets, private keys,
-        // DB connection strings) block regardless of HTTP method — leaking them in
+        // DB connection strings) block regardless of HTTP method - leaking them in
         // a POST body is just as dangerous as in a GET query string.
         // Stripe test/publishable keys are excluded (not secret material).
         const hasHighConfidenceSecret = leakageCheck.findings.some((finding: string) =>

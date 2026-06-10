@@ -47,7 +47,7 @@ describe('rate limiting with an external store (best-effort mirroring)', () => {
     expect(checkRateLimit(makeEvent('1.1.1.1'))).toBe(false);
     expect(checkRateLimit(makeEvent('1.1.1.1'))).toBe(false);
 
-    // Mirror is async — allow the microtask queue to drain
+    // Mirror is async - allow the microtask queue to drain
     await new Promise(resolve => setImmediate(resolve));
     expect(incrSpy).toHaveBeenCalledTimes(2);
   });

@@ -52,7 +52,7 @@ function setGlobalOptions(options: SilkerOptions | null) {
  */
 function validateOptions(options: SilkerOptions): boolean {
     if (!options || typeof options !== 'object') {
-        return true; // empty options are valid — apiKey read from env
+        return true; // empty options are valid - apiKey read from env
     }
 
     const MAX_ALLOWED_PAYLOAD = 100 * 1024 * 1024; // 100MB
@@ -78,9 +78,9 @@ function validateOptions(options: SilkerOptions): boolean {
 
 /**
  * Inicjalizuje Silker AI z podanymi opcjami.
- * Konfiguracja jest opcjonalna — apiKey/appId/endpoint są czytane z env
+ * Konfiguracja jest opcjonalna - apiKey/appId/endpoint są czytane z env
  * (SILKER_API_KEY, SILKER_APP_ID, SILKER_ENDPOINT) jeśli nie podano ich jawnie.
- * Bez klucza API SDK działa w trybie detection-only (bez telemetrii) — nigdy nie rzuca.
+ * Bez klucza API SDK działa w trybie detection-only (bez telemetrii) - nigdy nie rzuca.
  * @param inputOptions - Opcje konfiguracyjne Silker AI (opcjonalne)
  */
 async function initSilker(inputOptions: Partial<SilkerOptions> = {}): Promise<void> {

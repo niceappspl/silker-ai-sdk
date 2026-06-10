@@ -21,7 +21,7 @@ import { DEFAULT_SCAN_LIMIT_BYTES } from '../detection/features';
 
 /**
  * Maksymalny rozmiar body skanowanego pod kątem zagrożeń (ochrona przed DoS/latencją).
- * Współdzielony limit ze wszystkimi powłokami (express hook, isAnomaly) — 100KB.
+ * Współdzielony limit ze wszystkimi powłokami (express hook, isAnomaly) - 100KB.
  */
 export const MAX_BODY_SCAN_BYTES = DEFAULT_SCAN_LIMIT_BYTES;
 

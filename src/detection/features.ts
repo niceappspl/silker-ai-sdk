@@ -3,7 +3,7 @@ import { SilkerOptions } from '../types';
 export type FeatureKey = keyof NonNullable<SilkerOptions['features']>;
 
 /**
- * Domyślny limit skanowanego payloadu (bajty) — współdzielony przez
+ * Domyślny limit skanowanego payloadu (bajty) - współdzielony przez
  * express hook, edge core i isAnomaly. 100KB to balans między pokryciem
  * (typowe payloady ataków < 100KB) a kosztem CPU (regex/heurystyki).
  * Użytkownik może nadpisać przez `options.maxPayloadSize`.
@@ -13,7 +13,7 @@ export const DEFAULT_SCAN_LIMIT_BYTES = 100 * 1024; // 100KB
 /**
  * Domyślny stan funkcjonalności gdy użytkownik nie ustawił ich jawnie.
  * Detektory generujące dużo false positives na normalnym ruchu produkcyjnym
- * są OPT-IN (false) — włącza się je jawnie przez options.features.
+ * są OPT-IN (false) - włącza się je jawnie przez options.features.
  */
 export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
   // Włączone domyślnie (niski poziom false positives)
@@ -27,7 +27,7 @@ export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
   ipBanning: true,
   auditLogging: true,
   cloudCommunication: true,
-  // Ochrona SSRF dla WYCHODZĄCYCH żądań (fetch hook) — to główny cel hooka,
+  // Ochrona SSRF dla WYCHODZĄCYCH żądań (fetch hook) - to główny cel hooka,
   // więc jest domyślnie WŁĄCZONA (w przeciwieństwie do incoming ssrfDetection).
   outboundSsrfProtection: true,
   // Opt-in (wysokie ryzyko false positives na produkcyjnych API)
@@ -51,7 +51,7 @@ export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
 };
 
 /**
- * Sprawdza czy funkcjonalność jest włączona — JEDYNE źródło prawdy dla
+ * Sprawdza czy funkcjonalność jest włączona - JEDYNE źródło prawdy dla
  * wszystkich modułów detekcji (anomaly, threatDetection, hooki).
  * Jawna wartość użytkownika (boolean/obiekt) wygrywa; undefined → DEFAULT_FEATURES.
  */

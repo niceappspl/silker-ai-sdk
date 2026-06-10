@@ -6,8 +6,8 @@ const banMap = new Map<string, { banUntil: number }>();
 
 let rateLimitConfig: RateLimitConfig = {
   windowMs: 60000,
-  maxRequests: 300,   // 300 req/min per IP — catches brute-force, not normal users
-  banDurationMs: 300000  // 5-min ban (was 1 min — too short to matter)
+  maxRequests: 300,   // 300 req/min per IP - catches brute-force, not normal users
+  banDurationMs: 300000  // 5-min ban (was 1 min - too short to matter)
 };
 
 /**
@@ -150,7 +150,7 @@ export function checkRateLimit(event: SilkerEvent, shouldBan: boolean = true): b
   current.count++;
 
   // Mirror do zewnętrznego store: dosyłamy inkrement i best-effort zaciągamy
-  // współdzielony licznik/bany (fire-and-forget — sync decyzja zapada lokalnie).
+  // współdzielony licznik/bany (fire-and-forget - sync decyzja zapada lokalnie).
   if (externalStore) {
     const localEntry = current;
     swallow(

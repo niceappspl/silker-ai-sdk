@@ -147,7 +147,7 @@ describe('hookFetch', () => {
   it('should detect SSRF on outgoing requests and report it (monitor-only by default)', async () => {
     const threatSpy = jest.spyOn(dashboard, 'sendThreatToDashboard').mockResolvedValue();
 
-    // ssrfDetection not explicitly set — outboundSsrfProtection defaults to TRUE
+    // ssrfDetection not explicitly set - outboundSsrfProtection defaults to TRUE
     hookFetch({ ...mockOptions, features: { ...mockOptions.features, ssrfDetection: undefined } });
 
     const response = await global.fetch('http://169.254.169.254/latest/meta-data', {
@@ -164,7 +164,7 @@ describe('hookFetch', () => {
   it('should NOT run outbound SSRF check when ssrfDetection is explicitly false (backward compat)', async () => {
     const threatSpy = jest.spyOn(dashboard, 'sendThreatToDashboard').mockResolvedValue();
 
-    // mockOptions has ssrfDetection: false — explicit user intent disables outbound too
+    // mockOptions has ssrfDetection: false - explicit user intent disables outbound too
     hookFetch(mockOptions);
 
     const response = await global.fetch('http://169.254.169.254/latest/meta-data', {

@@ -31,7 +31,7 @@ app.use(middleware());
 
 **This is all you need to get started.** Core detectors (SQLi, XSS, path traversal,
 prompt injection, rate limiting, data leakage, file upload) are enabled by default.
-Advanced detectors are opt-in — see the defaults below.
+Advanced detectors are opt-in - see the defaults below.
 
 ---
 
@@ -44,14 +44,14 @@ Without a resolvable `apiKey`, the SDK runs in detection-only mode (no telemetry
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `apiKey` | `string` | `process.env.SILKER_API_KEY` | Silker API key for telemetry authentication |
-| `appId` | `string` | `process.env.SILKER_APP_ID` | Optional — the platform resolves the app from the API key |
+| `appId` | `string` | `process.env.SILKER_APP_ID` | Optional - the platform resolves the app from the API key |
 | `endpoint` | `string` | `process.env.SILKER_ENDPOINT`, then auto | API endpoint URL (Auto: `http://localhost:3000` dev, `https://platform.silkerai.com` prod) |
 | `debug` | `boolean` | `false` | Enable detailed console logging for debugging |
 | `maxPayloadSize` | `number` | `102400` | Maximum payload size to scan in bytes (100KB default, shared by the Express hook, the Edge core and `isAnomaly`) |
 | `blockOutgoing` | `boolean` | `false` | Block anomalous OUTGOING `fetch()` calls (default: monitor-only, telemetry without blocking) |
-| `trustProxy` | `boolean` | `true` | Trust proxy headers (`x-forwarded-for`, `x-real-ip`) for client IP resolution. **Set to `false` if your app is NOT behind a trusted proxy** — otherwise XFF is client-spoofable and IP-keyed bans / rate limits are unreliable. With `false`, the socket remote address is used |
+| `trustProxy` | `boolean` | `true` | Trust proxy headers (`x-forwarded-for`, `x-real-ip`) for client IP resolution. **Set to `false` if your app is NOT behind a trusted proxy** - otherwise XFF is client-spoofable and IP-keyed bans / rate limits are unreliable. With `false`, the socket remote address is used |
 | `store` | `SilkerStateStore` | in-memory | Optional shared state store (e.g. Redis) for distributing rate-limit counters and IP bans across instances. See [Distributed state store](#distributed-state-store-redis) |
-| `threatIntel` | `{ ips?, domains? }` | — | Extra threat-intelligence IPs/domains merged with the (small) builtin baseline lists |
+| `threatIntel` | `{ ips?, domains? }` | - | Extra threat-intelligence IPs/domains merged with the (small) builtin baseline lists |
 | `features` | `object` | See below | Feature toggles object to enable/disable specific checks |
 
 ---
@@ -59,7 +59,7 @@ Without a resolvable `apiKey`, the SDK runs in detection-only mode (no telemetry
 ## Security Features Detail
 
 Core detectors are **enabled by default** (`true`). Advanced detectors that tend to
-produce false positives on normal production traffic are **opt-in** (`false`) —
+produce false positives on normal production traffic are **opt-in** (`false`) -
 set them to `true` explicitly to enable. An explicit value always wins over the default.
 
 ### Core Security
@@ -88,8 +88,8 @@ Most of these are opt-in because they flag legitimate traffic on many production
 | **Auth Failures** | `authenticationValidation` | Detects weak authentication mechanisms and brute-force attempts. | `false` (opt-in) |
 | **Integrity Failures** | `softwareIntegrityValidation` | Verifies integrity of software updates and critical data flows. | `false` (opt-in) |
 | **Logging Failures** | `auditLogging` | Ensures critical security events are logged for audit trails. | `true` |
-| **SSRF (incoming)** | `ssrfDetection` | Server-Side Request Forgery detection for INCOMING requests (flags requests whose URL targets internal addresses). Opt-in — noisy on many APIs. | `false` (opt-in) |
-| **SSRF (outgoing)** | `outboundSsrfProtection` | SSRF protection for OUTGOING `fetch()` calls (internal addresses, cloud metadata endpoints) — the primary purpose of the fetch hook, hence default ON. Backward compat: an explicit `ssrfDetection: false` also disables outbound. | `true` |
+| **SSRF (incoming)** | `ssrfDetection` | Server-Side Request Forgery detection for INCOMING requests (flags requests whose URL targets internal addresses). Opt-in - noisy on many APIs. | `false` (opt-in) |
+| **SSRF (outgoing)** | `outboundSsrfProtection` | SSRF protection for OUTGOING `fetch()` calls (internal addresses, cloud metadata endpoints) - the primary purpose of the fetch hook, hence default ON. Backward compat: an explicit `ssrfDetection: false` also disables outbound. | `true` |
 | **Injection** | *Covered by `sqliDetection`* | (See Core Security) | `true` |
 
 ### Advanced Security
@@ -106,8 +106,8 @@ Specialized protection for modern applications and APIs.
 | **File Upload** | `fileUploadDetection` | Scans uploaded files for malware and validates file types/extensions. | `true` |
 | **Third Party** | `thirdPartyDetection` | Monitors and validates interactions with third-party APIs and services. | `false` (opt-in) |
 | **Compliance** | `complianceDetection` | Checks for violations of GDPR, HIPAA, and other regulatory requirements. | `false` (opt-in) |
-| **Threat Intel** | `threatIntelligence` | Checks IPs/domains/user-agents against a **baseline builtin list** (a handful of seed entries + known scanner user-agents). This is a heuristic baseline, not a live feed — extend it with your own lists via the top-level `threatIntel: { ips, domains }` option. | `false` (opt-in) |
-| **Zero Trust** | `zeroTrustDetection` | Enforces strict verification for every request (auth headers, origin, confirmation tokens for destructive ops). Heuristic baseline. The business-hours check is **off by default** (nonsense for global APIs) — enable explicitly via `performZeroTrustCheck(event, { businessHoursCheck: true })`. | `false` (opt-in) |
+| **Threat Intel** | `threatIntelligence` | Checks IPs/domains/user-agents against a **baseline builtin list** (a handful of seed entries + known scanner user-agents). This is a heuristic baseline, not a live feed - extend it with your own lists via the top-level `threatIntel: { ips, domains }` option. | `false` (opt-in) |
+| **Zero Trust** | `zeroTrustDetection` | Enforces strict verification for every request (auth headers, origin, confirmation tokens for destructive ops). Heuristic baseline. The business-hours check is **off by default** (nonsense for global APIs) - enable explicitly via `performZeroTrustCheck(event, { businessHoursCheck: true })`. | `false` (opt-in) |
 
 ### Monitoring
 
@@ -155,7 +155,7 @@ never awaited on the request path. The local in-memory state stays
 authoritative for the block/allow decision; increments and bans are mirrored
 to the external store fire-and-forget, and shared counters/bans are pulled
 back best-effort. State across instances is therefore **eventually
-consistent** — a single instance may briefly let traffic through above the
+consistent** - a single instance may briefly let traffic through above the
 shared limit before the shared counter propagates.
 
 ---
@@ -171,7 +171,7 @@ import { middleware } from '@silker-ai/agent';
 const app = express();
 
 app.use(middleware({
-  // Main Options (all optional — env fallback: SILKER_API_KEY / SILKER_APP_ID / SILKER_ENDPOINT)
+  // Main Options (all optional - env fallback: SILKER_API_KEY / SILKER_APP_ID / SILKER_ENDPOINT)
   apiKey: process.env.SILKER_API_KEY!,
   appId: 'd6bd4319-5aa9-49c8-b760-b4dfce661cbc',
   endpoint: 'https://platform.silkerai.com',
@@ -192,7 +192,7 @@ app.use(middleware({
     auditLogging: true,
     cloudCommunication: true,
 
-    // Advanced detectors (default: false — opt-in)
+    // Advanced detectors (default: false - opt-in)
     accessControlDetection: true,
     cryptographicValidation: true,
     vulnerableComponentsDetection: true,
@@ -278,13 +278,13 @@ SILKER_API_KEY=sk_your_api_key_here
 ### Environment Variables
 
 ```bash
-# API Key (required for telemetry) — get from platform.silkerai.com
+# API Key (required for telemetry) - get from platform.silkerai.com
 SILKER_API_KEY=sk_your_api_key_here
 
-# Optional — the platform resolves the app from the API key
+# Optional - the platform resolves the app from the API key
 SILKER_APP_ID=your-app-id
 
-# Optional — override the telemetry endpoint
+# Optional - override the telemetry endpoint
 SILKER_ENDPOINT=https://platform.silkerai.com
 
 # Environment (auto-detected)
@@ -320,7 +320,7 @@ app.use(middleware(config));
 
 ### maxPayloadSize
 
-- **Default**: 102400 bytes (100KB) — one shared limit across the Express hook, the Edge core and `isAnomaly`
+- **Default**: 102400 bytes (100KB) - one shared limit across the Express hook, the Edge core and `isAnomaly`
 - **Impact**: Larger payloads = slower scanning (regex/heuristics are CPU-bound)
 - **Best Practice**: keep the default unless attacks hide deeper in very large bodies
 

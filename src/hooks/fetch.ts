@@ -38,7 +38,7 @@ function safeStringify(obj: any): string {
 /**
  * Przechwytuje globalną funkcję fetch i dodaje monitorowanie bezpieczeństwa.
  * Wszystkie wywołania fetch są sprawdzane pod kątem anomalii przed wykonaniem.
- * Domyślnie działa w trybie monitor-only (telemetria bez blokowania) —
+ * Domyślnie działa w trybie monitor-only (telemetria bez blokowania) -
  * blokowanie wychodzących żądań wymaga ustawienia `blockOutgoing: true`.
  * @param inputOptions - Opcje konfiguracyjne Silker (opcjonalne, env fallback)
  */
@@ -122,7 +122,7 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
 
     // SSRF for OUTGOING requests is the primary purpose of this hook, so it is
     // governed by the dedicated `outboundSsrfProtection` feature (default TRUE in
-    // DEFAULT_FEATURES) — separate from incoming `ssrfDetection` (default false).
+    // DEFAULT_FEATURES) - separate from incoming `ssrfDetection` (default false).
     // Backward compat: an explicit `ssrfDetection: false` also disables outbound.
     const outboundSsrfEnabled =
       options.features?.ssrfDetection === false
@@ -146,7 +146,7 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
       if (telemetryEnabled) {
         setGlobalOptionsForThreat(options);
         // Outbound SSRF jest wykrywany lokalnie (osobny feature flag), więc
-        // klasyfikujemy go wprost — detectThreatType gateuje SSRF na incoming fladze.
+        // klasyfikujemy go wprost - detectThreatType gateuje SSRF na incoming fladze.
         const threatInfo = ssrfDetected
           ? {
               type: 'SSRF',

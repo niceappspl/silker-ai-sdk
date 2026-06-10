@@ -1,7 +1,7 @@
 # Silker self-host proxy (container)
 
 Runtime security for **any backend** (PHP, Java, Python, Go, Ruby, .NET, Rails…) on
-**any host** — **no Cloudflare, no code changes**. It reuses the exact same detection
+**any host** - **no Cloudflare, no code changes**. It reuses the exact same detection
 engine as the Node SDK and the Cloudflare Worker (`@silker-ai/core`).
 
 Use this when your app is not Node.js, or when you can't (or don't want to) add a
@@ -30,7 +30,7 @@ docker run -p 8080:8080 \
   ghcr.io/niceappspl/silker-proxy:latest
 ```
 
-Then point your traffic at `:8080` instead of your app. That's it — the proxy
+Then point your traffic at `:8080` instead of your app. That's it - the proxy
 inspects every request and forwards clean traffic to `SILKER_TARGET`.
 
 ## Build from source
@@ -56,7 +56,7 @@ docker run -p 8080:8080 \
 | `SILKER_ENDPOINT` | Platform URL | `https://platform.silkerai.com` |
 | `SILKER_PORT` | Proxy listen port | `8080` |
 
-Detection features are managed in the **Silker dashboard** and applied automatically —
+Detection features are managed in the **Silker dashboard** and applied automatically -
 no flags to set here.
 
 ## Health check
@@ -66,7 +66,7 @@ returning `{ "status": "ok" }`. The image ships with a Docker `HEALTHCHECK` usin
 
 ## Per-stack examples
 
-The proxy is language-agnostic — in every case you put it in front of your app and
+The proxy is language-agnostic - in every case you put it in front of your app and
 set `SILKER_TARGET` to the app's address. Examples (docker-compose):
 
 ### Java / Spring Boot
@@ -101,7 +101,7 @@ services:
 
 ### PHP / Laravel, Go, Ruby on Rails, .NET
 
-Same shape — only `SILKER_TARGET` changes to your app's port
+Same shape - only `SILKER_TARGET` changes to your app's port
 (`:9000`/`:80` for PHP-FPM/nginx, `:8080` for Go, `:3000` for Rails, `:5000` for .NET).
 
 ## Behind an existing reverse proxy (Nginx / Caddy / Traefik)

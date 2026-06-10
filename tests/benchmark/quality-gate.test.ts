@@ -30,7 +30,7 @@ describe('Detection benchmark quality gates', () => {
     return match;
   };
 
-  describe('Prompt Injection — LLM-route policy (medium+ or override signal)', () => {
+  describe('Prompt Injection - LLM-route policy (medium+ or override signal)', () => {
     it('detection rate (TPR) stays high', () => {
       const m = find('Prompt Injection', 'llm-route');
       expect(m.tpr).toBeGreaterThanOrEqual(0.93);
@@ -42,7 +42,7 @@ describe('Detection benchmark quality gates', () => {
     });
   });
 
-  describe('Prompt Injection — non-LLM-route policy (high/critical only)', () => {
+  describe('Prompt Injection - non-LLM-route policy (high/critical only)', () => {
     it('detection rate (TPR) stays high', () => {
       const m = find('Prompt Injection', 'non-llm-route');
       expect(m.tpr).toBeGreaterThanOrEqual(0.72);

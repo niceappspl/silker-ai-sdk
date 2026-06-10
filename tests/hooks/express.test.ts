@@ -159,7 +159,7 @@ describe('hookExpress', () => {
     await middleware(req, res, next);
     expect(next).toHaveBeenCalled();
 
-    // Trigger the finish handler — telemetry should be sent without appId,
+    // Trigger the finish handler - telemetry should be sent without appId,
     // using the apiKey resolved from env
     const finishCall = res.on.mock.calls.find((c: any[]) => c[0] === 'finish');
     expect(finishCall).toBeDefined();

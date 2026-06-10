@@ -140,7 +140,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
   let headers: Record<string, string> = {};
   let body: Buffer = Buffer.alloc(0);
 
-  // Health probe served by the proxy itself (never forwarded to origin) —
+  // Health probe served by the proxy itself (never forwarded to origin) -
   // used by Docker HEALTHCHECK / orchestrators.
   if ((req.url || '').split('?')[0] === HEALTH_PATH) {
     res.writeHead(200, { 'content-type': 'application/json' });

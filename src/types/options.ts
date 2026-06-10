@@ -41,7 +41,7 @@ export interface SilkerFeatures {
   /** Wykrywanie ataków SSRF w żądaniach PRZYCHODZĄCYCH (opt-in, domyślnie false) */
   ssrfDetection?: boolean;
   /**
-   * Ochrona SSRF dla WYCHODZĄCYCH żądań fetch (hook fetch) — domyślnie TRUE
+   * Ochrona SSRF dla WYCHODZĄCYCH żądań fetch (hook fetch) - domyślnie TRUE
    * (to główny cel hooka). Jawne `ssrfDetection: false` wyłącza również outbound
    * (poszanowanie intencji użytkownika, backward compat).
    */
@@ -132,7 +132,7 @@ export interface SilkerOptions {
   profile?: ConfigProfile;
   /** Klucz API do komunikacji z chmurą (domyślnie: process.env.SILKER_API_KEY; bez klucza SDK działa w trybie detection-only) */
   apiKey?: string;
-  /** Identyfikator aplikacji używany do grupowania danych w dashboardzie (domyślnie: process.env.SILKER_APP_ID; opcjonalny — platforma rozwiązuje app po kluczu API) */
+  /** Identyfikator aplikacji używany do grupowania danych w dashboardzie (domyślnie: process.env.SILKER_APP_ID; opcjonalny - platforma rozwiązuje app po kluczu API) */
   appId?: string;
   /** Opcjonalny endpoint chmury (domyślnie: process.env.SILKER_ENDPOINT, potem https://platform.silkerai.com w produkcji, http://localhost:3000 w trybie dev) */
   endpoint?: string;
@@ -148,8 +148,8 @@ export interface SilkerOptions {
   rateLimit?: RateLimitConfig;
   /**
    * Czy ufać nagłówkom proxy (x-forwarded-for / x-real-ip) przy ustalaniu IP klienta.
-   * Domyślnie true (zachowanie dotychczasowe — wymagane za Vercel/Cloudflare/LB).
-   * UWAGA: bez zaufanego proxy nagłówek XFF jest podszywalny przez klienta —
+   * Domyślnie true (zachowanie dotychczasowe - wymagane za Vercel/Cloudflare/LB).
+   * UWAGA: bez zaufanego proxy nagłówek XFF jest podszywalny przez klienta -
    * bany i rate limity per-IP są wtedy zawodne. Jeśli aplikacja NIE stoi za proxy,
    * ustaw `trustProxy: false` (użyty zostanie adres socketu).
    */
@@ -163,12 +163,12 @@ export interface SilkerOptions {
   store?: SilkerStateStore;
   /** Dodatkowe listy threat intelligence (IP/domeny) scalane z wbudowanymi */
   threatIntel?: ThreatIntelConfig;
-  /** Blokowanie WYCHODZĄCYCH żądań fetch po wykryciu anomalii (domyślnie false — tryb monitor-only, tylko telemetria) */
+  /** Blokowanie WYCHODZĄCYCH żądań fetch po wykryciu anomalii (domyślnie false - tryb monitor-only, tylko telemetria) */
   blockOutgoing?: boolean;
   /**
    * Pobieranie konfiguracji funkcjonalności z dashboardu (domyślnie true).
    * Gdy true, flagi `features` zarządzane w panelu Silker nadpisują lokalne ustawienia
-   * przy każdej synchronizacji telemetrii — bez potrzeby redeployu.
+   * przy każdej synchronizacji telemetrii - bez potrzeby redeployu.
    * Ustaw `false`, aby trzymać konfigurację wyłącznie w kodzie/env.
    */
   remoteConfig?: boolean;

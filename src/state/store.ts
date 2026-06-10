@@ -2,10 +2,10 @@
  * Pluggable rozproszony magazyn stanu dla rate limitingu i banów IP.
  *
  * Lokalne Mapy w procesie pozostają AUTORYTATYWNE dla synchronicznej decyzji
- * block/allow (isAnomaly jest sync — nie może czekać na sieć). Zewnętrzny
+ * block/allow (isAnomaly jest sync - nie może czekać na sieć). Zewnętrzny
  * store (np. Redis) jest lustrzany best-effort: inkrementy są dosyłane
  * fire-and-forget, a współdzielone liczniki/bany są okresowo zaciągane.
- * Konsekwencja: stan między instancjami jest EVENTUALLY consistent —
+ * Konsekwencja: stan między instancjami jest EVENTUALLY consistent -
  * pojedyncza instancja może chwilowo przepuścić ruch ponad wspólny limit.
  */
 

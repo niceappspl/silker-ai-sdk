@@ -24,7 +24,7 @@ export function setGlobalOptionsForThreat(options: SilkerOptions | null) {
 }
 
 /**
- * Współdzielony helper z ./features — ta sama semantyka co w isAnomaly:
+ * Współdzielony helper z ./features - ta sama semantyka co w isAnomaly:
  * undefined → DEFAULT_FEATURES (opt-in detektory są domyślnie wyłączone).
  */
 function isFeatureEnabled(feature: FeatureKey): boolean {

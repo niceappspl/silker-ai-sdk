@@ -94,7 +94,7 @@ export interface IngestResponseData {
 /**
  * Wysyła batch eventów do `/api/ingest`. Fire-and-forget po stronie wywołującego
  * (w Workerze opakuj w `ctx.waitUntil`). Nigdy nie rzuca.
- * Zwraca dane z odpowiedzi ingestu (remote config / bany) lub null —
+ * Zwraca dane z odpowiedzi ingestu (remote config / bany) lub null -
  * powłoka może je zaaplikować (np. `applyRemoteFeatures` / `syncBans`).
  */
 export async function sendEvents(config: TelemetryConfig, events: TelemetryItem[]): Promise<IngestResponseData | null> {

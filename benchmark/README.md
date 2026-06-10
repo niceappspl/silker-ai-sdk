@@ -18,23 +18,23 @@ and so CI catches regressions over time.
 The benchmark reports prompt injection under **both** blocking policies used in
 production (`isAnomaly()` in `src/detection/anomaly.ts`):
 
-- **LLM-route policy** — blocks on **any** detection (`result.detected === true`).
+- **LLM-route policy** - blocks on **any** detection (`result.detected === true`).
   Applied to LLM endpoints (`/api/chat`, OpenAI/Anthropic hosts, …). Aggressive:
   maximizes recall at the cost of false positives.
-- **Non-LLM-route policy** — blocks only when `detected && severity ∈ {high, critical}`.
+- **Non-LLM-route policy** - blocks only when `detected && severity ∈ {high, critical}`.
   Applied to generic endpoints. Conservative: minimizes false positives.
 
 ## Dataset schema
 
 Each entry is `{ "text": string, "label": "attack" | "benign", "category": string }`.
 
-- `prompt-injection.json` — ~60 attack payloads (instruction override, system
+- `prompt-injection.json` - ~60 attack payloads (instruction override, system
   prompt extraction, DAN/jailbreak, role manipulation, delimiter injection like
   `[INST]` / `<|system|>`, encoding obfuscation, multilingual, invisible-unicode
   token smuggling, obfuscated keywords) + ~45 benign-but-risky samples (legit
   roleplay UX like "act as a translator", innocent mentions of "system prompt",
   normal questions, long benign text).
-- `sqli.json` / `xss.json` — ~20 attacks + ~20 benign each, where benign samples
+- `sqli.json` / `xss.json` - ~20 attacks + ~20 benign each, where benign samples
   deliberately contain SQL keywords (`select the best option from the list`) or
   HTML-ish text (`use the <strong> tag`) to probe false positives.
 
@@ -61,9 +61,9 @@ The runner uses `ts-node` with `tsconfig.benchmark.json` (transpile-only).
 
 ## Metrics
 
-- **TPR (detection rate)** = `TP / (TP + FN)` — share of attacks caught.
-- **FPR** = `FP / (FP + TN)` — share of benign samples wrongly flagged.
-- **Precision** = `TP / (TP + FP)` — share of flags that were real attacks.
+- **TPR (detection rate)** = `TP / (TP + FN)` - share of attacks caught.
+- **FPR** = `FP / (FP + TN)` - share of benign samples wrongly flagged.
+- **Precision** = `TP / (TP + FP)` - share of flags that were real attacks.
 
 ## Current results summary (v1.3.2)
 
@@ -96,7 +96,7 @@ See `RESULTS.md` for the per-sample misclassification breakdown.
 
 `tests/benchmark/quality-gate.test.ts` runs the benchmark programmatically and
 asserts minimum bars (set slightly below the values above) so regressions fail
-CI. The bars are honest to the measured numbers, not the aspirational targets —
+CI. The bars are honest to the measured numbers, not the aspirational targets -
 in particular the LLM-route FPR gate reflects the real ~24% and is not forced to
 ≤10%.
 
