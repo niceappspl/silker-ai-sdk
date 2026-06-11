@@ -12,6 +12,7 @@ export * from './vulnerableComponents';
 export * from './authentication';
 export * from './softwareIntegrity';
 export * from './promptInjection';
+export * from './scannerTrap';
 export * from './piiRedaction';
 export * from './llmContext';
 

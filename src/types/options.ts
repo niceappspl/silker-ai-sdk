@@ -86,6 +86,13 @@ export interface SilkerFeatures {
   promptInjectionDetection?: boolean;
   /** Automatyczne banowanie adresów IP po wykryciu ataku lub przekroczeniu limitów */
   ipBanning?: boolean;
+  /**
+   * Scanner trap (honeypot paths) - wykrywanie żądań do znanych ścieżek
+   * exploitów/skanerów (/.env, /wp-login.php, /.git/config, /phpmyadmin...).
+   * Praktycznie zerowy FP na aplikacjach Node/Next, więc domyślnie WŁĄCZONE.
+   * Przy włączonym `ipBanning` IP skanera jest banowane natychmiast po trafieniu w pułapkę.
+   */
+  scannerTrapDetection?: boolean;
   /** Wyłącza legacy web security (CSRF, SSRF, IDOR, Host Header) - dla użytkowników z Cloudflare/WAF */
   disableLegacySecurity?: boolean;
 }

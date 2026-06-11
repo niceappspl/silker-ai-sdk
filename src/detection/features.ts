@@ -25,6 +25,9 @@ export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
   dataLeakageDetection: true,
   fileUploadDetection: true,
   ipBanning: true,
+  // Scanner trap (honeypot paths) - żądania do /.env, /wp-login.php itp.
+  // to niemal pewny skaner; zerowy FP na stacku Node/Next → default ON.
+  scannerTrapDetection: true,
   auditLogging: true,
   cloudCommunication: true,
   // Ochrona SSRF dla WYCHODZĄCYCH żądań (fetch hook) - to główny cel hooka,

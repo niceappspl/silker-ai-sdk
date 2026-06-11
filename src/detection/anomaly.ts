@@ -13,6 +13,8 @@ import { detectVulnerableComponents, checkForCveReferences } from './vulnerableC
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection, shouldBlockPromptInjectionOnLlmRoute } from './promptInjection';
+import { detectScannerTrap } from './scannerTrap';
+import { banIp } from './rateLimit';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
 import { isLlmRoute } from './llmContext';
 import {
@@ -109,6 +111,19 @@ export function isAnomaly(event: SilkerEvent): boolean {
     const ipBanningEnabled = isFeatureEnabled('ipBanning');
     if (isFeatureEnabled('rateLimit') && ip && checkRateLimit(event, ipBanningEnabled)) {
       return true;
+    }
+
+    // Scanner trap (honeypot paths) - czysty string match na pathname, ~0 kosztu.
+    // Trafienie w pułapkę = skaner; przy włączonym ipBanning banujemy od razu,
+    // zanim bot dotrze do realnej powierzchni ataku.
+    if (isFeatureEnabled('scannerTrapDetection')) {
+      const trap = detectScannerTrap(url);
+      if (trap.detected) {
+        if (ipBanningEnabled && ip) {
+          banIp(ip);
+        }
+        return true;
+      }
     }
 
     // Prepare payload for scanning (truncate to avoid ReDoS/DoS)

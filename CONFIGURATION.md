@@ -74,6 +74,7 @@ Essential protection against common web attacks.
 | **Path Traversal** | `pathTraversalDetection` | Blocks attempts to access unauthorized files via directory traversal (e.g., `../etc/passwd`). | `true` |
 | **Prompt Injection** | `promptInjectionDetection` | **AI/LLM Specific:** Detects attempts to manipulate LLM behavior via malicious prompts (jailbreaks, context leaks). | `true` |
 | **IP Banning** | `ipBanning` | Automatically bans IP addresses for a period after detecting a security threat or rate limit violation. | `true` |
+| **Scanner Trap** | `scannerTrapDetection` | Honeypot paths: requests to known exploit/scanner paths (`/.env`, `/wp-login.php`, `/.git/config`, `/phpmyadmin`...) are flagged as `Scanner Probe` and - with `ipBanning` on - the bot IP is banned instantly, before it reaches a real vulnerability. Near-zero false positives on Node/Next apps. | `true` |
 
 ### OWASP Top 10
 

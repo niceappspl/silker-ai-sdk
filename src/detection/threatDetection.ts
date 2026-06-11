@@ -15,6 +15,7 @@ import { checkCryptographicFailures, detectWeakEncryption } from './cryptographi
 import { detectVulnerableComponents, checkForCveReferences } from './vulnerableComponents';
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
+import { detectScannerTrap } from './scannerTrap';
 import { FeatureKey, isFeatureEnabled as isFeatureEnabledShared } from './features';
 
 let globalOptions: SilkerOptions | null = null;
@@ -46,6 +47,19 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
   const { method, url, payload, ip, headers } = event;
 
   const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload || '');
+
+  // 0. Scanner trap (honeypot paths) - przed resztą: skanerowe GET-y nie mają
+  // payloadu i bez tej klasyfikacji spadałyby do generycznego "Security Anomaly".
+  if (isFeatureEnabled('scannerTrapDetection')) {
+    const trap = detectScannerTrap(url);
+    if (trap.detected) {
+      return {
+        type: 'Scanner Probe',
+        severity: 'high',
+        description: `Automated scanner probe (${trap.category}: ${trap.matchedPath}) detected in ${url}`
+      };
+    }
+  }
 
   // 1. SQL Injection
   if (isFeatureEnabled('sqliDetection')) {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4] - 2026-06-11
+### Scanner Trap - honeypot paths with instant bot ban (active defense)
+- **New `scannerTrapDetection` feature** (default **true**) - requests to well-known exploit/scanner paths (`/.env*`, `/.git/`, `/.aws/`, `/.ssh/`, `/wp-login.php`, `/wp-admin`, `/xmlrpc.php`, `/phpmyadmin`, `/cgi-bin/`, `/actuator/`, `/backup.sql`, `*/shell.php` and more) are detected as a new `Scanner Probe` threat type (high severity). Near-zero false positives on Node/Next stacks - these paths are never served legitimately
+- **Instant ban on trap hit** - with `ipBanning` enabled (default), the scanner's IP is banned the moment it touches a trap path, before it can reach a real attack surface. Pure pathname string matching (~0ms, no regex)
+- Dashboard-manageable: toggle `Scanner Trap` in the platform Configuration panel (remote config), threat events appear in Activity/Threats as `Scanner Probe` with probe category (`env-probe`, `cms-probe`, `vcs-probe`, `admin-probe`, `backup-probe`)
+- Deliberately excluded from traps: `/.well-known/` (ACME/security.txt) and `/admin` (common legitimate panels)
+
 ## [1.3.3] - 2026-06-10
 ### Fewer prompt-injection false positives on LLM routes
 - **New LLM-route blocking policy** - LLM routes previously blocked on ANY prompt-injection detection, flagging benign UX roleplay ("act as a translator", "pretend you are a pirate", "simulate a dice roll", "roleplay as …") at low severity. The policy now blocks on **medium+ severity, or a low-severity match that carries a high-confidence override signal** (`shouldBlockPromptInjectionOnLlmRoute`). Pure persona-roleplay passes; roleplay combined with an override/jailbreak signal still escalates and is blocked. Benchmark LLM-route FPR dropped 24.4% → 0.0% with TPR staying high (98.3% → 94.9%); SQLi/XSS unchanged (100%/0%)
