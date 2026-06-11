@@ -20,7 +20,8 @@ export async function sendThreatToDashboard(
   blocked: boolean,
   description: string,
   options: SilkerOptions,
-  responseTime?: number
+  responseTime?: number,
+  extendBan: boolean = true
 ): Promise<void> {
   try {
     telemetry.configure(options);
@@ -42,7 +43,10 @@ export async function sendThreatToDashboard(
       user_agent: event.userAgent || 'unknown',
       ...(options.appId ? { app_id: options.appId } : {}),
       response_time: responseTime,
-      ip__banning_enabled: options.features?.ipBanning !== false
+      // Gdy extendBan=false (żądanie zablokowane WYŁĄCZNIE dlatego, że IP jest
+      // już zbanowane), nie pozwalamy platformie przedłużyć bana - inaczej ban
+      // nigdy nie wygasa pod ciągłym ruchem (pętla bana).
+      ip__banning_enabled: extendBan && options.features?.ipBanning !== false
     };
 
     telemetry.push('threat', '/api/threats', threatData);

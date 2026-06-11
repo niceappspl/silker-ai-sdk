@@ -2,7 +2,7 @@ import { SilkerEvent, SilkerOptions } from '../types';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { classifyPromptInjection } from './promptInjection';
 import { isLlmRoute } from './llmContext';
-import { checkRateLimit } from './rateLimit';
+import { checkRateLimit, isIpBanned } from './rateLimit';
 import { detectDataLeakage } from './dataLeakage';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
 import { detectFileUploadAttack } from './fileUpload';
@@ -133,8 +133,16 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
-  // 5. Rate Limiting
+  // 5. Rate Limiting / Banned IP - distinguish the two so an already-banned IP
+  // is not mislabeled as "Rate Limiting" (checkRateLimit returns true for both).
   if (isFeatureEnabled('rateLimit') && ip) {
+    if (isFeatureEnabled('ipBanning') && isIpBanned(ip)) {
+      return {
+        type: 'Banned IP Activity',
+        severity: 'medium',
+        description: `Request from a temporarily banned IP ${ip}`
+      };
+    }
     if (checkRateLimit(event)) {
       return {
         type: 'Rate Limiting',

@@ -158,6 +158,36 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
           }
         });
 
+        // 0. If the IP is ALREADY banned, block it here - BEFORE anomaly detection.
+        // This avoids two bugs: (a) re-banning/extending an existing ban on every
+        // request (which traps the IP forever under continuous traffic), and
+        // (b) mislabeling the block as "Rate Limiting" (checkRateLimit returns true
+        // for banned IPs). We report it as a banned-IP block and tell the platform
+        // NOT to extend the ban (extendBan=false), so it expires naturally.
+        const ipBanningEnabled = options.features?.ipBanning !== false;
+        if (event.ip && ipBanningEnabled && isIpBanned(event.ip)) {
+          (req as any)._silkerThreatReported = true;
+          recordPerformanceMetrics(event, Date.now() - start, 403);
+
+          if (telemetryEnabled) {
+            sendThreatToDashboard(
+              event,
+              'Banned IP Activity',
+              'medium',
+              true,
+              'Request from a temporarily banned IP address',
+              options,
+              Date.now() - start,
+              false // do not extend the ban - prevents the perpetual-ban loop
+            );
+          }
+
+          return res.status(403).json({
+            error: 'Request blocked by Silker AI',
+            reason: 'IP address is temporarily banned'
+          });
+        }
+
         // 1. First, check if there's a specific security threat in this request
         let anomaly = false;
         try {
@@ -215,31 +245,6 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
             // If blocking fails, log and allow request (fail open)
             logger.error('[Silker SDK] Error blocking request, allowing through:', error);
           }
-        }
-
-        // 2. If no specific anomaly, check if IP is already banned to block early
-        if (event.ip && options.features?.ipBanning !== false && isIpBanned(event.ip)) {
-          // Mark as reported to prevent duplicate in finish handler
-          (req as any)._silkerThreatReported = true;
-
-          // Report as threat even if already banned, so dashboard shows activity
-          if (telemetryEnabled) {
-            // Fire-and-forget: never block the response on telemetry delivery.
-            sendThreatToDashboard(
-              event,
-              'Banned IP Activity',
-              'medium',
-              true,
-              'Request from a temporarily banned IP address',
-              options,
-              Date.now() - start
-            );
-          }
-
-          return res.status(403).json({
-            error: 'Request blocked by Silker AI',
-            reason: 'IP address is temporarily banned'
-          });
         }
 
         // Run the downstream chain inside the request context so the fetch hook

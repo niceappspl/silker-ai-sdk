@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5] - 2026-06-11
+### Fix: perpetual-ban loop & "Rate Limiting" mislabel for banned IPs
+- **Fixed perpetual-ban loop** - once an IP was banned, every subsequent request from it was blocked, re-reported as a threat, and **re-banned** (both locally and via the ingest response), so the ban never expired under continuous traffic. A banned IP is now blocked WITHOUT extending the ban (`extendBan=false` on telemetry), so it expires naturally after the ban window
+- **Fixed "Rate Limiting" mislabel** - an already-banned IP was reported as `Rate Limiting` because `checkRateLimit()` returns true for banned IPs and was evaluated before the dedicated ban branch. Banned-IP blocks are now correctly labeled `Banned IP Activity` in both the Express hook and `detectThreatType` (all shells)
+- **Express hook**: the banned-IP check now runs BEFORE anomaly detection, so banned IPs are not re-banned and not re-analyzed
+- `sendThreatToDashboard` gained an `extendBan` parameter (default true); when false it sends `ip__banning_enabled: false` so the platform does not extend an existing ban
+
 ## [1.3.4] - 2026-06-11
 ### Scanner Trap - honeypot paths with instant bot ban (active defense)
 - **New `scannerTrapDetection` feature** (default **true**) - requests to well-known exploit/scanner paths (`/.env*`, `/.git/`, `/.aws/`, `/.ssh/`, `/wp-login.php`, `/wp-admin`, `/xmlrpc.php`, `/phpmyadmin`, `/cgi-bin/`, `/actuator/`, `/backup.sql`, `*/shell.php` and more) are detected as a new `Scanner Probe` threat type (high severity). Near-zero false positives on Node/Next stacks - these paths are never served legitimately
