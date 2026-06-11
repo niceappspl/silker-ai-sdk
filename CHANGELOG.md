@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0] - 2026-06-11
+### Active ban/config pull-sync (serverless ban enforcement)
+- **New: SDK now actively pulls the ban list + dashboard config** from the platform (`GET /api/sdk/sync`), instead of only receiving bans reactively in the ingest response. On a fresh process - especially serverless (Vercel/Lambda) where every isolate starts with an empty ban map - this primes the bans on cold start so they are enforced without waiting for a telemetry round-trip.
+- Runs in the background (fire-and-forget, never adds latency to the request path): once on init (cold start) and refreshed with a 30s TTL on subsequent requests. No-op when no API key is set.
+- Honors `remoteConfig: false` (skips config apply) and the existing `ipBanning` semantics.
+- **Note on hard multi-instance enforcement:** per-request guarantees across many concurrent isolates still require shared state via `SilkerStateStore` (Redis/KV). Pull-sync closes the cold-start gap without per-request latency, but is eventually-consistent (30s TTL).
+
 ## [1.3.5] - 2026-06-11
 ### Fix: perpetual-ban loop & "Rate Limiting" mislabel for banned IPs
 - **Fixed perpetual-ban loop** - once an IP was banned, every subsequent request from it was blocked, re-reported as a threat, and **re-banned** (both locally and via the ingest response), so the ban never expired under continuous traffic. A banned IP is now blocked WITHOUT extending the ban (`extendBan=false` on telemetry), so it expires naturally after the ban window

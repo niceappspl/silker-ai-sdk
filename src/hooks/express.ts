@@ -5,6 +5,7 @@ import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threat
 import { recordPerformanceMetrics } from '../analytics/performance';
 import { createLogger } from '../utils/logger';
 import { sendRequestToDashboard, sendThreatToDashboard } from '../cloud/dashboard';
+import { maybePrimeBansAndConfig } from '../cloud/sync';
 import { logAuditEvent } from '../monitoring/audit';
 import { resolveSilkerOptions, warnMissingApiKeyOnce } from '../config/env';
 import { applyProfile } from '../config/profiles';
@@ -34,8 +35,21 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
 
   logger.info('Silker middleware initialized');
 
+  // Aktywnie pobierz aktualne bany + config z platformy na starcie procesu
+  // (w tle). Na serverless wykonuje sie raz na cold-start isolate, dzieki czemu
+  // swiezy isolate egzekwuje bany bez czekania na round-trip telemetrii.
+  if (telemetryEnabled) {
+    maybePrimeBansAndConfig(options, true);
+  }
+
   return async (req: any, res: any, next: any) => {
     try {
+        // Odswiez bany/config w tle z TTL (utrzymuje aktualnosc w dlugo zyjacych
+        // procesach i re-prime'uje cieple isolate'y co jakis czas). Fire-and-forget.
+        if (telemetryEnabled) {
+          maybePrimeBansAndConfig(options);
+        }
+
         // Skip scanning for static assets and technical endpoints
         const skipPatterns = [
           /favicon\.(ico|png|jpg|svg)$/i,
