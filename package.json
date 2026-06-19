@@ -1,6 +1,6 @@
 {
   "name": "@silker-ai/agent",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,9 +38,13 @@
   ],
   "author": "Silker AI",
   "license": "UNLICENSED",
+  "homepage": "https://github.com/niceappspl/silker-ai-sdk#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/silker/agent.git"
+    "url": "https://github.com/niceappspl/silker-ai-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/niceappspl/silker-ai-sdk/issues"
   },
   "dependencies": {
     "axios": "^1.6.0",

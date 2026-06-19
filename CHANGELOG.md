@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.1] - 2026-06-19
+### Package metadata
+- Point npm `homepage`, `repository`, and `bugs` URLs to `https://github.com/niceappspl/silker-ai-sdk` (no runtime/code changes)
+
 ## [1.4.0] - 2026-06-11
 ### Active ban/config pull-sync (serverless ban enforcement)
 - **New: SDK now actively pulls the ban list + dashboard config** from the platform (`GET /api/sdk/sync`), instead of only receiving bans reactively in the ingest response. On a fresh process - especially serverless (Vercel/Lambda) where every isolate starts with an empty ban map - this primes the bans on cold start so they are enforced without waiting for a telemetry round-trip.
