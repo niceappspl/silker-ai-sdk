@@ -380,6 +380,6 @@ app.use(middleware({
 
 ## License
 
-UNLICENSED - Proprietary Software
+Apache-2.0 - see [LICENSE](./LICENSE).
 
-Copyright © 2024 Silker AI. All rights reserved.
+Copyright © 2026 Silker AI.

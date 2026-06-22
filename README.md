@@ -300,4 +300,4 @@ Yes. Create an account at [platform.silkerai.com](https://platform.silkerai.com)
 
 ---
 
-Proprietary Software. © 2026 Silker AI. All rights reserved.
+Licensed under the [Apache License 2.0](./LICENSE). © 2026 Silker AI.

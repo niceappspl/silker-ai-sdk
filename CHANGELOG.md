@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.1] - 2026-06-22
+### License
+- Relicensed from proprietary (`UNLICENSED`) to **Apache-2.0**. Full license text in [LICENSE](./LICENSE); `package.json` `license` field and docs updated accordingly. No runtime/code changes.
+
 ## [1.5.0] - 2026-06-22
 ### Obfuscation-resistant prompt-injection detection (input normalization + decode-and-rescan)
 - **New: input normalization before detection** - `detectPromptInjection` now strips zero-width / invisible / bidi-control characters (`\u200B-\u200F`, `\u202A-\u202E`, `\u2060-\u2064`, `\uFEFF`, soft hyphen, …) and applies Unicode **NFKC** folding. Attacks that hide an instruction override behind zero-width separators (`i\u200Bg\u200Bn\u200Bo\u200Br\u200Be all previous instructions`) or fullwidth homoglyphs (`ｉｇｎｏｒｅ ａｌｌ …`) now surface as plain text and are blocked. Exposed as `normalizeForDetection()`.
