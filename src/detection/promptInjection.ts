@@ -100,6 +100,11 @@ const JAILBREAK_SUBTYPE = [
   /no\s+(longer|more)\s+(bound|restricted|limited)\s+by/i,
   /without\s+(any\s+)?(restrictions?|limitations?|filters?|ethics?)/i,
   /bypass\s+(safety|ethics|guidelines?|filters?)/i,
+  // "grandma exploit": persona of a deceased relative used to extract secrets
+  /pretend\s+to\s+be\s+(my\s+)?(deceased|late|dead)\b/i,
+  // "imagine you were a hacker/criminal …", "with no morals/ethics"
+  /imagine\s+you\s+(are|were)\s+(an?\s+)?(hacker|criminal|terrorist|attacker|cybercriminal|malicious)\b/i,
+  /with\s+no\s+(morals?|ethics?|conscience|scruples?)\b/i,
 ];
 
 /** system_prompt_extraction: próby wyciągnięcia system promptu / instrukcji. */
@@ -124,7 +129,10 @@ const INSTRUCTION_OVERRIDE_SUBTYPE = [
   /ignore\s+(the\s+)?(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/i,
   /disregard\s+(the\s+)?(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/i,
   /forget\s+(everything|all|what|previous|prior).{0,20}(above|before|instructions?)/i,
+  /skip\s+(the\s+)?(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/i,
   /override\s+(previous|system|all).{0,20}(instructions?|prompts?|rules?)/i,
+  // "From now on, respond only …", "from now on you will …" - persistent override directive
+  /from\s+now\s+on\b.{0,40}\b(respond|answer|reply|obey|ignore|disregard|you\s+(will|must|are\s+to)|only\s+(say|with|do))\b/i,
   /<\/?system>/i,
   /\[\/?system\]/i,
   /###\s*system\s*:/i,
@@ -139,40 +147,140 @@ const CHAIN_MANIPULATION = [
 ];
 
 const MULTILINGUAL_ATTACKS = [
-  /игнорировать/gi,
-  /忽略/gi,
-  /無視/gi,
-  /olvidar/gi,
-  /oublier/gi,
+  // Russian
+  /игнорир(овать|уй|уйте)/gi,
+  /забудь(те)?\s+(все|всё|предыдущ)/gi,
+  // Chinese (ignore / disregard previous instructions)
+  /忽略(之前|所有|上述|先前)?/gi,
+  /无视(之前|所有|上述)?/gi,
+  // Japanese
+  /無視して(ください)?/gi,
+  /(以前|前)の指示を無視/gi,
+  // Spanish
+  /(ignora|ignorar|olvida|olvidar)\s+(todas?\s+)?(las\s+)?(instrucciones|reglas|órdenes)\s+(anteriores|previas)/gi,
+  /olvidar\s+todas/gi,
+  // French
+  /(ignore[rz]?|oublie[rz]?)\s+(toutes\s+)?(les\s+)?(instructions|règles)\s+(précédentes|precedentes|antérieures)/gi,
+  /oublier\s+les\s+instructions/gi,
+  // German
+  /(ignoriere|vergiss)\s+(alle\s+)?(vorherigen?\s+)?(anweisungen|regeln|befehle)/gi,
+  // Portuguese
+  /(ignore|ignorar|esqueça|esquecer)\s+(todas\s+)?(as\s+)?(instruções|regras)\s+(anteriores|prévias)/gi,
+  // Italian
+  /(ignora|dimentica)\s+(tutte\s+)?(le\s+)?(istruzioni|regole)\s+(precedenti)/gi,
+  // Korean
+  /(이전|모든)\s*(지시|명령)(을|를)?\s*무시/gi,
+  // Arabic (ignore previous instructions)
+  /تجاهل\s+(جميع\s+)?(التعليمات|الأوامر)/gi,
 ];
+
+/**
+ * Zero-width / invisible / bidi-control characters abused for token smuggling and
+ * homoglyph obfuscation. Stripped before pattern matching so attacks like
+ * `i\u200Bg\u200Bn\u200Bo\u200Br\u200Be all previous instructions` surface as plain text.
+ */
+const INVISIBLE_CHARS = /[\u200B-\u200F\u202A-\u202E\u2060-\u2064\uFEFF\u00AD\u180E]/g;
+
+/** Subset used for smuggling SCORING (excludes bidi controls, includes nbsp). */
+const SMUGGLING_CHARS = /[\u200B-\u200D\u2060\uFEFF\u00AD\u180E\u00A0]/g;
+
+/**
+ * Normalizes a payload for detection: strips zero-width/invisible characters and
+ * applies Unicode NFKC folding (which collapses fullwidth/compatibility homoglyphs
+ * back to ASCII and turns NBSP into a normal space). Used so heuristic patterns
+ * see the real intent instead of the obfuscated surface form.
+ */
+export function normalizeForDetection(payload: string): string {
+  const stripped = payload.replace(INVISIBLE_CHARS, '');
+  try {
+    return stripped.normalize('NFKC');
+  } catch {
+    return stripped;
+  }
+}
+
+/** Runtime-agnostic base64 decode (Edge `atob` or Node `Buffer`); null on failure. */
+function base64Decode(token: string): string | null {
+  try {
+    if (typeof atob === 'function') {
+      const binary = atob(token);
+      const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(token, 'base64').toString('utf-8');
+    }
+  } catch {
+    /* not valid base64 */
+  }
+  return null;
+}
+
+/**
+ * Finds base64-looking blobs, decodes them and returns the decoded text that is
+ * mostly printable ASCII - so payloads that hide an instruction-override behind a
+ * base64 blob (`base64: aWdub3Jl…`) are re-scanned as plain text. Capped for perf.
+ */
+function decodeBase64Segments(text: string): string {
+  const out: string[] = [];
+  const re = /[A-Za-z0-9+/]{16,}={0,2}/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null && out.length < 4) {
+    const token = match[0];
+    if (token.length > 4096) continue;
+    if (token.length % 4 !== 0 && !token.includes('=')) continue;
+    const decoded = base64Decode(token);
+    if (!decoded || decoded.length < 8) continue;
+    const printable = decoded.replace(/[^\x20-\x7E]/g, '').length;
+    if (printable / decoded.length > 0.8) {
+      out.push(decoded);
+    }
+  }
+  return out.join('\n');
+}
+
+/** Decodes `\uXXXX` / `\xXX` escape sequences so escaped keywords are re-scanned. */
+function decodeEscapeSequences(text: string): string {
+  return text
+    .replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/\\x([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+}
 
 /**
  * Detects token smuggling attempts by analyzing character distribution and unusual patterns.
  * Attackers often use invisible characters or weird unicode to bypass filters.
- * 
- * @param payload - The string payload to analyze
+ *
+ * @param payload - The string payload to analyze (ORIGINAL, pre-normalization)
  * @returns Object containing detection status and score
  */
 function detectTokenSmuggling(payload: string): { detected: boolean; score: number } {
   let score = 0;
 
-  // Check for invisible characters (zero-width spaces, etc.)
-  const invisibleChars = /[\u200B-\u200D\uFEFF\u00A0]/g;
-  const invisibleMatch = payload.match(invisibleChars);
-  if (invisibleMatch && invisibleMatch.length > 5) {
+  const invisibleMatch = payload.match(SMUGGLING_CHARS);
+  const invisibleCount = invisibleMatch ? invisibleMatch.length : 0;
+
+  // Invisible characters wedged BETWEEN word characters (or between a word and a
+  // space) are an unambiguous smuggling signature - never produced by normal text.
+  const interleaved =
+    /[A-Za-z0-9][\u200B-\u200D\u2060\uFEFF\u00AD\u180E][A-Za-z0-9]/.test(payload) ||
+    /[A-Za-z0-9][\u200B-\u200D\u2060\uFEFF\u00AD\u180E]\s/.test(payload);
+
+  if (interleaved && invisibleCount >= 3) {
+    score += 15; // high severity on its own - deliberate obfuscation
+  } else if (invisibleCount > 5) {
     score += 10;
   }
 
-  // Check for excessive use of rare unicode blocks (often used for obfuscation)
-  // This is a heuristic: if > 30% of chars are non-ASCII and non-standard punctuation
+  // Excessive use of rare unicode blocks (often used for obfuscation):
+  // if > 30% of chars are non-ASCII on a reasonably long payload.
   const nonAscii = payload.replace(/[\x00-\x7F]/g, '').length;
-  if (payload.length > 50 && (nonAscii / payload.length) > 0.3) {
+  if (payload.length > 50 && nonAscii / payload.length > 0.3) {
     score += 5;
   }
 
   return {
     detected: score > 0,
-    score
+    score,
   };
 }
 
@@ -228,6 +336,17 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     return result;
   }
 
+  // Build a normalized "haystack" so obfuscated attacks surface as plain text:
+  // strip zero-width chars + NFKC fold, then append base64- and escape-decoded
+  // views so smuggled/encoded instructions are re-scanned by the same patterns.
+  const normalized = normalizeForDetection(payload);
+  const views = [normalized];
+  const decodedBase64 = decodeBase64Segments(normalized);
+  if (decodedBase64) views.push(decodedBase64);
+  const decodedEscapes = decodeEscapeSequences(normalized);
+  if (decodedEscapes !== normalized) views.push(decodedEscapes);
+  const haystack = views.join('\n');
+
   // `override: true` marks high-confidence injection categories (override,
   // jailbreak, extraction, exfiltration, delimiter/system manipulation,
   // encoding, multilingual). Pure persona-roleplay and generic chain phrasing
@@ -236,12 +355,12 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     { patterns: INSTRUCTION_OVERRIDE_PATTERNS, weight: 10, name: 'Instruction Override', override: true },
     { patterns: SYSTEM_PROMPT_MANIPULATION, weight: 15, name: 'System Prompt Manipulation', override: true },
     { patterns: ROLE_MANIPULATION, weight: 7, name: 'Role Manipulation', override: false },
-    { patterns: DELIMITER_INJECTION, weight: 12, name: 'Delimiter Injection', override: true },
+    { patterns: DELIMITER_INJECTION, weight: 15, name: 'Delimiter Injection', override: true },
     { patterns: JAILBREAK_ATTEMPTS, weight: 20, name: 'Jailbreak Attempt', override: true },
     { patterns: PROMPT_EXTRACTION, weight: 8, name: 'Prompt Extraction', override: true },
     { patterns: ENCODING_OBFUSCATION, weight: 6, name: 'Encoding Obfuscation', override: true },
     { patterns: CHAIN_MANIPULATION, weight: 9, name: 'Chain Manipulation', override: false },
-    { patterns: MULTILINGUAL_ATTACKS, weight: 11, name: 'Multilingual Attack', override: true },
+    { patterns: MULTILINGUAL_ATTACKS, weight: 15, name: 'Multilingual Attack', override: true },
     { patterns: JAILBREAK_SUBTYPE, weight: 20, name: 'Jailbreak Attempt', override: true },
     { patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE, weight: 15, name: 'Prompt Extraction', override: true },
     { patterns: DATA_EXFIL_SUBTYPE, weight: 20, name: 'Data Exfiltration', override: true },
@@ -250,7 +369,7 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
 
   for (const check of checks) {
     for (const pattern of check.patterns) {
-      const matches = payload.match(pattern);
+      const matches = haystack.match(pattern);
       if (matches) {
         result.detected = true;
         result.patterns.push(check.name);
@@ -263,7 +382,8 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     }
   }
 
-  // Advanced Checks
+  // Advanced Checks (run on the ORIGINAL payload - they rely on the obfuscation
+  // surface form, which normalization deliberately removes).
   const smuggling = detectTokenSmuggling(payload);
   if (smuggling.detected) {
     result.detected = true;
@@ -342,6 +462,8 @@ export function classifyPromptInjection(payload: string): PromptInjectionClassif
     return { detected: false };
   }
 
+  const normalized = normalizeForDetection(payload);
+
   const groups: Array<{
     subtype: PromptInjectionSubtype;
     severity: 'critical' | 'high' | 'medium';
@@ -354,7 +476,7 @@ export function classifyPromptInjection(payload: string): PromptInjectionClassif
   ];
 
   for (const group of groups) {
-    if (group.patterns.some(pattern => pattern.test(payload))) {
+    if (group.patterns.some(pattern => pattern.test(normalized))) {
       return { detected: true, subtype: group.subtype, severity: group.severity };
     }
   }

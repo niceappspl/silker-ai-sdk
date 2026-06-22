@@ -65,30 +65,34 @@ The runner uses `ts-node` with `tsconfig.benchmark.json` (transpile-only).
 - **FPR** = `FP / (FP + TN)` - share of benign samples wrongly flagged.
 - **Precision** = `TP / (TP + FP)` - share of flags that were real attacks.
 
-## Current results summary (v1.3.2)
+## Current results summary (v1.5.0)
 
 | Dataset | Policy | TPR | FPR | Precision |
 | --- | --- | ---: | ---: | ---: |
-| Prompt Injection | LLM-route (any detection) | 98.3% | 24.4% | 84.1% |
-| Prompt Injection | non-LLM-route (high/critical) | 76.3% | 2.2% | 97.8% |
+| Prompt Injection | LLM-route (medium+ or override signal) | 96.0% | 0.0% | 100.0% |
+| Prompt Injection | non-LLM-route (high/critical) | 96.0% | 0.0% | 100.0% |
 | SQL Injection | block on detection | 100.0% | 0.0% | 100.0% |
 | XSS | block on detection | 100.0% | 0.0% | 100.0% |
 
+Measured on the expanded adversarial dataset (130 prompt-injection samples).
+v1.5.0 added input normalization (zero-width stripping + NFKC), base64/escape
+decode-and-rescan, broader multilingual coverage and weight tuning - lifting the
+non-LLM-route TPR from ~76% (v1.4.x) to 96% while holding FPR at 0%.
+
 See `RESULTS.md` for the per-sample misclassification breakdown.
 
-### Observations / detector weaknesses
+### Observations / known limitations
 
-- **LLM-route FPR is high (~24%)**: low-severity role phrases that are legitimate
-  LLM UX ("act as …", "pretend you are …", "simulate a …", "roleplay as …",
-  "imagine you are …") are flagged because the LLM policy blocks on *any*
-  detection. This is a recall-vs-precision trade-off, not a bug.
-- **Non-LLM-route misses obfuscated attacks (TPR ~76%)**: token smuggling
-  (severity medium), encoding obfuscation (low), multilingual (medium), and
-  "skip … instructions" (medium) score below the high/critical threshold and so
-  pass the conservative policy. They *are* caught under the LLM policy.
-- **Over-eager pattern**: the benign phrase "the new instructions for assembling
-  the furniture …" matches `new (instructions|role|mode|system)` at high
-  severity, producing a false positive under **both** policies.
+- **Resolved in v1.5.0**: zero-width token smuggling, fullwidth homoglyphs,
+  base64-/escape-encoded overrides, and German/Portuguese/Italian/Korean/Arabic
+  multilingual overrides are now caught at high severity (blocked on both
+  policies). The "new instructions for assembling the furniture" benign phrase
+  is not flagged.
+- **Remaining misses (documented)**: heuristics are character/token based, so
+  **leetspeak** (`1gn0r3 4ll …`), **Cyrillic homoglyphs** (Latin-looking
+  Cyrillic letters that NFKC does not fold), and languages without an explicit
+  pattern (e.g. **Hindi**) still evade detection. These are honest gaps that
+  keep the benchmark credible and provide regression headroom.
 - **SQLi / XSS**: perfect on this baseline dataset, but the dataset is small and
   not adversarial.
 

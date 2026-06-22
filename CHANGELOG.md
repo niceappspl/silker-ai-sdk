@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.0] - 2026-06-22
+### Obfuscation-resistant prompt-injection detection (input normalization + decode-and-rescan)
+- **New: input normalization before detection** - `detectPromptInjection` now strips zero-width / invisible / bidi-control characters (`\u200B-\u200F`, `\u202A-\u202E`, `\u2060-\u2064`, `\uFEFF`, soft hyphen, …) and applies Unicode **NFKC** folding. Attacks that hide an instruction override behind zero-width separators (`i\u200Bg\u200Bn\u200Bo\u200Br\u200Be all previous instructions`) or fullwidth homoglyphs (`ｉｇｎｏｒｅ ａｌｌ …`) now surface as plain text and are blocked. Exposed as `normalizeForDetection()`.
+- **New: base64 + escape decode-and-rescan** - base64 blobs and `\uXXXX` / `\xXX` escape sequences are decoded and re-scanned by the same heuristics, so a payload like `base64: aWdub3Jl…` (decodes to "ignore all previous instructions and comply") is caught instead of scoring as a low-severity blob. Decoding is capped (≤4 segments, ≤4KB each, printable-ASCII only) and runtime-agnostic (Edge `atob` / Node `Buffer`).
+- **Stronger token-smuggling signal** - invisible characters wedged *between* word characters are now treated as an unambiguous high-severity obfuscation signature (never produced by normal text).
+- **Broader multilingual coverage** - instruction-override patterns added for German, Portuguese, Italian, Korean and Arabic (joining Russian, Chinese, Japanese, Spanish, French); multilingual and delimiter-injection matches re-weighted to `high` so they are blocked on non-LLM routes too.
+- **Detection-quality jump (measured)** - on the expanded adversarial benchmark both prompt-injection policies now reach **~96% TPR at 0% FPR** (non-LLM-route TPR was ~76%). Remaining misses (leetspeak, Cyrillic homoglyphs, Hindi) are documented known limitations.
+- **Benchmark hardened** - `benchmark/datasets/prompt-injection.json` expanded with 16 new adversarial attacks (fullwidth, zero-width, base64, hex-escape, 5 new languages, grandma exploit, leetspeak/homoglyph/letter-spacing) and 10 benign FPR traps (benign base64, multilingual mentions, "ignore the merge conflicts", …). CI quality gate raised: non-LLM-route prompt-injection TPR ≥ 0.90.
+
 ## [1.4.1] - 2026-06-19
 ### Package metadata
 - Point npm `homepage`, `repository`, and `bugs` URLs to `https://github.com/niceappspl/silker-ai-sdk` (no runtime/code changes)
