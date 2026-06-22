@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2] - 2026-06-22
+### Extended-suite prompt-injection detection (leetspeak, spacing, homoglyphs, decode-and-rescan)
+- **New: `buildAnalysisHaystack()`** - multi-view analysis pipeline used by `detectPromptInjection()` and `classifyPromptInjection()`: NFKC + zero-width strip, leetspeak normalization (`1gn0r3` → `ignore`), spaced-letter collapse (`d i s r e g a r d` → `disregard`), mixed-script Cyrillic homoglyph folding (Latin smuggling only - pure Russian text unchanged), plus ROT13/hex/base64/escape decode-and-rescan.
+- **Expanded pattern coverage** - system-prompt extraction, jailbreak, malicious roleplay, data exfiltration, multilingual (pl/es/ru/de/fr/it/ja/ko/ar/nl/sv/da/pt/hi), delimiter `[USER]`/`[ASSISTANT]`, and chain manipulation. Chain `first, ignore` now requires an injection context so benign phrases like "First, ignore the noise in the data…" pass.
+- **Benchmark jump (measured)** - on the **extended** suite (1012 samples): prompt-injection **LLM-route TPR 71.4% → 100.0%** at **0% FPR**; non-LLM-route **97.6%**. Core suite (CI gate): **100% TPR / 0% FPR** on all datasets.
+
 ## [1.5.1] - 2026-06-22
 ### License
 - Relicensed from proprietary (`UNLICENSED`) to **Apache-2.0**. Full license text in [LICENSE](./LICENSE); `package.json` `license` field and docs updated accordingly. No runtime/code changes.

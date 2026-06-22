@@ -22,7 +22,7 @@ describe('Detection benchmark quality gates', () => {
   let results: BenchmarkResults;
 
   beforeAll(() => {
-    results = runBenchmark();
+    results = runBenchmark('core');
   });
 
   const find = (name: string, policyPrefix: string): DatasetMetrics => {

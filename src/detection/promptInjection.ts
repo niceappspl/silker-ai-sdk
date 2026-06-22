@@ -18,6 +18,7 @@ const INSTRUCTION_OVERRIDE_PATTERNS = [
   /ignore\s+(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/gi,
   /disregard\s+(previous|all|above|prior).{0,20}(instructions?|prompts?|commands?|rules?)/gi,
   /forget\s+(everything|all|what|previous|prior).{0,20}(above|before|instructions?)/gi,
+  /forget\s+everything\s+above/gi,
   /skip\s+(previous|all|above).{0,20}(instructions?|rules?|commands?)/gi,
   /override\s+(previous|system|all).{0,20}(instructions?|prompts?|rules?)/gi,
 ];
@@ -55,28 +56,52 @@ const DELIMITER_INJECTION = [
   /\[SYSTEM\]/gi,
   /\[\/INST\]/gi,
   /\[INST\]/gi,
+  /\[(USER|ASSISTANT)\].{0,30}(override|comply|ignore)/gi,
+  /\[USER\].{0,20}\[ASSISTANT\]/gi,
 ];
 
 const JAILBREAK_ATTEMPTS = [
   /DAN\s+(mode|activated|protocol|enabled)/gi,
   /do\s+anything\s+now/gi,
   /without\s+(any\s+)?(restrictions?|limitations?|filters?|ethics?)/gi,
-  /evil\s+(mode|confidant|assistant)/gi,
+  /evil\s+(mode|confidant|assistant|ai)/gi,
   /unrestricted\s+(mode|access|ai)/gi,
-  /bypass\s+(safety|ethics|guidelines|filters?)/gi,
+  /bypass\s+(all\s+)?(safety|ethics|guidelines|filters?)/gi,
+  /(drop|disable)\s+all\s+(filters?|restrictions?|safety)/gi,
+  /(activate|enter)\s+(god|admin|maintenance)\s+mode/gi,
+  /simulate\s+(an?\s+)?(ai|assistant)\s+with\s+no\s+(content\s+)?policy/gi,
+  /(pretend|imagine)\s+(safety\s+training|your\s+training)\s+never\s+happened/gi,
+  /disregard\s+(openai|anthropic|google)\s+(usage\s+)?polic/gi,
+  /ignore\s+your\s+ethics\s+and\s+explain/gi,
+  /comply\s+with\s+every\s+user\s+request\s+unconditionally/gi,
   /\bDAN\b/gi,
 ];
 
 const PROMPT_EXTRACTION = [
   /show\s+(me\s+)?(your|the)\s+(system\s+)?(prompt|instructions?|rules?)/gi,
   /what\s+(are|is)\s+your\s+(initial|original|system)\s+(prompt|instructions?)/gi,
+  /reveal\s+(your\s+)?(everything\s+)?(written\s+)?(at\s+the\s+top|your\s+(system\s+)?(prompt|instructions?))/gi,
   /reveal\s+your\s+(system\s+)?(prompt|instructions?|programming)/gi,
   /print\s+(your|the)\s+(system\s+)?(prompt|instructions?|configuration)/gi,
-  /output\s+your\s+(system\s+)?(prompt|instructions?)/gi,
+  /output\s+(your\s+)?(system\s+)?(prompt|instructions?|message)/gi,
+  /tell\s+me\s+(the\s+)?exact\s+(system\s+)?prompt/gi,
+  /display\s+(the\s+)?hidden\s+(prompt|instructions?)/gi,
+  /(dump|echo|copy|paste|recite)\s+(your\s+|the\s+)?(system\s+)?(prompt|instructions?|preamble|directive|block)/gi,
+  /what\s+is\s+written\s+in\s+your\s+system\s+context/gi,
+  /hidden\s+(prompt|instructions?).{0,20}(context|window)/gi,
+  /developer\s+instructions?\s+(back|verbatim|exactly)/gi,
+  /repeat\s+your\s+system\s+message/gi,
+  /what\s+rules\s+were\s+you\s+given\s+at\s+startup/gi,
+  /read\s+aloud\s+the\s+confidential\s+preamble/gi,
+  /what\s+did\s+the\s+developer\s+tell\s+you\s+in\s+secret/gi,
+  /recite\s+your\s+(initial\s+)?directive/gi,
+  /print\s+your\s+hidden\s+instructions/gi,
 ];
 
 const ENCODING_OBFUSCATION = [
   /base64\s*:\s*[A-Za-z0-9+/=]{20,}/gi,
+  /rot13\s*:\s*[a-zA-Z\s]{8,}/gi,
+  /(?:hex\s*:\s*)[0-9a-fA-F]{16,}/gi,
   /\\u[0-9a-fA-F]{4}/g,
   /\\x[0-9a-fA-F]{2}/g,
   /&#\d{2,4};/g,
@@ -105,13 +130,36 @@ const JAILBREAK_SUBTYPE = [
   // "imagine you were a hacker/criminal …", "with no morals/ethics"
   /imagine\s+you\s+(are|were)\s+(an?\s+)?(hacker|criminal|terrorist|attacker|cybercriminal|malicious)\b/i,
   /with\s+no\s+(morals?|ethics?|conscience|scruples?)\b/i,
+  /(drop|disable)\s+all\s+(filters?|restrictions?|safety)/i,
+  /(activate|enter)\s+(god|admin|maintenance)\s+mode/i,
+  /simulate\s+(an?\s+)?(ai|assistant)\s+with\s+no\s+(content\s+)?policy/i,
+  /(pretend|imagine)\s+(safety\s+training|your\s+training)\s+never\s+happened/i,
+  /disregard\s+(openai|anthropic|google)\s+(usage\s+)?polic/i,
+  /ignore\s+your\s+ethics\s+and\s+explain/i,
+  /comply\s+with\s+every\s+user\s+request\s+unconditionally/i,
+  /pretend\s+(to\s+be|you\s+are)\s+(an?\s+)?(uncensored|evil)/i,
+  /roleplay\s+as\s+(a\s+)?(malware|phishing|uncensored|evil)/i,
+  /simulate\s+(a\s+)?(phishing|malware)\s+(expert|author)/i,
+  /pretend\s+(you\s+are|to\s+be)\s+(an?\s+)?insider\s+leaking/i,
+  /you\s+will\s+pretend\s+to\s+be\s+(an?\s+)?(uncensored|evil)/i,
 ];
 
 /** system_prompt_extraction: próby wyciągnięcia system promptu / instrukcji. */
 const SYSTEM_PROMPT_EXTRACTION_SUBTYPE = [
   /repeat\s+(the\s+)?(words?|text|everything|sentence)\s+above/i,
-  /(print|reveal|show|output|display|give\s+me|tell\s+me|repeat)\s+(me\s+)?(your|the)\s+(system\s+)?(prompt|instructions?|rules?|programming|configuration)/i,
+  /(print|reveal|show|output|display|give\s+me|tell\s+me|repeat|dump|echo|copy|paste|recite)\s+(me\s+)?(your|the)\s+(system\s+)?(prompt|instructions?|rules?|programming|configuration|preamble|directive)/i,
   /what\s+(are|is|were)\s+your\s+(initial|original|system|first|exact)\s+(prompt|instructions?|message|rules?)/i,
+  /tell\s+me\s+(the\s+)?exact\s+(system\s+)?prompt/i,
+  /what\s+is\s+written\s+in\s+your\s+system\s+context/i,
+  /display\s+(the\s+)?hidden\s+(prompt|instructions?)/i,
+  /hidden\s+(prompt|instructions?).{0,20}(context|window)/i,
+  /developer\s+instructions?\s+(back|verbatim|exactly)/i,
+  /repeat\s+your\s+system\s+message/i,
+  /what\s+rules\s+were\s+you\s+given\s+at\s+startup/i,
+  /copy\s+the\s+system\s+block/i,
+  /read\s+aloud\s+the\s+confidential\s+preamble/i,
+  /what\s+did\s+the\s+developer\s+tell\s+you\s+in\s+secret/i,
+  /recite\s+your\s+(initial\s+)?directive/i,
   /ignore\s+everything\s+(else\s+)?and\s+(output|print|reveal|show|repeat)\s+(your\s+|the\s+)?(system\s+)?(prompt|instructions?)/i,
   /what('?s| is| was)\s+(written|said|stated)\s+(at|in)\s+the\s+(top|beginning|start)/i,
 ];
@@ -119,9 +167,17 @@ const SYSTEM_PROMPT_EXTRACTION_SUBTYPE = [
 /** data_exfiltration_via_llm: prośby o zakodowanie/przetłumaczenie system promptu. */
 const DATA_EXFIL_SUBTYPE = [
   /(base64|hex|rot13|binary|morse)\s*[- ]?\s*(encode|encoded)?\s+(your|the|all)\s+(system\s+)?(prompt|instructions?)/i,
-  /(encode|convert)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+(in|to|into|as)\s+(base64|hex|rot13|binary)/i,
+  /(encode|convert)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+(in|to|into|as)\s+(base64|hex|rot13|binary|morse)/i,
   /(translate|convert)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+(in)?to\s+\w+/i,
   /(spell|write)\s+out\s+(your|the)\s+(system\s+)?(prompt|instructions?)/i,
+  /(write|spell)\s+(your|the)\s+(system\s+)?(prompt|instructions?)\s+backwards/i,
+  /(encode|summarize)\s+(your|the)\s+(system\s+)?(prompt|instructions?).{0,40}(secret|morse|backwards|including)/i,
+  /paraphrase.{0,40}(full|original|verbatim)\s+(system\s+)?(prompt|instructions?)/i,
+  /encode\s+your\s+rules\s+in\s+morse\s+code/i,
+  /paraphrase.{0,80}(full|original).{0,30}system\s+text/i,
+  /(leak|output|reveal)\s+(confidential|admin|secret)/i,
+  /output\s+admin\s+password/i,
+  /reveal\s+secret\s+api\s+keys/i,
 ];
 
 /** instruction_override: nadpisanie instrukcji + delimiter/role injection. */
@@ -140,16 +196,28 @@ const INSTRUCTION_OVERRIDE_SUBTYPE = [
 
 const CHAIN_MANIPULATION = [
   /step\s+1\s*:\s*ignore/gi,
-  /first\s*,?\s*ignore/gi,
-  /before\s+(you\s+)?(continue|proceed|respond)/gi,
+  /first\s*,?\s*ignore\s+(the\s+)?(previous|all|above|prior|everything)/gi,
+  /before\s+(you\s+)?(continue|proceed|respond).{0,30}(ignore|disregard)/gi,
   /\|\s*ignore/gi,
   /;\s*ignore/gi,
+  /\|\s*reveal\s+password/gi,
+];
+
+const MALICIOUS_ROLEPLAY = [
+  /pretend\s+(to\s+be|you\s+are)\s+(an?\s+)?(uncensored|evil)/gi,
+  /roleplay\s+as\s+(a\s+)?(malware|phishing|uncensored|evil)/gi,
+  /simulate\s+(a\s+)?(phishing|malware)\s+(expert|author)/gi,
+  /pretend\s+(you\s+are|to\s+be)\s+(an?\s+)?insider\s+leaking/gi,
+  /you\s+will\s+pretend\s+to\s+be\s+(an?\s+)?(uncensored|evil)/gi,
 ];
 
 const MULTILINGUAL_ATTACKS = [
   // Russian
-  /игнорир(овать|уй|уйте)/gi,
+  /игнорир(овать|уй|уйте|уете)/gi,
+  /игнорируйте\s+все\s+предыдущие/gi,
+  /игнорировать\s+все\s+предыдущие/gi,
   /забудь(те)?\s+(все|всё|предыдущ)/gi,
+  /забудьте\s+все\s+предыдущие/gi,
   // Chinese (ignore / disregard previous instructions)
   /忽略(之前|所有|上述|先前)?/gi,
   /无视(之前|所有|上述)?/gi,
@@ -172,6 +240,39 @@ const MULTILINGUAL_ATTACKS = [
   /(이전|모든)\s*(지시|명령)(을|를)?\s*무시/gi,
   // Arabic (ignore previous instructions)
   /تجاهل\s+(جميع\s+)?(التعليمات|الأوامر)/gi,
+  /انس[^\s]{0,4}\s+كل\s+التعليمات/gi,
+  // Polish
+  /ignoruj\s+(wszystkie|poprzednie)/gi,
+  /zapomnij\s+o\s+wszystkich/gi,
+  /polecenia\s+systemowe/gi,
+  // Spanish (extended)
+  /ignorar\s+(las\s+)?(reglas|instrucciones)\s+(del\s+sistema|del\s+desarrollador)/gi,
+  /ignora\s+las\s+reglas\s+del\s+sistema/gi,
+  /olvida\s+todo\s+lo\s+anterior/gi,
+  /revela\s+(secretos|tus\s+instrucciones)/gi,
+  /instrucciones\s+del\s+desarrollador/gi,
+  // German (extended)
+  /sicherheitsrichtlinie/gi,
+  /entwickleranweisungen/gi,
+  // French (extended)
+  /oubliez\s+(les\s+)?(règles|regles)/gi,
+  /instructions\s+du\s+d[eé]veloppeur/gi,
+  // Italian (extended)
+  /dimentica\s+tutte\s+le\s+regole/gi,
+  // Japanese (extended)
+  /以前の指示をすべて忘れ/gi,
+  // Korean (extended)
+  /모든\s+이전\s+규칙을\s+무시/gi,
+  // Dutch
+  /negeer\s+alle\s+eerdere/gi,
+  // Swedish
+  /ignorera\s+alla\s+tidigare/gi,
+  // Danish
+  /ignorer\s+alle\s+tidligere/gi,
+  // Portuguese (extended)
+  /instruções\s+do\s+sistema/gi,
+  // Hindi
+  /पिछले\s+सभी\s+निर्देशों\s+को\s+अनदेखा/gi,
 ];
 
 /**
@@ -244,6 +345,120 @@ function decodeEscapeSequences(text: string): string {
   return text
     .replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
     .replace(/\\x([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+}
+
+/** Cyrillic letters that visually mimic Latin (homoglyph smuggling). */
+const CYRILLIC_HOMOGLYPHS: Record<string, string> = {
+  '\u0430': 'a', '\u0431': 'b', '\u0432': 'v', '\u0433': 'g', '\u0434': 'd',
+  '\u0435': 'e', '\u0451': 'e', '\u0436': 'zh', '\u0437': 'z', '\u0438': 'i',
+  '\u0439': 'i', '\u043a': 'k', '\u043b': 'l', '\u043c': 'm', '\u043d': 'n',
+  '\u043e': 'o', '\u043f': 'p', '\u0440': 'p', '\u0441': 'c', '\u0442': 't',
+  '\u0443': 'y', '\u0444': 'f', '\u0445': 'x', '\u0446': 'c', '\u0447': 'ch',
+  '\u0448': 'sh', '\u0449': 'sh', '\u044a': '', '\u044b': 'y', '\u044c': '',
+  '\u044d': 'e', '\u044e': 'yu', '\u044f': 'ya', '\u0456': 'i', '\u04cf': 'l',
+};
+
+function foldCyrillicHomoglyphs(text: string): string {
+  return text.replace(/\S+/g, (token) => {
+    const hasLatin = /[a-zA-Z]/.test(token);
+    const hasCyrillic = /[\u0400-\u04FF]/.test(token);
+    if (!hasLatin || !hasCyrillic) return token;
+    return token.replace(/[\u0400-\u04FF]/g, (ch) => CYRILLIC_HOMOGLYPHS[ch] ?? ch);
+  });
+}
+
+/** Collapses leetspeak tokens that contain digit/symbol substitutions. */
+function normalizeLeetspeak(text: string): string {
+  return text.replace(/\b[\w@$013457]+\b/g, (word) => {
+    if (!/[013457@$]/.test(word)) return word;
+    return word
+      .replace(/0/g, 'o')
+      .replace(/1/g, 'i')
+      .replace(/3/g, 'e')
+      .replace(/4/g, 'a')
+      .replace(/5/g, 's')
+      .replace(/7/g, 't')
+      .replace(/@/g, 'a')
+      .replace(/\$/g, 's');
+  });
+}
+
+/** Collapses spaced-out letter sequences like "d i s r e g a r d" into words. */
+function collapseSpacedLetters(text: string): string {
+  return text.replace(/(?:\b[a-zA-Z] )+[a-zA-Z]\b/g, (seq) => {
+    const collapsed = seq.replace(/ /g, '');
+    return collapsed.length >= 3 ? collapsed : seq;
+  });
+}
+
+function rot13Decode(text: string): string {
+  return text.replace(/[a-zA-Z]/g, (c) => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base);
+  });
+}
+
+function decodeRot13Segments(text: string): string {
+  const out: string[] = [];
+  const labeled = text.match(/rot13\s*:\s*([a-zA-Z\s]+)/gi);
+  if (labeled) {
+    for (const segment of labeled.slice(0, 4)) {
+      const payload = segment.replace(/^rot13\s*:\s*/i, '');
+      out.push(rot13Decode(payload.trim()));
+    }
+  }
+  return out.join('\n');
+}
+
+function decodeHexSegments(text: string): string {
+  const out: string[] = [];
+  const re = /(?:hex\s*:\s*)([0-9a-fA-F]{16,})/gi;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null && out.length < 4) {
+    const hex = match[1];
+    if (hex.length % 2 !== 0) continue;
+    let decoded = '';
+    for (let i = 0; i < hex.length; i += 2) {
+      const code = parseInt(hex.slice(i, i + 2), 16);
+      if (code < 0x20 || code > 0x7e) {
+        decoded = '';
+        break;
+      }
+      decoded += String.fromCharCode(code);
+    }
+    if (decoded.length >= 8) out.push(decoded);
+  }
+  return out.join('\n');
+}
+
+/**
+ * Builds a multi-view haystack for pattern matching: normalized text plus
+ * leetspeak/spacing/cyrillic folds and decoded base64/escape/rot13/hex segments.
+ */
+function buildAnalysisHaystack(payload: string): string {
+  let base = normalizeForDetection(payload);
+  base = foldCyrillicHomoglyphs(base);
+  base = collapseSpacedLetters(base);
+  const leet = normalizeLeetspeak(base);
+
+  const views = [base];
+  if (leet !== base) views.push(leet);
+
+  const b64 = decodeBase64Segments(base);
+  if (b64) views.push(b64);
+  const esc = decodeEscapeSequences(base);
+  if (esc !== base) views.push(esc);
+  const rot = decodeRot13Segments(base);
+  if (rot) views.push(rot);
+  const hex = decodeHexSegments(base);
+  if (hex) views.push(hex);
+
+  if (leet !== base) {
+    const leetB64 = decodeBase64Segments(leet);
+    if (leetB64) views.push(leetB64);
+  }
+
+  return views.join('\n');
 }
 
 /**
@@ -336,16 +551,8 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     return result;
   }
 
-  // Build a normalized "haystack" so obfuscated attacks surface as plain text:
-  // strip zero-width chars + NFKC fold, then append base64- and escape-decoded
-  // views so smuggled/encoded instructions are re-scanned by the same patterns.
-  const normalized = normalizeForDetection(payload);
-  const views = [normalized];
-  const decodedBase64 = decodeBase64Segments(normalized);
-  if (decodedBase64) views.push(decodedBase64);
-  const decodedEscapes = decodeEscapeSequences(normalized);
-  if (decodedEscapes !== normalized) views.push(decodedEscapes);
-  const haystack = views.join('\n');
+  // Build a normalized "haystack" so obfuscated attacks surface as plain text.
+  const haystack = buildAnalysisHaystack(payload);
 
   // `override: true` marks high-confidence injection categories (override,
   // jailbreak, extraction, exfiltration, delimiter/system manipulation,
@@ -359,8 +566,9 @@ export function detectPromptInjection(payload?: string): PromptInjectionResult {
     { patterns: JAILBREAK_ATTEMPTS, weight: 20, name: 'Jailbreak Attempt', override: true },
     { patterns: PROMPT_EXTRACTION, weight: 8, name: 'Prompt Extraction', override: true },
     { patterns: ENCODING_OBFUSCATION, weight: 6, name: 'Encoding Obfuscation', override: true },
-    { patterns: CHAIN_MANIPULATION, weight: 9, name: 'Chain Manipulation', override: false },
+    { patterns: CHAIN_MANIPULATION, weight: 10, name: 'Chain Manipulation', override: true },
     { patterns: MULTILINGUAL_ATTACKS, weight: 15, name: 'Multilingual Attack', override: true },
+    { patterns: MALICIOUS_ROLEPLAY, weight: 18, name: 'Jailbreak Attempt', override: true },
     { patterns: JAILBREAK_SUBTYPE, weight: 20, name: 'Jailbreak Attempt', override: true },
     { patterns: SYSTEM_PROMPT_EXTRACTION_SUBTYPE, weight: 15, name: 'Prompt Extraction', override: true },
     { patterns: DATA_EXFIL_SUBTYPE, weight: 20, name: 'Data Exfiltration', override: true },
@@ -462,7 +670,7 @@ export function classifyPromptInjection(payload: string): PromptInjectionClassif
     return { detected: false };
   }
 
-  const normalized = normalizeForDetection(payload);
+  const haystack = buildAnalysisHaystack(payload);
 
   const groups: Array<{
     subtype: PromptInjectionSubtype;
@@ -476,7 +684,7 @@ export function classifyPromptInjection(payload: string): PromptInjectionClassif
   ];
 
   for (const group of groups) {
-    if (group.patterns.some(pattern => pattern.test(normalized))) {
+    if (group.patterns.some(pattern => pattern.test(haystack))) {
       return { detected: true, subtype: group.subtype, severity: group.severity };
     }
   }

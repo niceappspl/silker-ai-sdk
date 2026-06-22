@@ -1,113 +1,92 @@
 # Silker AI Detection Benchmark
 
-A reproducible benchmark that measures the **detection rate (TPR)** and **false
-positive rate (FPR)** of the SDK's heuristic detectors against curated, labeled
-datasets. It exists so detection quality can be published as proof of quality
-and so CI catches regressions over time.
+Reproducible benchmark measuring **detection rate (TPR)**, **false-positive rate (FPR)**,
+and **macro-average TPR per category** for the SDK heuristic detectors.
 
-## What it measures
+## Two suites
 
-| Detector | Public API | Datasets |
-| --- | --- | --- |
-| Prompt injection | `detectPromptInjection()` from `src/detection/promptInjection.ts` | `datasets/prompt-injection.json` |
-| SQL injection | `detectSqliHeuristic()` from `src/detection/heuristics.ts` | `datasets/sqli.json` |
-| XSS | `detectXssHeuristic()` from `src/detection/heuristics.ts` | `datasets/xss.json` |
+| Suite | Purpose | Size | CI gate |
+| --- | --- | ---: | --- |
+| **core** | Fast regression gate on every PR | ~210 samples | yes (`quality-gate.test.ts`) |
+| **extended** | Transparency / release honesty | ~630+ samples | no (informational) |
 
-### Prompt-injection: two production policies
+Extended = **core + additions** (`datasets/extended/additions/`), deduped by exact text at load time.
 
-The benchmark reports prompt injection under **both** blocking policies used in
-production (`isAnomaly()` in `src/detection/anomaly.ts`):
-
-- **LLM-route policy** - blocks on **any** detection (`result.detected === true`).
-  Applied to LLM endpoints (`/api/chat`, OpenAI/Anthropic hosts, …). Aggressive:
-  maximizes recall at the cost of false positives.
-- **Non-LLM-route policy** - blocks only when `detected && severity ∈ {high, critical}`.
-  Applied to generic endpoints. Conservative: minimizes false positives.
-
-## Dataset schema
-
-Each entry is `{ "text": string, "label": "attack" | "benign", "category": string }`.
-
-- `prompt-injection.json` - ~60 attack payloads (instruction override, system
-  prompt extraction, DAN/jailbreak, role manipulation, delimiter injection like
-  `[INST]` / `<|system|>`, encoding obfuscation, multilingual, invisible-unicode
-  token smuggling, obfuscated keywords) + ~45 benign-but-risky samples (legit
-  roleplay UX like "act as a translator", innocent mentions of "system prompt",
-  normal questions, long benign text).
-- `sqli.json` / `xss.json` - ~20 attacks + ~20 benign each, where benign samples
-  deliberately contain SQL keywords (`select the best option from the list`) or
-  HTML-ish text (`use the <strong> tag`) to probe false positives.
-
-Datasets were authored from well-known public attack patterns. They are a
-**baseline**, not an adversarial-robustness corpus.
-
-## How to run
-
-```bash
-npm run benchmark
+```
+benchmark/datasets/
+  core/                    # hand-curated baseline (CI)
+    prompt-injection.json
+    sqli.json
+    xss.json
+  extended/additions/      # generated + curated expansions
+    prompt-injection.json
+    sqli.json
+    xss.json
 ```
 
-This:
+Regenerate additions:
 
-1. Loads the datasets.
-2. Runs each sample through the relevant detector(s) under each policy.
-3. Computes per-dataset TPR, FPR, precision, a confusion matrix, and the list of
-   misclassified samples.
-4. Prints a console table and writes `benchmark/results.json` and
-   `benchmark/RESULTS.md` (full table + misclassifications, dated and tagged with
-   the package version from `src/version.ts`).
+```bash
+npm run benchmark:generate
+```
 
-The runner uses `ts-node` with `tsconfig.benchmark.json` (transpile-only).
+## Commands
 
-## Metrics
+```bash
+npm run benchmark              # core suite → results.json, RESULTS.md
+npm run benchmark:extended     # extended suite → results-extended.json
+npm run benchmark:all          # both
+```
 
-- **TPR (detection rate)** = `TP / (TP + FN)` - share of attacks caught.
-- **FPR** = `FP / (FP + TN)` - share of benign samples wrongly flagged.
-- **Precision** = `TP / (TP + FP)` - share of flags that were real attacks.
+## Current results (v1.5.2)
 
-## Current results summary (v1.5.0)
+### Core suite (~210 samples) - CI gate
 
-| Dataset | Policy | TPR | FPR | Precision |
+| Dataset | Policy | TPR | FPR |
+| --- | --- | ---: | ---: |
+| Prompt Injection | LLM-route | 100.0% | 0.0% |
+| Prompt Injection | non-LLM-route | 100.0% | 0.0% |
+| SQL Injection | block on detection | 100.0% | 0.0% |
+| XSS | block on detection | 100.0% | 0.0% |
+
+### Extended suite (~1012 samples) - transparency
+
+| Dataset | Policy | TPR | Macro TPR | FPR |
 | --- | --- | ---: | ---: | ---: |
-| Prompt Injection | LLM-route (medium+ or override signal) | 96.0% | 0.0% | 100.0% |
-| Prompt Injection | non-LLM-route (high/critical) | 96.0% | 0.0% | 100.0% |
-| SQL Injection | block on detection | 100.0% | 0.0% | 100.0% |
-| XSS | block on detection | 100.0% | 0.0% | 100.0% |
+| Prompt Injection | LLM-route | 100.0% | 100.0% | 0.0% |
+| Prompt Injection | non-LLM-route | 97.6% | 97.8% | 0.0% |
+| SQL Injection | block on detection | 96.9% | 97.1% | 0.0% |
+| XSS | block on detection | 100.0% | 100.0% | 0.0% |
 
-Measured on the expanded adversarial dataset (130 prompt-injection samples).
-v1.5.0 added input normalization (zero-width stripping + NFKC), base64/escape
-decode-and-rescan, broader multilingual coverage and weight tuning - lifting the
-non-LLM-route TPR from ~76% (v1.4.x) to 96% while holding FPR at 0%.
+Extended = core + 802 unique additions across 30+ PI categories, 13 SQLi categories,
+11 XSS categories. See [CATEGORIES.md](./CATEGORIES.md) for what each category probes.
 
-See `RESULTS.md` for the per-sample misclassification breakdown.
+## Detectors
 
-### Observations / known limitations
+| Detector | API | Dataset file(s) |
+| --- | --- | --- |
+| Prompt injection | `detectPromptInjection()` | `prompt-injection.json` |
+| SQL injection | `detectSqliHeuristic()` | `sqli.json` |
+| XSS | `detectXssHeuristic()` | `xss.json` |
 
-- **Resolved in v1.5.0**: zero-width token smuggling, fullwidth homoglyphs,
-  base64-/escape-encoded overrides, and German/Portuguese/Italian/Korean/Arabic
-  multilingual overrides are now caught at high severity (blocked on both
-  policies). The "new instructions for assembling the furniture" benign phrase
-  is not flagged.
-- **Remaining misses (documented)**: heuristics are character/token based, so
-  **leetspeak** (`1gn0r3 4ll …`), **Cyrillic homoglyphs** (Latin-looking
-  Cyrillic letters that NFKC does not fold), and languages without an explicit
-  pattern (e.g. **Hindi**) still evade detection. These are honest gaps that
-  keep the benchmark credible and provide regression headroom.
-- **SQLi / XSS**: perfect on this baseline dataset, but the dataset is small and
-  not adversarial.
+### Prompt-injection policies (mirrors `isAnomaly()`)
+
+- **LLM-route** - `shouldBlockPromptInjectionOnLlmRoute()`: medium+ severity, or low + override signal
+- **non-LLM-route** - high/critical only
+
+## Sample schema
+
+```json
+{ "text": "...", "label": "attack" | "benign", "category": "...", "source": "optional" }
+```
 
 ## CI regression gate
 
-`tests/benchmark/quality-gate.test.ts` runs the benchmark programmatically and
-asserts minimum bars (set slightly below the values above) so regressions fail
-CI. The bars are honest to the measured numbers, not the aspirational targets -
-in particular the LLM-route FPR gate reflects the real ~24% and is not forced to
-≤10%.
+`tests/benchmark/quality-gate.test.ts` runs the **core** suite only. Bars sit slightly
+below measured core values so regressions fail CI without blocking on extended gaps.
 
 ## Caveats
 
-- Detection is **heuristic** (regex/token-stream), not ML/semantic. Novel or
-  heavily obfuscated payloads can evade it.
-- The dataset is a **baseline** for measuring direction and regressions, **not**
-  proof of adversarial robustness.
-- Results depend on the dataset; do not add samples to inflate metrics.
+- Heuristic detection, not ML/semantic.
+- Core = regression direction; extended = honest coverage map.
+- Do not add samples solely to inflate metrics - stratify by category instead.

