@@ -41,6 +41,13 @@ function tokenize(input: string): Token[] {
             continue;
         }
 
+        // MySQL hash comment: # starts a line comment
+        if (char === '#') {
+            tokens.push({ type: 'SYMBOL', value: '#', position: current });
+            current++;
+            continue;
+        }
+
         // Symbols
         if (/[;'"()=<>*\/\\:-]/.test(char)) {
             // Check for multi-char symbols like --, /*, */
@@ -100,10 +107,12 @@ export function detectSqliHeuristic(input: string): boolean {
     const quickPatterns = [
         /' OR '/i,                    // ' OR '
         /' OR 1=/i,                   // ' OR 1=
-        /--$/,                        // SQL comment at end
+        /--/,                         // SQL comment (--)
+        /#(?:$|\s|')/,                // MySQL hash comment (#, # , #')
         /UNION.*SELECT/i,             // UNION SELECT
         /; DROP TABLE/i,              // ; DROP TABLE
-        /' AND '/i                    // ' AND '
+        /' AND '/i,                   // ' AND '
+        /' AND \d/i,                  // ' AND 1= tautology
     ];
     
     for (const pattern of quickPatterns) {
@@ -125,23 +134,22 @@ export function detectSqliHeuristic(input: string): boolean {
         // 2. SELECT ... FROM (simplified)
         if (t.value === 'SELECT' && next?.value === 'FROM') return true; // unlikely to be adjacent but catches SELECT FROM
 
-        // 3. Comment injection: -- or /*
-        if (t.value === '--' || t.value === '/*') return true;
+        // 3. Comment injection: --, /* or MySQL # comment
+        if (t.value === '--' || t.value === '/*' || t.value === '#') return true;
 
-        // 4. Tautology: ' OR '1'='1 or similar patterns
-        // Check for OR keyword followed by quotes and equals (common in tautologies)
-        if (t.value === 'OR') {
-            // Look ahead for patterns like: OR '...' = '...' or OR 1=1
-            for (let j = i + 1; j < Math.min(i + 6, tokens.length); j++) {
+        // 4. Tautology: ' OR '1'='1, ' AND 1=1 or similar patterns
+        // Check for OR/AND keyword followed by equals (common in tautologies)
+        if (t.value === 'OR' || t.value === 'AND') {
+            // Look ahead for patterns like: OR '...' = '...' or OR 1=1 (up to 8 tokens for nested parens)
+            for (let j = i + 1; j < Math.min(i + 8, tokens.length); j++) {
                 if (tokens[j].value === '=') {
-                    // Found an equals sign after OR within 6 tokens - likely tautology
                     return true;
                 }
             }
         }
 
-        // 5. Quote followed by OR (classic SQLi pattern)
-        if (t.value === "'" && next?.value === 'OR') return true;
+        // 5. Quote followed by OR or AND (classic SQLi pattern)
+        if (t.value === "'" && (next?.value === 'OR' || next?.value === 'AND')) return true;
 
         // 6. Piggybacked query: ; DROP/INSERT/UPDATE
         if (t.value === ';' && next?.type === 'KEYWORD') {

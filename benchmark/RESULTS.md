@@ -2,10 +2,10 @@
 
 - **Suite:** `core`
 - **Package:** `@silker-ai/agent`
-- **Version:** `1.5.1`
-- **Date:** 2026-06-22
+- **Version:** `1.6.0`
+- **Date:** 2026-06-25
 - **Samples:** 210
-- **Generated:** 2026-06-22T20:14:33.123Z
+- **Generated:** 2026-06-25T17:11:20.379Z
 
 ## Summary
 
