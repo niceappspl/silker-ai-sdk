@@ -15,6 +15,8 @@ import { DEFAULT_SCAN_LIMIT_BYTES } from '../detection/features';
 const vibeEmitter = new EventEmitter();
 vibeEmitter.setMaxListeners(50);
 
+let trustProxyWarned = false;
+
 /**
  * Tworzy middleware Express.js dla Silker.
  * Przechwytuje żądania Express, sprawdza je pod kątem anomalii i blokuje podejrzane żądania.
@@ -34,6 +36,20 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
   }
 
   logger.info('Silker middleware initialized');
+
+  // Jednorazowe ostrzeżenie: gdy trustProxy != false, IP klienta jest ustalane z
+  // nagłówków proxy (XFF/x-real-ip), które bez zaufanego proxy są podszywalne -
+  // atakujący może omijać bany/rate-limit. Jeśli aplikacja NIE stoi za proxy,
+  // ustaw `trustProxy: false`.
+  if (options.trustProxy !== false && !trustProxyWarned) {
+    trustProxyWarned = true;
+    logger.warn(
+      '[Silker SDK] trustProxy is enabled (default): client IP is derived from ' +
+      'x-forwarded-for/x-real-ip headers. Behind a trusted proxy (Vercel/Cloudflare/LB) ' +
+      'this is correct; if the app is directly exposed, set `trustProxy: false` to avoid ' +
+      'IP spoofing that can bypass IP bans and rate limits.'
+    );
+  }
 
   // Aktywnie pobierz aktualne bany + config z platformy na starcie procesu
   // (w tle). Na serverless wykonuje sie raz na cold-start isolate, dzieki czemu

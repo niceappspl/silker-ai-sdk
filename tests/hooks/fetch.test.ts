@@ -109,6 +109,26 @@ describe('hookFetch', () => {
     expect(data.error).toBe('Request blocked by Silker AI');
   });
 
+  it('should BYPASS internal SDK requests (x-silker-client-version) without analysis', async () => {
+    const threatSpy = jest.spyOn(dashboard, 'sendThreatToDashboard').mockResolvedValue();
+
+    // blockOutgoing ON + anomalous body would normally be blocked (403).
+    hookFetch({ ...mockOptions, blockOutgoing: true });
+
+    const response = await global.fetch('https://platform.silkerai.com/api/sync', {
+      method: 'POST',
+      headers: { 'x-silker-client-version': '1.6.0' },
+      body: JSON.stringify({ query: "'; DROP TABLE users; --" })
+    });
+
+    // Internal request is passed straight through to the original fetch (mock).
+    expect(response.status).toBe(200);
+    expect(mockFetch).toHaveBeenCalled();
+    expect(threatSpy).not.toHaveBeenCalled();
+
+    threatSpy.mockRestore();
+  });
+
   it('should block requests with XSS when blockOutgoing is enabled', async () => {
     nock('https://test-silker.com')
       .post('/api')

@@ -103,14 +103,17 @@ export function detectSqliHeuristic(input: string): boolean {
         return false;
     }
 
-    // Quick regex-based detection for common SQL injection patterns (fallback)
+    // Quick regex-based detection for common SQL injection patterns (fallback).
+    // Comment markers (--, #) are matched ONLY in SQL context (right after a
+    // quote, closing paren or semicolon) to avoid false positives on benign
+    // text like "mid-2024 -- note", "use --flag" or "section # 1".
     const quickPatterns = [
         /' OR '/i,                    // ' OR '
-        /' OR 1=/i,                   // ' OR 1=
-        /--/,                         // SQL comment (--)
-        /#(?:$|\s|')/,                // MySQL hash comment (#, # , #')
+        /' OR \d+\s*=/i,              // ' OR 1= (tautology, allows spaces)
+        /['");]\s*--/,                // line comment after quote/paren/semicolon
+        /['");]\s*#/,                 // MySQL hash comment after quote/paren/semicolon
         /UNION.*SELECT/i,             // UNION SELECT
-        /; DROP TABLE/i,              // ; DROP TABLE
+        /;\s*DROP\s+TABLE/i,          // ; DROP TABLE
         /' AND '/i,                   // ' AND '
         /' AND \d/i,                  // ' AND 1= tautology
     ];
@@ -134,15 +137,37 @@ export function detectSqliHeuristic(input: string): boolean {
         // 2. SELECT ... FROM (simplified)
         if (t.value === 'SELECT' && next?.value === 'FROM') return true; // unlikely to be adjacent but catches SELECT FROM
 
-        // 3. Comment injection: --, /* or MySQL # comment
-        if (t.value === '--' || t.value === '/*' || t.value === '#') return true;
+        // 3. Block comment injection (/* */). Line comments (--) and MySQL hash (#)
+        // are handled contextually by the quick patterns above to avoid FPs on
+        // free text that happens to contain "--" or "#".
+        if (t.value === '/*') return true;
 
-        // 4. Tautology: ' OR '1'='1, ' AND 1=1 or similar patterns
-        // Check for OR/AND keyword followed by equals (common in tautologies)
+        // 4. Tautology: OR/AND ... <operand> = <operand> with IDENTICAL operands
+        // (e.g. 1=1, 'a'='a, (1=1)). We scan a short window after OR/AND, find the
+        // equality and compare the operands flanking it (skipping quotes/parens).
+        // Only IDENTICAL operands flag, so benign "key=value" pairs near "or"/"and"
+        // (e.g. "active and verified=true", "red or blue&sort=name") are NOT flagged.
         if (t.value === 'OR' || t.value === 'AND') {
-            // Look ahead for patterns like: OR '...' = '...' or OR 1=1 (up to 8 tokens for nested parens)
-            for (let j = i + 1; j < Math.min(i + 8, tokens.length); j++) {
+            const windowEnd = Math.min(i + 8, tokens.length);
+            let eqIndex = -1;
+            for (let j = i + 1; j < windowEnd; j++) {
                 if (tokens[j].value === '=') {
+                    eqIndex = j;
+                    break;
+                }
+            }
+            if (eqIndex > i) {
+                const isOperand = (tk?: Token) =>
+                    !!tk && (tk.type === 'LITERAL' || tk.type === 'KEYWORD');
+                let before: Token | undefined;
+                for (let j = eqIndex - 1; j > i; j--) {
+                    if (isOperand(tokens[j])) { before = tokens[j]; break; }
+                }
+                let after: Token | undefined;
+                for (let j = eqIndex + 1; j < windowEnd; j++) {
+                    if (isOperand(tokens[j])) { after = tokens[j]; break; }
+                }
+                if (before && after && before.value === after.value) {
                     return true;
                 }
             }

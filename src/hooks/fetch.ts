@@ -36,6 +36,28 @@ function safeStringify(obj: any): string {
 }
 
 /**
+ * Wykrywa wewnętrzne żądania SDK (telemetria/sync) po nagłówku
+ * `x-silker-client-version`. Takie żądania muszą omijać hook - inaczej analizujemy
+ * i raportujemy własny ruch SDK (sprzężenie zwrotne + szum telemetrii).
+ * Obsługuje headers jako Headers, tablicę krotek lub zwykły obiekt.
+ */
+function isSilkerInternalRequest(headers: HeadersInit | undefined): boolean {
+  if (!headers) return false;
+  const MARKER = 'x-silker-client-version';
+  try {
+    if (typeof Headers !== 'undefined' && headers instanceof Headers) {
+      return headers.has(MARKER);
+    }
+    if (Array.isArray(headers)) {
+      return headers.some(([key]) => key?.toLowerCase() === MARKER);
+    }
+    return Object.keys(headers).some(key => key.toLowerCase() === MARKER);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Przechwytuje globalną funkcję fetch i dodaje monitorowanie bezpieczeństwa.
  * Wszystkie wywołania fetch są sprawdzane pod kątem anomalii przed wykonaniem.
  * Domyślnie działa w trybie monitor-only (telemetria bez blokowania) -
@@ -61,6 +83,13 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
     originalFetchBackup = global.fetch;
 
     global.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+    // Bypass dla wewnętrznych żądań SDK (telemetria/sync) - nie analizujemy
+    // ani nie raportujemy własnego ruchu (unika sprzężenia zwrotnego).
+    const inputHeaders = (input as Request)?.headers;
+    if (isSilkerInternalRequest(init?.headers) || isSilkerInternalRequest(inputHeaders)) {
+      return originalFetchBackup!.call(this, input, init);
+    }
+
     const start = Date.now();
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     const method = init?.method || 'GET';

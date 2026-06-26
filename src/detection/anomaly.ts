@@ -80,10 +80,21 @@ export function applyRemoteFeatures(features: Record<string, unknown> | null | u
   if (!features || typeof features !== 'object') return;
   if (!globalOptions) globalOptions = {};
   const merged = { ...(globalOptions.features ?? {}) } as Record<string, unknown>;
+
+  // Allowlista: aplikujemy tylko znane klucze funkcjonalności (DEFAULT_FEATURES).
+  // Nieznane/śmieciowe klucze z odpowiedzi platformy są ignorowane (ochrona przed
+  // wstrzyknięciem niespodziewanych pól / prototype pollution).
+  const allowedKeys = new Set(Object.keys(DEFAULT_FEATURES));
+
+  // Floor: krytyczne detektory, których remote NIE może wyłączyć (tylko włączyć).
+  // Chroni przed cichym wyłączeniem ochrony przez zmanipulowaną odpowiedź.
+  const floor = new Set<string>((globalOptions.remoteConfigFloor ?? []) as string[]);
+
   for (const [key, value] of Object.entries(features)) {
-    if (typeof value === 'boolean') {
-      merged[key] = value;
-    }
+    if (typeof value !== 'boolean') continue;
+    if (!allowedKeys.has(key)) continue;
+    if (value === false && floor.has(key)) continue;
+    merged[key] = value;
   }
   globalOptions.features = merged as SilkerOptions['features'];
 

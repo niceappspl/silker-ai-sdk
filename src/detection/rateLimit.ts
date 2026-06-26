@@ -4,6 +4,38 @@ import { SilkerStateStore } from '../state/store';
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const banMap = new Map<string, { banUntil: number }>();
 
+/**
+ * Miękki limit liczby wpisów w banMap - chroni przed nieograniczonym wzrostem
+ * pamięci przy rozproszonym skanowaniu (tysiące unikalnych IP). Wygasłe bany są
+ * usuwane okresowo; po przekroczeniu limitu usuwamy najstarsze (najbliższe wygaśnięcia).
+ */
+const MAX_BAN_ENTRIES = 50_000;
+
+/** Usuwa wygasłe wpisy z banMap. */
+function sweepExpiredBans(now: number): void {
+  for (const [ip, info] of banMap.entries()) {
+    if (info.banUntil <= now) {
+      banMap.delete(ip);
+    }
+  }
+}
+
+/**
+ * Egzekwuje miękki limit rozmiaru banMap: najpierw usuwa wygasłe wpisy, a jeśli
+ * nadal przekraczamy limit - eksmituje najstarsze bany (najmniejsze banUntil).
+ */
+function enforceBanMapCap(now: number): void {
+  if (banMap.size < MAX_BAN_ENTRIES) return;
+  sweepExpiredBans(now);
+  if (banMap.size < MAX_BAN_ENTRIES) return;
+
+  const sorted = [...banMap.entries()].sort((a, b) => a[1].banUntil - b[1].banUntil);
+  const overflow = banMap.size - MAX_BAN_ENTRIES + 1;
+  for (let i = 0; i < overflow && i < sorted.length; i++) {
+    banMap.delete(sorted[i][0]);
+  }
+}
+
 let rateLimitConfig: RateLimitConfig = {
   windowMs: 60000,
   maxRequests: 300,   // 300 req/min per IP - catches brute-force, not normal users
@@ -77,7 +109,9 @@ export function banIp(ip: string | undefined, durationMs?: number): void {
   // W przyszłości można tu dodać sprawdzanie globalOptions.features.ipBanning
   
   const duration = durationMs || rateLimitConfig.banDurationMs || 300000;
-  banMap.set(ip, { banUntil: Date.now() + duration });
+  const now = Date.now();
+  enforceBanMapCap(now);
+  banMap.set(ip, { banUntil: now + duration });
 
   // Mirror bana do zewnętrznego store (best-effort, nie blokuje).
   if (externalStore) {
@@ -178,11 +212,14 @@ export function checkRateLimit(event: SilkerEvent, shouldBan: boolean = true): b
     return true;
   }
 
-  // Periodic cleanup (10% chance to avoid overhead on every request)
+  // Periodic cleanup (10% chance to avoid overhead on every request).
+  // Sweeps both rate-limit counters AND expired bans so banMap nie rośnie
+  // bez limitu przy rozproszonym ruchu (wygasłe bany IP, które już nie wracają).
   if (Math.random() < 0.1) {
     for (const [k, v] of rateLimitMap.entries()) {
       if (v.resetTime < now) rateLimitMap.delete(k);
     }
+    sweepExpiredBans(now);
   }
 
   return false;

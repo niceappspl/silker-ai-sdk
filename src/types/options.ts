@@ -179,6 +179,13 @@ export interface SilkerOptions {
    * Ustaw `false`, aby trzymać konfigurację wyłącznie w kodzie/env.
    */
   remoteConfig?: boolean;
+  /**
+   * Lista funkcjonalności, których konfiguracja zdalna (dashboard) NIE może
+   * wyłączyć. Chroni krytyczne detektory przed cichym wyłączeniem przez
+   * zmanipulowaną/błędną odpowiedź platformy. Remote może je tylko włączać.
+   * Domyślnie brak floor (pełna kontrola dashboardu, zachowanie dotychczasowe).
+   */
+  remoteConfigFloor?: (keyof SilkerFeatures)[];
   /** Konfiguracja telemetrii (sampling request-eventów) */
   telemetry?: TelemetryOptions;
   /**

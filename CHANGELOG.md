@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.1] - 2026-06-26
+### Security & reliability hardening (fewer false positives, safer defaults)
+- **SQLi heuristic - eliminated false positives that could block legitimate traffic** (`detectSqliHeuristic`):
+  - Line/hash comment markers (`--`, `#`) are now matched ONLY in SQL context (directly after `'`, `"`, `)` or `;`) instead of anywhere in the input. Benign text like `mid-2024 -- final draft`, `use --flag in cli` and `section # 1` no longer triggers a 403.
+  - OR/AND tautology now requires IDENTICAL operands around the equality (`1=1`, `'a'='a'`, `(1=1)`) instead of any `=` within an 8-token window. Normal query strings such as `?q=red or blue&sort=name` and `status=active and verified=true` pass cleanly - this mainly affected the Edge/Next.js adapter, which scans the decoded query string. Real injections (`UNION SELECT`, `' OR '1'='1`, `; DROP TABLE`, nested-paren tautologies) stay blocked; all benchmark suites remain at 100% TPR / 0% FPR.
+- **Bounded `banMap` memory** (`rateLimit.ts`): expired bans are now swept periodically (alongside the existing rate-limit sweep) and a soft cap (`MAX_BAN_ENTRIES = 50000`) evicts the oldest entries, preventing unbounded growth under distributed scanning.
+- **Fetch hook no longer monitors its own traffic** (`hookFetch`): internal SDK requests (telemetry/sync, identified by the `x-silker-client-version` header) bypass interception, avoiding a self-monitoring feedback loop and telemetry noise.
+- **Hardened remote config** (`applyRemoteFeatures`): only known feature keys from the dashboard response are applied (unknown keys ignored), and a new optional `remoteConfigFloor: (keyof SilkerFeatures)[]` lists critical detectors that remote config can enable but never silently disable.
+- **`trustProxy` startup warning**: when `trustProxy` is left at its default (enabled), the Express middleware now logs a one-time warning that client IP is derived from spoofable proxy headers when not actually behind a trusted proxy (recommends `trustProxy: false` for directly-exposed apps).
+
 ## [1.6.0] - 2026-06-25
 ### 100% detection across all extended benchmarks (0 false negatives, 0 false positives)
 - **Prompt injection non-LLM-route: 97.6% → 100.0% TPR** - fixed 7 false negatives at 0% FPR:

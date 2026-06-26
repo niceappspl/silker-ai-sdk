@@ -18,6 +18,27 @@ describe('Heuristic Detection', () => {
       expect(detectSqliHeuristic("Hello world")).toBe(false);
       expect(detectSqliHeuristic("Select your option")).toBe(false);
     });
+
+    test('should detect parenthesized / spaced tautologies', () => {
+      expect(detectSqliHeuristic("') OR ('a'='a")).toBe(true);
+      expect(detectSqliHeuristic("1 OR 1=1")).toBe(true);
+      expect(detectSqliHeuristic("x AND 1=1")).toBe(true);
+      expect(detectSqliHeuristic("1; DROP TABLE users")).toBe(true);
+      expect(detectSqliHeuristic("admin'#")).toBe(true);
+    });
+
+    test('should NOT flag benign text with -- # or or/and (false positives)', () => {
+      // Komentarze SQL tylko w kontekście (po cudzysłowie/nawiasie), nie w wolnym tekście.
+      expect(detectSqliHeuristic("mid-2024 -- final draft")).toBe(false);
+      expect(detectSqliHeuristic("use --flag in cli")).toBe(false);
+      expect(detectSqliHeuristic("section # 1 intro")).toBe(false);
+      expect(detectSqliHeuristic("color #fff here")).toBe(false);
+      // OR/AND blisko key=value (typowe query stringi) - to NIE tautologia.
+      expect(detectSqliHeuristic("cats or dogs sort=name")).toBe(false);
+      expect(detectSqliHeuristic("search=red or blue&limit=10")).toBe(false);
+      expect(detectSqliHeuristic("status=active and verified=true")).toBe(false);
+      expect(detectSqliHeuristic("filter=name and age=30")).toBe(false);
+    });
   });
 
   describe('XSS', () => {
