@@ -1,5 +1,15 @@
 import { SilkerEvent, SilkerOptions } from '../types';
-import { isAnomaly, setGlobalOptions, getDataLeakageConfig, redactPii, detectSsrfAttack } from '../detection';
+import {
+  isAnomaly,
+  setGlobalOptions,
+  getDataLeakageConfig,
+  redactPii,
+  detectSsrfAttack,
+  inspectResponseText,
+  isScannableContentType,
+  guardStreamingResponse,
+  isStreamingContentType,
+} from '../detection';
 import { sendThreatToDashboard, sendRequestToDashboard } from '../cloud/dashboard';
 import { detectThreatType, setGlobalOptionsForThreat } from '../detection/threatDetection';
 import { logAuditEvent } from '../monitoring/audit';
@@ -228,6 +238,47 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
         // Send request metrics to dashboard if enabled (fire-and-forget, never blocks)
         if (telemetryEnabled) {
             sendRequestToDashboard(event, response.status, duration, options);
+        }
+
+        // Inspekcja ODPOWIEDZI (np. z API LLM) pod kątem wycieku danych.
+        const responseInspectionEnabled = options.features?.responseInspection !== false;
+        const contentType = response.headers.get('content-type');
+
+        const reportLeak = (description: string): void => {
+          if (!telemetryEnabled) return;
+          void sendThreatToDashboard(event, 'Data Leakage', 'critical', false, description, options, duration);
+          if (options.features?.auditLogging !== false) {
+            logAuditEvent(event, 'flagged', 'Data leak detected in outbound response', 'high');
+          }
+        };
+
+        // Strumień LLM (SSE/ndjson): token-level guardrails z cut-off.
+        if (
+          options.features?.streamingGuardrails !== false &&
+          isStreamingContentType(contentType) &&
+          response.body
+        ) {
+          return guardStreamingResponse(response, {
+            onDetect: (findings) =>
+              reportLeak(`Sensitive data / policy violation in streamed response: ${findings.join(', ')}`),
+          });
+        }
+
+        // Pozostałe odpowiedzi tekstowe: skan klona w tle (telemetria), nie blokuje.
+        if (responseInspectionEnabled && response.body && isScannableContentType(contentType)) {
+          const clone = response.clone();
+          const scan = (async () => {
+            try {
+              const text = await clone.text();
+              const result = inspectResponseText(text);
+              if (result.leaked) {
+                reportLeak(`Sensitive data leak in outbound response: ${result.findings.join(', ')}`);
+              }
+            } catch {
+              // Inspekcja best-effort - nigdy nie wpływa na ruch.
+            }
+          })();
+          if (options.waitUntil) options.waitUntil(scan);
         }
 
         return response;

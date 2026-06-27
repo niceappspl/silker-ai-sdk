@@ -12,10 +12,12 @@ import { createServer, IncomingMessage, ServerResponse } from 'http';
 import {
   configureCore,
   inspectEvent,
+  inspectResponseLeakage,
   buildThreatItem,
   buildRequestItem,
   sendEvents,
   EDGE_SAFE_FEATURES,
+  MAX_RESPONSE_SCAN_BYTES,
   type SilkerEvent,
   type SilkerOptions,
   type TelemetryConfig,
@@ -32,6 +34,9 @@ const MAX_SCAN_BYTES = 50 * 1024; // 50KB do skanu
 const HOP_BY_HOP = new Set(['host', 'connection', 'content-length', 'transfer-encoding', 'keep-alive']);
 
 const telemetry: TelemetryConfig = { endpoint: ENDPOINT, apiKey: API_KEY, appId: APP_ID };
+
+// Inspekcja odpowiedzi wychodzących włączona, chyba że jawnie wyłączona.
+const RESPONSE_INSPECTION = EDGE_SAFE_FEATURES.responseInspection !== false;
 
 const options: SilkerOptions = {
   apiKey: API_KEY,
@@ -133,6 +138,40 @@ async function relayResponse(upstream: Response, res: ServerResponse): Promise<v
   res.end(buffer);
 }
 
+/**
+ * Relay z inspekcją wycieku danych w odpowiedzi originu. Body jest buforowane
+ * (proxy i tak je buforuje), skanowane pod kątem sekretów/PII i przekazywane
+ * niezmienione. Wykrycie generuje zdarzenie "Data Leakage" (monitor - nie psujemy
+ * odpowiedzi originu). Telemetria fire-and-forget.
+ */
+async function relayWithInspection(
+  upstream: Response,
+  res: ServerResponse,
+  event: SilkerEvent,
+  start: number,
+): Promise<void> {
+  const headers: Record<string, string> = {};
+  upstream.headers.forEach((value, key) => {
+    if (!HOP_BY_HOP.has(key.toLowerCase())) headers[key] = value;
+  });
+  const buffer = Buffer.from(await upstream.arrayBuffer());
+
+  if (RESPONSE_INSPECTION && buffer.length > 0) {
+    try {
+      const text = buffer.toString('utf8', 0, Math.min(buffer.length, MAX_RESPONSE_SCAN_BYTES));
+      const threat = inspectResponseLeakage(text, upstream.headers.get('content-type'));
+      if (threat) {
+        void sendEvents(telemetry, [buildThreatItem(event, threat, APP_ID, Date.now() - start)]);
+      }
+    } catch {
+      // Inspekcja best-effort - nigdy nie blokuje przekazania odpowiedzi.
+    }
+  }
+
+  res.writeHead(upstream.status, headers);
+  res.end(buffer);
+}
+
 const HEALTH_PATH = '/_silker/health';
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
@@ -171,7 +210,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
 
     const upstream = await forward(req, headers, body);
     void sendEvents(telemetry, [buildRequestItem(event, upstream.status, Date.now() - start, APP_ID)]);
-    await relayResponse(upstream, res);
+    await relayWithInspection(upstream, res, event, start);
   } catch {
     // Fail-open: spróbuj przekazać ruch; jeśli się nie da - 502.
     try {

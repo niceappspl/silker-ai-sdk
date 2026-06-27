@@ -1,6 +1,7 @@
 import { SilkerEvent, SilkerOptions } from '../types';
 import { detectCsrfAttack, detectSsrfAttack, detectIdorAttack, detectHostHeaderInjection, detectBrokenAccessControl, detectPrivilegeEscalation, detectHorizontalPrivilegeEscalation } from './owasp';
 import { classifyPromptInjection } from './promptInjection';
+import { semanticThreatScore } from './semantic';
 import { isLlmRoute } from './llmContext';
 import { checkRateLimit, isIpBanned } from './rateLimit';
 import { detectDataLeakage } from './dataLeakage';
@@ -130,6 +131,15 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
           description: `AI prompt injection attempt detected in ${url}`
         };
       }
+    }
+
+    // Trafienie warstwy semantycznej (parafraza/nowy wariant bez dopasowania reguły).
+    if (isFeatureEnabled('semanticDetection') && isLlmRoute(url, headers) && semanticThreatScore(payloadStr).matched) {
+      return {
+        type: 'Prompt Injection',
+        severity: 'high',
+        description: `Prompt injection (semantic) detected on LLM route ${url}`,
+      };
     }
   }
 

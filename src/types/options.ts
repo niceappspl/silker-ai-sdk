@@ -84,6 +84,24 @@ export interface SilkerFeatures {
   softwareIntegrityValidation?: boolean;
   /** Wykrywanie prompt injection dla systemów AI/LLM */
   promptInjectionDetection?: boolean;
+  /**
+   * Semantyczna warstwa detekcji prompt injection (lekka, lokalna, edge-safe).
+   * Działa OBOK silnika sygnaturowego: hashowane n-gramy + podobieństwo kosinusowe
+   * do centroidu znanych intencji ataku - wyłapuje parafrazy/nowe warianty, których
+   * nie pokrywają reguły. Bez zewnętrznych modeli/API. Domyślnie włączona.
+   */
+  semanticDetection?: boolean;
+  /**
+   * Inspekcja WYCHODZĄCYCH odpowiedzi pod kątem wycieku danych (PII, klucze API,
+   * sekrety) zanim trafią do klienta. Generuje zdarzenia "Data Leakage". Domyślnie włączona.
+   */
+  responseInspection?: boolean;
+  /**
+   * Token-level guardrails dla strumieniowanych odpowiedzi LLM (SSE/chunked).
+   * Skanuje odpowiedź w locie i ucina strumień przy wykryciu wycieku danych /
+   * udanego jailbreaka. Wymaga TransformStream (edge/Node 18+). Domyślnie włączona.
+   */
+  streamingGuardrails?: boolean;
   /** Automatyczne banowanie adresów IP po wykryciu ataku lub przekroczeniu limitów */
   ipBanning?: boolean;
   /**

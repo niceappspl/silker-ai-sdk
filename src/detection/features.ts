@@ -22,7 +22,13 @@ export const DEFAULT_FEATURES: Record<FeatureKey, boolean> = {
   xssDetection: true,
   pathTraversalDetection: true,
   promptInjectionDetection: true,
+  // Semantyczna warstwa prompt injection (lokalna, edge-safe) - niski FP, default ON.
+  semanticDetection: true,
   dataLeakageDetection: true,
+  // Inspekcja odpowiedzi wychodzących + guardrails strumieni LLM - default ON
+  // (edge-safe, skanuje tylko treść tekstową pod limitem).
+  responseInspection: true,
+  streamingGuardrails: true,
   fileUploadDetection: true,
   ipBanning: true,
   // Scanner trap (honeypot paths) - żądania do /.env, /wp-login.php itp.

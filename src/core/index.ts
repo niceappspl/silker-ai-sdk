@@ -9,7 +9,14 @@
  * Powłoka odpowiada za: transport (telemetria), stan rozproszony (KV/DO)
  * i forward ruchu. Core odpowiada wyłącznie za decyzję block/allow.
  */
-import { isAnomaly, setGlobalOptions as setDetectionOptions } from '../detection';
+import {
+  isAnomaly,
+  setGlobalOptions as setDetectionOptions,
+  inspectResponseText,
+  isScannableContentType,
+  guardStreamingResponse,
+  isStreamingContentType,
+} from '../detection';
 import { setGlobalOptions as setBehaviorOptions } from '../analytics/userBehavior';
 import {
   detectThreatType,
@@ -124,7 +131,29 @@ export async function eventFromRequest(request: Request, ip?: string, maxBytes: 
   };
 }
 
+/**
+ * Limit treści odpowiedzi skanowanej pod kątem wycieku danych (Worker/kontener).
+ */
+export const MAX_RESPONSE_SCAN_BYTES = 256 * 1024;
+
+/**
+ * Inspekcja odpowiedzi originu pod kątem wycieku danych. Zwraca ThreatInfo
+ * (typ "Data Leakage") gdy wykryto sekrety/PII, w przeciwnym razie null.
+ * Edge-safe; pomija odpowiedzi binarne (po Content-Type).
+ */
+export function inspectResponseLeakage(text: string, contentType?: string | null): ThreatInfo | null {
+  if (!isScannableContentType(contentType)) return null;
+  const result = inspectResponseText(text, MAX_RESPONSE_SCAN_BYTES);
+  if (!result.leaked) return null;
+  return {
+    type: 'Data Leakage',
+    severity: 'critical',
+    description: `Sensitive data leak in outbound response: ${result.findings.join(', ')}`,
+  };
+}
+
 export { isAnomaly, detectThreatType };
+export { inspectResponseText, isScannableContentType, guardStreamingResponse, isStreamingContentType };
 export type { SilkerFeatures };
 export {
   buildThreatItem,

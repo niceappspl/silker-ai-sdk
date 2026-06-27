@@ -16,12 +16,16 @@ import {
   configureCore,
   eventFromRequest,
   inspectEvent,
+  inspectResponseLeakage,
+  guardStreamingResponse,
+  isStreamingContentType,
   buildThreatItem,
   buildRequestItem,
   sendEvents,
   EDGE_SAFE_FEATURES,
   type SilkerOptions,
   type TelemetryConfig,
+  type ThreatInfo,
 } from '../../src/core';
 
 export interface Env {
@@ -95,8 +99,41 @@ export default {
       }
 
       const response = await forwardToOrigin(request, env);
+      const contentType = response.headers.get('content-type');
       const item = buildRequestItem(event, response.status, Date.now() - start, env.SILKER_APP_ID);
       ctx.waitUntil(sendEvents(telemetryConfig(env), [item]));
+
+      const reportLeak = (description: string): void => {
+        const threat: ThreatInfo = { type: 'Data Leakage', severity: 'critical', description };
+        ctx.waitUntil(
+          sendEvents(telemetryConfig(env), [buildThreatItem(event, threat, env.SILKER_APP_ID, Date.now() - start)]),
+        );
+      };
+
+      // Strumień LLM (SSE/ndjson): token-level guardrails z cut-off.
+      if (EDGE_SAFE_FEATURES.streamingGuardrails !== false && isStreamingContentType(contentType) && response.body) {
+        return guardStreamingResponse(response, {
+          onDetect: (findings) =>
+            reportLeak(`Sensitive data / policy violation in streamed response: ${findings.join(', ')}`),
+        });
+      }
+
+      // Pozostałe odpowiedzi: skan klona w tle (telemetria), bez blokowania ścieżki.
+      if (EDGE_SAFE_FEATURES.responseInspection !== false && response.body) {
+        const clone = response.clone();
+        ctx.waitUntil(
+          (async () => {
+            try {
+              const text = await clone.text();
+              const threat = inspectResponseLeakage(text, contentType);
+              if (threat) reportLeak(threat.description);
+            } catch {
+              // Inspekcja best-effort.
+            }
+          })(),
+        );
+      }
+
       return response;
     } catch {
       // Fail-open: nigdy nie psujemy aplikacji usera.

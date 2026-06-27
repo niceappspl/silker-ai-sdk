@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.5] - 2026-06-27
+### AI Detection Layer (v3): semantic detection, outbound response inspection & streaming guardrails
+- **New: semantic prompt-injection layer** (`semanticThreatScore`, `src/detection/semantic.ts`) - a lightweight, fully local, edge-safe model that runs ALONGSIDE the signature engine on LLM routes. Uses a hashing trick (words + word-bigrams + char 3-grams → 512-dim vector) and cosine similarity to attack/benign centroids to catch paraphrased / novel prompt-injection variants that no regex matches. No external model, no API call, ~0ms. Conservative threshold + benign margin keep false positives at zero on the LLM-route benchmark (including tricky cases like "the new instructions for assembling the furniture"). Toggle: `semanticDetection` (default on).
+- **New: outbound response inspection** (`inspectResponseText`, `src/detection/responseInspection.ts`) - scans outgoing responses for leaked secrets (provider API keys, JWT, private keys, DB connection strings via `detectDataLeakage`) and PII (email/phone) before they reach the client, generating `Data Leakage` events. Wired into the fetch hook, Cloudflare Worker and self-host container; binary content types are skipped by `Content-Type`. Toggle: `responseInspection` (default on).
+- **New: streaming LLM guardrails** (`createGuardrailTransform` / `guardStreamingResponse`, `src/detection/streamingGuardrails.ts`) - a `TransformStream` that inspects streamed model output (SSE / ndjson) token-by-token and CUTS OFF the stream the moment a secret/PII leak or a successful jailbreak surfaces - before the payload completes. Boundary-safe holdback prevents a secret split across chunks from leaking early. Edge-safe (TransformStream/TextDecoder, Worker + Node 18+). Wired into the Worker and fetch hook. Toggle: `streamingGuardrails` (default on).
+- **Tests**: +16 unit tests for the three new modules; full suite at 572 green.
+
 ## [1.6.1] - 2026-06-26
 ### Security & reliability hardening (fewer false positives, safer defaults)
 - **SQLi heuristic - eliminated false positives that could block legitimate traffic** (`detectSqliHeuristic`):

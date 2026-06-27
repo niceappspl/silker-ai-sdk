@@ -13,6 +13,7 @@ import { detectVulnerableComponents, checkForCveReferences } from './vulnerableC
 import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectPromptInjection, shouldBlockPromptInjectionOnLlmRoute } from './promptInjection';
+import { semanticThreatScore } from './semantic';
 import { detectScannerTrap } from './scannerTrap';
 import { banIp } from './rateLimit';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
@@ -159,6 +160,13 @@ export function isAnomaly(event: SilkerEvent): boolean {
     if (isLlm && scannedPayload && isFeatureEnabled('promptInjectionDetection')) {
       const injection = detectPromptInjection(scannedPayload);
       if (shouldBlockPromptInjectionOnLlmRoute(injection)) {
+        event.complianceTags = [...(event.complianceTags || []), 'AI_ACT_RESILIENCE', 'ISO_A_8_2'];
+        return true;
+      }
+
+      // Warstwa SEMANTYCZNA (lokalna, edge-safe) - łapie parafrazy / nowe warianty,
+      // których nie pokryły reguły. Działa tylko na trasach LLM (minimalizacja FP).
+      if (isFeatureEnabled('semanticDetection') && semanticThreatScore(scannedPayload).matched) {
         event.complianceTags = [...(event.complianceTags || []), 'AI_ACT_RESILIENCE', 'ISO_A_8_2'];
         return true;
       }
