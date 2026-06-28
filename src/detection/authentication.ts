@@ -1,4 +1,5 @@
 import { SilkerEvent } from '../types';
+import { isAuthEndpoint } from './authContext';
 
 const DEFAULT_CREDENTIALS = [
   { user: 'admin', pass: 'admin' },
@@ -30,10 +31,23 @@ export interface AuthenticationIssue {
 export function detectAuthenticationFailures(event: SilkerEvent): AuthenticationIssue[] {
   const issues: AuthenticationIssue[] = [];
   const url = (event.url || '').toLowerCase();
-  const payload = event.payload;
+  let payload: Record<string, unknown> | null = null;
 
-  if (url.includes('/login') || url.includes('/auth') || url.includes('/signin')) {
-    if (payload && typeof payload === 'object') {
+  if (event.payload && typeof event.payload === 'object') {
+    payload = event.payload as Record<string, unknown>;
+  } else if (typeof event.payload === 'string' && event.payload.trim().startsWith('{')) {
+    try {
+      const parsed = JSON.parse(event.payload);
+      if (parsed && typeof parsed === 'object') {
+        payload = parsed as Record<string, unknown>;
+      }
+    } catch {
+      // ignore invalid JSON
+    }
+  }
+
+  if (isAuthEndpoint(url)) {
+    if (payload) {
       const username = payload.username || payload.user || payload.email || payload.login;
       const password = payload.password || payload.pass || payload.pwd;
 
@@ -42,7 +56,7 @@ export function detectAuthenticationFailures(event: SilkerEvent): Authentication
           if (username.toString().toLowerCase() === cred.user && password === cred.pass) {
             issues.push({
               type: 'default_credentials',
-              severity: 'critical',
+              severity: 'low',
               description: `Default credentials detected: ${cred.user}/${cred.pass}`
             });
           }
@@ -52,7 +66,7 @@ export function detectAuthenticationFailures(event: SilkerEvent): Authentication
           if (isWeakPassword(password)) {
             issues.push({
               type: 'weak_password',
-              severity: 'high',
+              severity: 'low',
               description: 'Weak password detected'
             });
           }

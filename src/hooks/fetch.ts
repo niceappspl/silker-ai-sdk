@@ -143,6 +143,7 @@ export function hookFetch(inputOptions: Partial<SilkerOptions> = {}) {
         : undefined,
       ip,
       timestamp: start,
+      direction: 'outgoing',
       userAgent: (modifiedInit?.headers as any)?.['User-Agent'],
       headers: modifiedInit?.headers as Record<string, string>,
       complianceTags: redactionPerformed ? ['GDPR', 'GDPR_ART_32'] : undefined,

@@ -146,7 +146,7 @@ export function detectDataLeakage(payload?: string, response?: any): { leaked: b
     for (const match of matches) {
       const pwd = match[1];
       // Pomijamy placeholder'y i słabe hasła testowe
-      if (pwd && !/^(password|test|demo|example|\*+|x+)/i.test(pwd)) {
+      if (pwd && !/^(password|test|demo|example|\*+|x+)$/i.test(pwd)) {
         findings.push(`Password: ${pwd.substring(0, 20)}...`);
         if (findings.length >= 10) break;
       }

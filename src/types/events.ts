@@ -20,4 +20,9 @@ export interface SilkerEvent {
   complianceTags?: string[];
   /** Typy wykrytych danych wrażliwych (np. email, phone, credit_card) */
   dataTypesDetected?: string[];
+  /**
+   * Kierunek ruchu: incoming = Express/Edge middleware (request od klienta),
+   * outgoing = przechwycony fetch() (egress z backendu).
+   */
+  direction?: 'incoming' | 'outgoing';
 }

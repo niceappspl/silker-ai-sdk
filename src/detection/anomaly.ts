@@ -18,6 +18,7 @@ import { detectScannerTrap } from './scannerTrap';
 import { banIp } from './rateLimit';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
 import { isLlmRoute } from './llmContext';
+import { isAuthEndpoint, isCredentialSubmission } from './authContext';
 import {
   DEFAULT_FEATURES,
   DEFAULT_SCAN_LIMIT_BYTES,
@@ -242,7 +243,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
-    if (isFeatureEnabled('cryptographicValidation')) {
+    if (isFeatureEnabled('cryptographicValidation') && !isCredentialSubmission(event)) {
       const cryptoCheck = checkCryptographicFailures(event);
       if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
         return true;
@@ -263,7 +264,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
       }
     }
 
-    if (isFeatureEnabled('authenticationValidation')) {
+    if (isFeatureEnabled('authenticationValidation') && !isCredentialSubmission(event)) {
       const authIssues = detectAuthenticationFailures(event);
       if (authIssues.some(issue => issue.severity === 'critical' || issue.severity === 'high')) {
         return true;
@@ -284,7 +285,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
       if (leakageCheck.leaked) {
         event.complianceTags = [...(event.complianceTags || []), 'GDPR', 'GDPR_ART_32'];
         
-        const isAuthEndpoint = /\/(login|register|auth|signin|signup)/i.test(url);
+        const isAuth = isAuthEndpoint(url);
         
         const hasHighRiskLeak = leakageCheck.findings.some((finding: string) =>
           finding.includes('Credit Card') ||
@@ -323,7 +324,7 @@ export function isAnomaly(event: SilkerEvent): boolean {
         }
 
         // Generic password fields on auth endpoints stay allowed (login/register flows).
-        if (hasPasswordLeak && !isAuthEndpoint) {
+        if (hasPasswordLeak && !isAuth) {
           return true;
         }
 

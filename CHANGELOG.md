@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.6] - 2026-06-28
+### Auth safe harbor & outbound egress (production false-positive fixes)
+- **Auth endpoint safe harbor** (`authContext.ts`) - POST/PUT/PATCH on `/login`, `/register`, `/auth`, etc. no longer blocked for normal credential submission (wrong password → app's 401, not Silker 403). Applies to data leakage (password fields), cryptographic validation (plaintext password), and authentication audit (default/weak credentials downgraded to low severity, monitor-only).
+- **Data leakage password exclusion fix** - placeholder regex now uses `$` anchor so `test123` is not silently skipped while other passwords were flagged inconsistently.
+- **Outbound egress guard rewrite** (`thirdParty.ts`) - third-party detection now runs **only** on outgoing `fetch()` traffic (`event.direction: 'outgoing'`), decisions are **URL-only** (exfil denylist + webhook allowlist); payload heuristics removed. Incoming Express routes (`/api/login`, `/api/webhook/...`) are out of scope. Threat type renamed to `Untrusted Outbound` (was misleading `Supply Chain Attack`).
+- **`SilkerEvent.direction`** - `'incoming'` (Express middleware) vs `'outgoing'` (fetch hook) for direction-aware detectors.
+- **Tests**: new `authFlow.test.ts`; third-party tests rewritten for outbound-only semantics. Full suite green.
+
 ## [1.6.5] - 2026-06-27
 ### AI Detection Layer (v3): semantic detection, outbound response inspection & streaming guardrails
 - **New: semantic prompt-injection layer** (`semanticThreatScore`, `src/detection/semantic.ts`) - a lightweight, fully local, edge-safe model that runs ALONGSIDE the signature engine on LLM routes. Uses a hashing trick (words + word-bigrams + char 3-grams → 512-dim vector) and cosine similarity to attack/benign centroids to catch paraphrased / novel prompt-injection variants that no regex matches. No external model, no API call, ~0ms. Conservative threshold + benign margin keep false positives at zero on the LLM-route benchmark (including tricky cases like "the new instructions for assembling the furniture"). Toggle: `semanticDetection` (default on).

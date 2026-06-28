@@ -1,4 +1,5 @@
 import { SilkerEvent } from '../types';
+import { isCredentialSubmission } from './authContext';
 
 const WEAK_CIPHERS = [
   'RC4', 'MD5', 'SHA1', 'DES', '3DES', 'RC2',
@@ -47,9 +48,12 @@ export function checkCryptographicFailures(event: SilkerEvent): CryptographicChe
       issues.push('Potential SSN data in payload');
     }
 
-    if (payload.includes('password') && !payload.includes('hashed') && !payload.includes('encrypted')) {
-      if (payload.match(/password['":\s]*=['":\s]*[^,\s}]+/i)) {
-        issues.push('Potential plaintext password in payload');
+    // Hasła w body POST /login itp. to normalny flow — nie traktujemy tego jak wycieku.
+    if (!isCredentialSubmission(event)) {
+      if (payload.includes('password') && !payload.includes('hashed') && !payload.includes('encrypted')) {
+        if (payload.match(/password['":\s]*=['":\s]*[^,\s}]+/i)) {
+          issues.push('Potential plaintext password in payload');
+        }
       }
     }
   }

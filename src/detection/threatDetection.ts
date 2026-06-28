@@ -7,7 +7,7 @@ import { checkRateLimit, isIpBanned } from './rateLimit';
 import { detectDataLeakage } from './dataLeakage';
 import { detectSqliHeuristic, detectXssHeuristic } from './heuristics';
 import { detectFileUploadAttack } from './fileUpload';
-import { detectThirdPartyAttack } from './thirdParty';
+import { detectThirdPartyAttack, detectThirdPartyRisks } from './thirdParty';
 import { detectComplianceViolation } from './compliance';
 import { checkThreatIntelligence } from './threatIntelligence';
 import { detectZeroTrustViolation } from './zeroTrust';
@@ -18,6 +18,7 @@ import { detectAuthenticationFailures } from './authentication';
 import { checkSoftwareIntegrity } from './softwareIntegrity';
 import { detectScannerTrap } from './scannerTrap';
 import { FeatureKey, isFeatureEnabled as isFeatureEnabledShared } from './features';
+import { isAuthEndpoint, isCredentialSubmission } from './authContext';
 
 let globalOptions: SilkerOptions | null = null;
 
@@ -198,15 +199,43 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
-  // 10. Data Leakage
+  // 10. Data Leakage (spójnie z isAnomaly: hasła na /login itp. są oczekiwane)
   if (isFeatureEnabled('dataLeakageDetection')) {
     const leakageCheck = detectDataLeakage(payloadStr);
     if (leakageCheck.leaked) {
-      return {
-        type: 'Data Leakage',
-        severity: 'critical',
-        description: `Sensitive data leakage detected: ${leakageCheck.findings.join(', ')}`
-      };
+      const isAuth = isAuthEndpoint(url);
+      const hasHighRiskLeak = leakageCheck.findings.some(finding =>
+        finding.includes('Credit Card') ||
+        finding.includes('SSN') ||
+        finding.includes('Private Key') ||
+        finding.includes('Database Connection')
+      );
+      const hasPasswordLeak = leakageCheck.findings.some(finding => finding.includes('Password'));
+      const hasApiKeyLeak = leakageCheck.findings.some(finding =>
+        finding.includes('API Key') ||
+        finding.includes('Secret') ||
+        finding.includes('JWT Token')
+      );
+      const hasHighConfidenceSecret = leakageCheck.findings.some(finding =>
+        finding.includes('Secret') ||
+        (finding.includes('API Key (') &&
+          !finding.includes('Stripe Test Key') &&
+          !finding.includes('Stripe Publishable Key'))
+      );
+
+      const shouldReport =
+        hasHighRiskLeak ||
+        hasHighConfidenceSecret ||
+        (hasPasswordLeak && !isAuth) ||
+        (method === 'GET' && hasApiKeyLeak);
+
+      if (shouldReport) {
+        return {
+          type: 'Data Leakage',
+          severity: 'critical',
+          description: `Sensitive data leakage detected: ${leakageCheck.findings.join(', ')}`
+        };
+      }
     }
   }
 
@@ -219,12 +248,13 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     };
   }
 
-  // 12. Third Party / Supply Chain
+  // 12. Outbound egress (tylko fetch hook, decyzja po URL — bez skanowania payloadu)
   if (isFeatureEnabled('thirdPartyDetection') && detectThirdPartyAttack(event)) {
+    const risks = detectThirdPartyRisks(event);
     return {
-        type: 'Supply Chain Attack',
-        severity: 'critical',
-        description: `Suspicious third-party integration activity detected`
+      type: 'Untrusted Outbound',
+      severity: 'critical',
+      description: risks.issues.join('; ') || 'Outbound request to untrusted destination',
     };
   }
 
@@ -267,8 +297,8 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
       };
   }
 
-  // 17. Cryptographic Failures
-  if (isFeatureEnabled('cryptographicValidation')) {
+  // 17. Cryptographic Failures (hasło w POST /login to oczekiwany flow)
+  if (isFeatureEnabled('cryptographicValidation') && !isCredentialSubmission(event)) {
     const cryptoCheck = checkCryptographicFailures(event);
     if (!cryptoCheck.valid && cryptoCheck.issues.some(issue => issue.includes('plaintext password') || issue.includes('credit card'))) {
         return {
@@ -306,8 +336,8 @@ export function detectThreatType(event: SilkerEvent): ThreatInfo | null {
     }
   }
 
-  // 19. Authentication Failures
-  if (isFeatureEnabled('authenticationValidation')) {
+  // 19. Authentication Failures (audit — nie blokuje logowania użytkownika)
+  if (isFeatureEnabled('authenticationValidation') && !isCredentialSubmission(event)) {
       const authIssues = detectAuthenticationFailures(event);
       const severeIssue = authIssues.find(issue => issue.severity === 'critical' || issue.severity === 'high');
       if (severeIssue) {

@@ -10,6 +10,7 @@ export * from './zeroTrust';
 export * from './cryptographic';
 export * from './vulnerableComponents';
 export * from './authentication';
+export * from './authContext';
 export * from './softwareIntegrity';
 export * from './promptInjection';
 export * from './scannerTrap';

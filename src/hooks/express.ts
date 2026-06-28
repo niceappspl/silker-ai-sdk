@@ -153,6 +153,7 @@ export function hookExpress(inputOptions: Partial<SilkerOptions> = {}) {
           payload: payloadParts.join(' '),
           ip: realIp,
           timestamp: Date.now(),
+          direction: 'incoming',
           userAgent: req.get('User-Agent'),
           headers: req.headers as Record<string, string>,
           complianceTags: redactionPerformed ? ['GDPR', 'GDPR_ART_32'] : undefined,
