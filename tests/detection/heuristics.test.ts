@@ -27,6 +27,13 @@ describe('Heuristic Detection', () => {
       expect(detectSqliHeuristic("admin'#")).toBe(true);
     });
 
+    test('should detect ORDER BY / GROUP BY blind probes with trailing comments', () => {
+      expect(detectSqliHeuristic("1' ORDER BY 1--")).toBe(true);
+      expect(detectSqliHeuristic("1' ORDER BY 10--")).toBe(true);
+      expect(detectSqliHeuristic("1' GROUP BY columnnames HAVING 1=1--")).toBe(true);
+      expect(detectSqliHeuristic("1')) OR (('1'='1")).toBe(true);
+    });
+
     test('should NOT flag benign text with -- # or or/and (false positives)', () => {
       // Komentarze SQL tylko w kontekście (po cudzysłowie/nawiasie), nie w wolnym tekście.
       expect(detectSqliHeuristic("mid-2024 -- final draft")).toBe(false);

@@ -11,7 +11,7 @@ export interface Token {
 }
 
 const SQL_KEYWORDS = new Set([
-    'SELECT', 'UNION', 'INSERT', 'UPDATE', 'DELETE', 'DROP', 'FROM', 'WHERE', 'INTO', 'TABLE', 'OR', 'AND', 'EXEC', 'EXECUTE', 'DECLARE', 'CAST', 'CONVERT'
+    'SELECT', 'UNION', 'INSERT', 'UPDATE', 'DELETE', 'DROP', 'FROM', 'WHERE', 'INTO', 'TABLE', 'OR', 'AND', 'EXEC', 'EXECUTE', 'DECLARE', 'CAST', 'CONVERT', 'ORDER', 'GROUP', 'BY', 'HAVING'
 ]);
 
 const XSS_TAGS = new Set([
@@ -112,6 +112,10 @@ export function detectSqliHeuristic(input: string): boolean {
         /' OR \d+\s*=/i,              // ' OR 1= (tautology, allows spaces)
         /['");]\s*--/,                // line comment after quote/paren/semicolon
         /['");]\s*#/,                 // MySQL hash comment after quote/paren/semicolon
+        /'[^']*\bORDER\s+BY\b/i,      // quote-break column enumeration (1' ORDER BY 1--)
+        /'[^']*\bGROUP\s+BY\b/i,      // quote-break GROUP BY / HAVING probes
+        /\bORDER\s+BY\s+\d+\s*--/,    // ORDER BY N with trailing line comment
+        /\bGROUP\s+BY\b.+\bHAVING\b/i, // GROUP BY … HAVING tautology probes
         /UNION.*SELECT/i,             // UNION SELECT
         /;\s*DROP\s+TABLE/i,          // ; DROP TABLE
         /' AND '/i,                   // ' AND '
@@ -148,7 +152,7 @@ export function detectSqliHeuristic(input: string): boolean {
         // Only IDENTICAL operands flag, so benign "key=value" pairs near "or"/"and"
         // (e.g. "active and verified=true", "red or blue&sort=name") are NOT flagged.
         if (t.value === 'OR' || t.value === 'AND') {
-            const windowEnd = Math.min(i + 8, tokens.length);
+            const windowEnd = Math.min(i + 12, tokens.length);
             let eqIndex = -1;
             for (let j = i + 1; j < windowEnd; j++) {
                 if (tokens[j].value === '=') {

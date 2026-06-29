@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.7] - 2026-06-29
+### Community benchmark suite & SQLi blind-probe fix
+- **SQLi heuristic fix** - restored detection of quote-break `ORDER BY` / `GROUP BY` column-enumeration probes (`1' ORDER BY 1--`, `1' GROUP BY … HAVING 1=1--`) and nested-paren blind tautologies (`1')) OR (('1'='1`) without re-introducing benign false positives on free text with `--` or `#`. Extended curated suite back to 0 FN at 0% FPR.
+- **New: community benchmark suite** - third-party payloads imported from [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) and [HttpParamsDataset](https://github.com/Morzeux/HttpParamsDataset) (~1,494 samples). Run with `npm run benchmark:community`; refresh datasets with `npm run benchmark:import-community`. `benchmark:all` now runs core + extended + community on every full benchmark pass.
+- **Measured (v1.6.7 · 2026-06-29)** - curated extended: 100% TPR / 0% FPR on all four datasets; community (honest stress test): SQLi 68.1%, XSS 96.1%, 0% FPR. High curated scores are lab snapshots, not completeness guarantees.
+
 ## [1.6.6] - 2026-06-28
 ### Auth safe harbor & outbound egress (production false-positive fixes)
 - **Auth endpoint safe harbor** (`authContext.ts`) - POST/PUT/PATCH on `/login`, `/register`, `/auth`, etc. no longer blocked for normal credential submission (wrong password → app's 401, not Silker 403). Applies to data leakage (password fields), cryptographic validation (plaintext password), and authentication audit (default/weak credentials downgraded to low severity, monitor-only).

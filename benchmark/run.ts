@@ -4,7 +4,7 @@ import { detectPromptInjection, shouldBlockPromptInjectionOnLlmRoute } from '../
 import { detectSqliHeuristic, detectXssHeuristic } from '../src/detection/heuristics';
 import { SDK_VERSION } from '../src/version';
 
-export type BenchmarkSuite = 'core' | 'extended';
+export type BenchmarkSuite = 'core' | 'extended' | 'community';
 
 export interface Sample {
   text: string;
@@ -83,6 +83,10 @@ export function dedupeSamples(samples: Sample[]): Sample[] {
 export function loadThreatDataset(suite: BenchmarkSuite, file: string): Sample[] {
   const core = readJson(path.join(DATASETS_ROOT, 'core', file));
   if (suite === 'core') return dedupeSamples(core);
+
+  if (suite === 'community') {
+    return dedupeSamples(readJson(path.join(DATASETS_ROOT, 'community', file)));
+  }
 
   const additions = readJson(path.join(DATASETS_ROOT, 'extended', 'additions', file));
   return dedupeSamples([...core, ...additions]);
@@ -189,19 +193,27 @@ const predictPromptInjectionGeneric: Predict = (text) => {
 /**
  * Runs the detection benchmark for the given suite.
  * - core: CI regression gate (~210 samples)
- * - extended: core + additions (~640+ samples, transparency / release)
+ * - extended: core + additions (~1012 samples, transparency / release)
+ * - community: third-party payloads (PayloadsAllTheThings + HttpParamsDataset)
  */
 export function runBenchmark(suite: BenchmarkSuite = 'core'): BenchmarkResults {
   const promptInjection = loadThreatDataset(suite, 'prompt-injection.json');
   const sqli = loadThreatDataset(suite, 'sqli.json');
   const xss = loadThreatDataset(suite, 'xss.json');
 
-  const datasets: DatasetMetrics[] = [
-    evaluate('Prompt Injection', 'llm-route (medium+ or override signal)', promptInjection, predictPromptInjectionLlm),
-    evaluate('Prompt Injection', 'non-llm-route (high/critical)', promptInjection, predictPromptInjectionGeneric),
-    evaluate('SQL Injection', 'block on detection', sqli, detectSqliHeuristic),
-    evaluate('XSS', 'block on detection', xss, detectXssHeuristic),
-  ];
+  const datasets: DatasetMetrics[] = [];
+  if (promptInjection.length > 0) {
+    datasets.push(
+      evaluate('Prompt Injection', 'llm-route (medium+ or override signal)', promptInjection, predictPromptInjectionLlm),
+      evaluate('Prompt Injection', 'non-llm-route (high/critical)', promptInjection, predictPromptInjectionGeneric)
+    );
+  }
+  if (sqli.length > 0) {
+    datasets.push(evaluate('SQL Injection', 'block on detection', sqli, detectSqliHeuristic));
+  }
+  if (xss.length > 0) {
+    datasets.push(evaluate('XSS', 'block on detection', xss, detectXssHeuristic));
+  }
 
   return {
     suite,
@@ -318,8 +330,8 @@ export function writeArtifacts(results: BenchmarkResults): void {
 function parseSuiteArg(): BenchmarkSuite {
   const arg = process.argv.find((a) => a.startsWith('--suite='));
   const value = arg?.split('=')[1] ?? process.env.BENCHMARK_SUITE ?? 'core';
-  if (value === 'core' || value === 'extended') return value;
-  throw new Error(`Unknown suite "${value}". Use --suite=core or --suite=extended`);
+  if (value === 'core' || value === 'extended' || value === 'community') return value;
+  throw new Error(`Unknown suite "${value}". Use --suite=core, --suite=extended, or --suite=community`);
 }
 
 if (require.main === module) {

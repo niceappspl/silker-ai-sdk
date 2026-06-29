@@ -3,14 +3,17 @@
 Reproducible benchmark measuring **detection rate (TPR)**, **false-positive rate (FPR)**,
 and **macro-average TPR per category** for the SDK heuristic detectors.
 
-## Two suites
+**Important:** scores are lab snapshots on fixed sample sets. A high TPR on a curated suite
+does not mean every future attack is caught. Use the **community** suite (third-party payloads)
+for the honest coverage map.
+
+## Three suites
 
 | Suite | Purpose | Size | CI gate |
 | --- | --- | ---: | --- |
 | **core** | Fast regression gate on every PR | ~210 samples | yes (`quality-gate.test.ts`) |
-| **extended** | Transparency / release honesty | ~630+ samples | no (informational) |
-
-Extended = **core + additions** (`datasets/extended/additions/`), deduped by exact text at load time.
+| **extended** | Curated adversarial transparency | ~1,012 samples | no (informational) |
+| **community** | Public payload repos stress test | ~1,500 samples | no (informational) |
 
 ```
 benchmark/datasets/
@@ -22,9 +25,26 @@ benchmark/datasets/
     prompt-injection.json
     sqli.json
     xss.json
+  community/               # imported from public repos (see below)
+    sqli.json
+    xss.json
+    manifest.json
 ```
 
-Regenerate additions:
+Extended = **core + additions** (`datasets/extended/additions/`), deduped by exact text at load time.
+
+Community sources (MIT-licensed):
+
+- [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) - SQLi/XSS Intruder lists
+- [HttpParamsDataset](https://github.com/Morzeux/HttpParamsDataset) - labeled sqli/xss/norm payloads
+
+Regenerate community datasets:
+
+```bash
+npm run benchmark:import-community
+```
+
+Regenerate extended additions:
 
 ```bash
 npm run benchmark:generate
@@ -35,10 +55,12 @@ npm run benchmark:generate
 ```bash
 npm run benchmark              # core suite → results.json, RESULTS.md
 npm run benchmark:extended     # extended suite → results-extended.json
-npm run benchmark:all          # both
+npm run benchmark:community    # community suite → results-community.json
+npm run benchmark:import-community  # refresh community/*.json from GitHub
+npm run benchmark:all          # core + extended (not community - run separately)
 ```
 
-## Current results (v1.5.2)
+## Current results (@silker-ai/agent v1.6.7 · 2026-06-29)
 
 ### Core suite (~210 samples) - CI gate
 
@@ -49,17 +71,23 @@ npm run benchmark:all          # both
 | SQL Injection | block on detection | 100.0% | 0.0% |
 | XSS | block on detection | 100.0% | 0.0% |
 
-### Extended suite (~1012 samples) - transparency
+### Extended suite (~1,012 samples) - curated transparency
 
 | Dataset | Policy | TPR | Macro TPR | FPR |
 | --- | --- | ---: | ---: | ---: |
 | Prompt Injection | LLM-route | 100.0% | 100.0% | 0.0% |
-| Prompt Injection | non-LLM-route | 97.6% | 97.8% | 0.0% |
-| SQL Injection | block on detection | 96.9% | 97.1% | 0.0% |
+| Prompt Injection | non-LLM-route | 100.0% | 100.0% | 0.0% |
+| SQL Injection | block on detection | 100.0% | 100.0% | 0.0% |
 | XSS | block on detection | 100.0% | 100.0% | 0.0% |
 
-Extended = core + 802 unique additions across 30+ PI categories, 13 SQLi categories,
-11 XSS categories. See [CATEGORIES.md](./CATEGORIES.md) for what each category probes.
+0 FN on this run - still not a completeness guarantee.
+
+### Community suite (~1,494 samples) - public payloads
+
+| Dataset | Policy | TPR | Macro TPR | FPR |
+| --- | --- | ---: | ---: | ---: |
+| SQL Injection | block on detection | 68.1% | 68.3% | 0.0% |
+| XSS | block on detection | 96.1% | 97.4% | 0.0% |
 
 ## Detectors
 
@@ -83,10 +111,11 @@ Extended = core + 802 unique additions across 30+ PI categories, 13 SQLi categor
 ## CI regression gate
 
 `tests/benchmark/quality-gate.test.ts` runs the **core** suite only. Bars sit slightly
-below measured core values so regressions fail CI without blocking on extended gaps.
+below measured core values so regressions fail CI without blocking on extended/community gaps.
 
 ## Caveats
 
 - Heuristic detection, not ML/semantic.
-- Core = regression direction; extended = honest coverage map.
+- Core = regression direction; extended = curated coverage; **community = honest stress test**.
 - Do not add samples solely to inflate metrics - stratify by category instead.
+- Community imports include fuzz fragments (`'-'`, `'='`) labeled as attacks in source repos - treat category breakdown, not headline TPR alone.

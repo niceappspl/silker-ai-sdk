@@ -1,0 +1,1712 @@
+{
+  "suite": "community",
+  "version": "1.6.7",
+  "generatedAt": "2026-06-29T19:22:48.105Z",
+  "sampleCount": 1494,
+  "datasets": [
+    {
+      "name": "SQL Injection",
+      "policy": "block on detection",
+      "total": 986,
+      "attacks": 786,
+      "benign": 200,
+      "tpr": 0.6807,
+      "fpr": 0,
+      "precision": 1,
+      "macroTpr": 0.6826,
+      "confusion": {
+        "truePositives": 535,
+        "falseNegatives": 251,
+        "falsePositives": 0,
+        "trueNegatives": 200
+      },
+      "misclassified": [
+        {
+          "text": "'-'",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "' '",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'&'",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'^'",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'*'",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\"-\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" \"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\"&\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\"^\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\"*\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\"-\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\" \"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\"&\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\"^\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\"*\"",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or true--",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or true--",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\") or true--",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "') or true--",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "')) or (('x'))=(('x",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\")) or ((\"x\"))=((\"x",
+          "category": "pat-Auth_Bypass",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "==",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "=",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "' --",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "' #",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "' –",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'--",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'/*",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'#",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" --",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" #",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\"/*",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or true",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or \"\"=\"",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "like '%'",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'=\"or'",
+          "category": "pat-Auth_Bypass2",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR 1=0",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR x=y",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR 1=0#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR x=y#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR 1=0--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR x=y--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=1",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=0",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=1#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=0#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=1--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "HAVING 1=0--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 1=0",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 1=0--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 1=0#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 1=0 AND '%'='",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AS INJECTX WHERE 1=1 AND 1=0",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AS INJECTX WHERE 1=1 AND 1=0#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AS INJECTX WHERE 1=1 AND 1=0--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "WHERE 1=1 AND 1=0",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "WHERE 1=1 AND 1=0#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "WHERE 1=1 AND 1=0--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 2#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 3#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 4#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 5#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 6#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 7#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 8#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 9#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 10#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 11#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 12#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 13#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 14#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 15#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 16#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 17#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 18#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 19#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 20#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 21#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 22#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 23#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 24#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 25#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 26#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 27#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 28#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 29#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 30#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 31337#",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 2",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 3",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 4",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 5",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 6",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 7",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 8",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 9",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 10",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 11",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 12",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 13",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 14",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 15",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 16",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 17",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 18",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 19",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 20",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 21",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 22",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 23",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 24",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 25",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 26",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 27",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 28",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 29",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 30",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 31337",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "RLIKE (SELECT (CASE WHEN (4346=4346) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "RLIKE (SELECT (CASE WHEN (4346=4347) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "IF(7423=7424) SELECT 7423 ELSE DROP FUNCTION xcjl--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "IF(7423=7423) SELECT 7423 ELSE DROP FUNCTION xcjl--",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,1,1))='X'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,1,1))='M'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,2,1))='i'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,2,1))='y'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,3,1))='c'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,3,1))='S'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "and (select substring(@@version,3,1))='X'",
+          "category": "pat-Generic_ErrorBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\" or sleep(5)=\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\") or sleep(5)=\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "') or sleep(5)='",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "\")) or sleep(5)=\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "')) or sleep(5)='",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))YjoC) AND '%'='",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "SLEEP(5)=\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "SLEEP(5)='",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or SLEEP(5)=\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or SLEEP(5)='",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "waitfor delay '00:00:05'",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "benchmark(50000000,MD5(1))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or benchmark(50000000,MD5(1))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "pg_SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "or pg_SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'\\\"",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AnD SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "&&SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "'&&SLEEP(5)&&'1",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY SLEEP(5)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "(SELECT * FROM (SELECT(SLEEP(5)))ecMj)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "+benchmark(3200,SHA1(1))+'",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "+ SLEEP(10) + '",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "RANDOMBLOB(500000000/2)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(500000000/2))))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(500000000/2))))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "RANDOMBLOB(1000000000/2)",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "OR 2947=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))",
+          "category": "pat-Generic_TimeBased",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5)",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A'))",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),3#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),3,4#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30#",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),3--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),3,4--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30--",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 5650=CONVERT(INT,(SELECT CHAR(113)+CHAR(106)+CHAR(122)+CHAR(106)+CHAR(113)+(SELECT (CASE WHEN (5650=5650) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(112)+CHAR(106)+CHAR(107)+CHAR(113)))",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND 3516=CAST((CHR(113)||CHR(106)||CHR(122)||CHR(106)||CHR(113))||(SELECT (CASE WHEN (3516=3516) THEN 1 ELSE 0 END))::text||(CHR(113)||CHR(112)||CHR(106)||CHR(107)||CHR(113)) AS NUMERIC)",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "AND (SELECT 4523 FROM(SELECT COUNT(*),CONCAT(0x716a7a6a71,(SELECT (ELT(4523=4523,1))),0x71706a6b71,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)",
+          "category": "pat-Generic_UnionSelect",
+          "expected": "attack",
+          "predicted": "benign"
+        }
+      ],
+      "byCategory": [
+        {
+          "category": "httpparams-norm",
+          "attacks": 0,
+          "benign": 200,
+          "tpr": 0,
+          "fpr": 0
+        },
+        {
+          "category": "pat-Auth_Bypass",
+          "attacks": 78,
+          "benign": 0,
+          "tpr": 0.7308,
+          "fpr": 0
+        },
+        {
+          "category": "pat-Auth_Bypass2",
+          "attacks": 113,
+          "benign": 0,
+          "tpr": 0.8584,
+          "fpr": 0
+        },
+        {
+          "category": "pat-Generic_ErrorBased",
+          "attacks": 154,
+          "benign": 0,
+          "tpr": 0.3831,
+          "fpr": 0
+        },
+        {
+          "category": "pat-Generic_TimeBased",
+          "attacks": 104,
+          "benign": 0,
+          "tpr": 0.7019,
+          "fpr": 0
+        },
+        {
+          "category": "pat-Generic_UnionSelect",
+          "attacks": 337,
+          "benign": 0,
+          "tpr": 0.7389,
+          "fpr": 0
+        }
+      ]
+    },
+    {
+      "name": "XSS",
+      "policy": "block on detection",
+      "total": 508,
+      "attacks": 308,
+      "benign": 200,
+      "tpr": 0.961,
+      "fpr": 0,
+      "precision": 1,
+      "macroTpr": 0.9738,
+      "confusion": {
+        "truePositives": 296,
+        "falseNegatives": 12,
+        "falsePositives": 0,
+        "trueNegatives": 200
+      },
+      "misclassified": [
+        {
+          "text": "'%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<<scr\\0ipt/src=http://xss.com/xss.js></script",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "%27%22--%3E%3C%2Fstyle%3E%3C%2Fscript%3E%3Cscript%3ERWAR%280x00010E%29%3C%2Fscript%3E",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<%73%63%72%69%70%74> %64 = %64%6f%63%75%6d%65%6e%74%2e%63%72%65%61%74%65%45%6c%65%6d%65%6e%74(%22%64%69%76%22); %64%2e%61%70%70%65%6e%64%43%68%69%6c%64(%64%6f%63%75%6d%65%6e%74%2e%68%65%61%64%2e%63%6c%6f%6e%65%4e%6f%64%65(%74%72%75%65)); %61%6c%65%72%74(%64%2e%69%6e%6e%65%72%48%54%4d%4c%2e%6d%61%74%63%68(%22%63%6f%6f%6b%69%65 = '(%2e%2a%3f)'%22)[%31]); </%73%63%72%69%70%74>",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<a aa aaa aaaa aaaaa aaaaaa aaaaaaa aaaaaaaa  aaaaaaaaa aaaaaaaaaa  href=j&#97v&#97script&#x3A;&#97lert(1)>ClickMe",
+          "category": "pat-JHADDIX_XSS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<x %6Fnxxx=1",
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<x o%6Exxx=1",
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<x on%78xx=1",
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<x onxxx%3D1",
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<http://onxxx%3D1/",
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "expected": "attack",
+          "predicted": "benign"
+        },
+        {
+          "text": "<h1>INJECTX</h1>",
+          "category": "pat-xss_payloads_quick",
+          "expected": "attack",
+          "predicted": "benign"
+        }
+      ],
+      "byCategory": [
+        {
+          "category": "httpparams-norm",
+          "attacks": 0,
+          "benign": 200,
+          "tpr": 0,
+          "fpr": 0
+        },
+        {
+          "category": "pat-BRUTELOGIC-XSS-STRINGS",
+          "attacks": 110,
+          "benign": 0,
+          "tpr": 0.9545,
+          "fpr": 0
+        },
+        {
+          "category": "pat-IntrudersXSS",
+          "attacks": 41,
+          "benign": 0,
+          "tpr": 1,
+          "fpr": 0
+        },
+        {
+          "category": "pat-JHADDIX_XSS",
+          "attacks": 107,
+          "benign": 0,
+          "tpr": 0.9439,
+          "fpr": 0
+        },
+        {
+          "category": "pat-xss_payloads_quick",
+          "attacks": 34,
+          "benign": 0,
+          "tpr": 0.9706,
+          "fpr": 0
+        },
+        {
+          "category": "pat-XSS_Polyglots",
+          "attacks": 16,
+          "benign": 0,
+          "tpr": 1,
+          "fpr": 0
+        }
+      ]
+    }
+  ]
+}
