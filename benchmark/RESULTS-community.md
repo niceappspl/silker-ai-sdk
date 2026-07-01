@@ -2,16 +2,16 @@
 
 - **Suite:** `community`
 - **Package:** `@silker-ai/agent`
-- **Version:** `1.6.7`
-- **Date:** 2026-06-29
+- **Version:** `1.6.8`
+- **Date:** 2026-07-01
 - **Samples:** 1494
-- **Generated:** 2026-06-29T19:22:48.105Z
+- **Generated:** 2026-07-01T06:13:07.024Z
 
 ## Summary
 
 | Dataset | Policy | N | TPR | Macro TPR | FPR | Precision | TP | FN | FP | TN |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| SQL Injection | block on detection | 986 | 68.1% | 68.3% | 0.0% | 100.0% | 535 | 251 | 0 | 200 |
+| SQL Injection | block on detection | 986 | 97.7% | 95.9% | 0.0% | 100.0% | 768 | 18 | 0 | 200 |
 | XSS | block on detection | 508 | 96.1% | 97.4% | 0.0% | 100.0% | 296 | 12 | 0 | 200 |
 
 ## Misclassified samples
@@ -30,48 +30,14 @@
 | FN | pat-Auth_Bypass | `"&"` |
 | FN | pat-Auth_Bypass | `"^"` |
 | FN | pat-Auth_Bypass | `"*"` |
-| FN | pat-Auth_Bypass | `" or ""-"` |
-| FN | pat-Auth_Bypass | `" or "" "` |
-| FN | pat-Auth_Bypass | `" or ""&"` |
-| FN | pat-Auth_Bypass | `" or ""^"` |
-| FN | pat-Auth_Bypass | `" or ""*"` |
-| FN | pat-Auth_Bypass | `or true--` |
-| FN | pat-Auth_Bypass | `" or true--` |
-| FN | pat-Auth_Bypass | `") or true--` |
-| FN | pat-Auth_Bypass | `') or true--` |
 | FN | pat-Auth_Bypass | `')) or (('x'))=(('x` |
 | FN | pat-Auth_Bypass | `")) or (("x"))=(("x` |
 | FN | pat-Auth_Bypass2 | `==` |
 | FN | pat-Auth_Bypass2 | `=` |
 | FN | pat-Auth_Bypass2 | `'` |
-| FN | pat-Auth_Bypass2 | `' --` |
-| FN | pat-Auth_Bypass2 | `' #` |
 | FN | pat-Auth_Bypass2 | `' –` |
-| FN | pat-Auth_Bypass2 | `'--` |
-| FN | pat-Auth_Bypass2 | `'/*` |
-| FN | pat-Auth_Bypass2 | `'#` |
-| FN | pat-Auth_Bypass2 | `" --` |
-| FN | pat-Auth_Bypass2 | `" #` |
-| FN | pat-Auth_Bypass2 | `"/*` |
-| FN | pat-Auth_Bypass2 | `or true` |
-| FN | pat-Auth_Bypass2 | `" or ""="` |
-| FN | pat-Auth_Bypass2 | `like '%'` |
 | FN | pat-Auth_Bypass2 | `'="or'` |
-| FN | pat-Generic_ErrorBased | `OR 1=0` |
-| FN | pat-Generic_ErrorBased | `OR x=y` |
-| FN | pat-Generic_ErrorBased | `OR 1=0#` |
-| FN | pat-Generic_ErrorBased | `OR x=y#` |
-| FN | pat-Generic_ErrorBased | `OR 1=0--` |
-| FN | pat-Generic_ErrorBased | `OR x=y--` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=1` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=0` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=1#` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=0#` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=1--` |
-| FN | pat-Generic_ErrorBased | `HAVING 1=0--` |
-| FN | pat-Generic_ErrorBased | `AND 1=0` |
-
-_… and 201 more (see results JSON)._
+| FN | pat-Generic_TimeBased | `'\"` |
 
 ### XSS - block on detection
 

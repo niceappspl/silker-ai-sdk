@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.8] - 2026-07-01
+### SQLi heuristic: community benchmark 68.1% → 97.7% TPR (0% FPR, no core/extended regression)
+- **`detectSqliHeuristic` quick-pattern expansion** (`src/detection/heuristics.ts`) - the length gate (`input.length < 5`) previously ran *before* the regex fast-path, silently skipping short-but-structural payloads (`'--`, `'#`, `" or "..."`). Regex patterns now run first (all structural, no bare-symbol matching), length gate only applies to the tokenizer pass.
+- New signatures: double-quote `" OR "` / `" AND "` variants, quote + block-comment (`'/*`), bare boolean probes (`OR 1=0`, `AND 1=1`, `OR x=y`), standalone `HAVING 1=1`, bare `ORDER BY N` (column-count enumeration) and `ORDER BY … SLEEP()/BENCHMARK()`, time-based blind functions (`SLEEP()`, `pg_SLEEP()`, `BENCHMARK()`, `WAITFOR DELAY`, `RANDOMBLOB()`), `RLIKE()`, `@@version`, `information_schema`, broadened `DROP TABLE/FUNCTION/PROCEDURE/…` (semicolon no longer required), `CAST/CONVERT(... SELECT ...)`, `CASE WHEN … THEN`, `CHAR()/CHR()` concatenation obfuscation, `LIKE '%'` wildcard bypass, `or true`.
+- Deliberately NOT flagged: bare single-symbol fragments (`'`, `=`, `==`, `'&'`, `' '`) - these are indistinguishable from benign input at the string level; chasing them would reintroduce false positives (see benchmark README caveat on fuzz-fragment noise).
+- **Measured (v1.6.8 · 2026-07-01)** - community suite: SQLi 68.1% → **97.7%** TPR (18 FN, down from 251), XSS unchanged at 96.1%, FPR 0.0% on all three suites (core/extended/community). Core and extended remain 100% TPR / 0% FPR.
+
 ## [1.6.7] - 2026-06-29
 ### Community benchmark suite & SQLi blind-probe fix
 - **SQLi heuristic fix** - restored detection of quote-break `ORDER BY` / `GROUP BY` column-enumeration probes (`1' ORDER BY 1--`, `1' GROUP BY … HAVING 1=1--`) and nested-paren blind tautologies (`1')) OR (('1'='1`) without re-introducing benign false positives on free text with `--` or `#`. Extended curated suite back to 0 FN at 0% FPR.

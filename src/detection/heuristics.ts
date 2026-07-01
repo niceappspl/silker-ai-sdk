@@ -99,33 +99,60 @@ function tokenize(input: string): Token[] {
  * - ; DROP TABLE
  */
 export function detectSqliHeuristic(input: string): boolean {
-    if (!input || input.length < 5) {
+    if (!input) {
         return false;
     }
 
     // Quick regex-based detection for common SQL injection patterns (fallback).
-    // Comment markers (--, #) are matched ONLY in SQL context (right after a
+    // Runs regardless of length: every pattern here requires SQL-specific
+    // structure (keyword + operator combos, unique function names), so short
+    // benign strings (a bare "'", "=", single symbol) never match - only the
+    // tokenizer pass below is gated by length to avoid noise on short input.
+    // Comment markers (--, #, /*) are matched ONLY in SQL context (right after a
     // quote, closing paren or semicolon) to avoid false positives on benign
     // text like "mid-2024 -- note", "use --flag" or "section # 1".
     const quickPatterns = [
         /' OR '/i,                    // ' OR '
+        /" OR "/i,                    // " OR " (double-quote variant)
         /' OR \d+\s*=/i,              // ' OR 1= (tautology, allows spaces)
         /['");]\s*--/,                // line comment after quote/paren/semicolon
         /['");]\s*#/,                 // MySQL hash comment after quote/paren/semicolon
+        /['")]\s*\/\*/,               // block comment after quote/paren
         /'[^']*\bORDER\s+BY\b/i,      // quote-break column enumeration (1' ORDER BY 1--)
         /'[^']*\bGROUP\s+BY\b/i,      // quote-break GROUP BY / HAVING probes
-        /\bORDER\s+BY\s+\d+\s*--/,    // ORDER BY N with trailing line comment
+        /\bORDER\s+BY\s+\d+\b/,       // ORDER BY N (column-count enumeration probe)
+        /\bORDER\s+BY\b[\s\S]{0,60}\b(SLEEP|BENCHMARK)\s*\(/i, // ORDER BY … SLEEP()/BENCHMARK() (time-based)
         /\bGROUP\s+BY\b.+\bHAVING\b/i, // GROUP BY … HAVING tautology probes
+        /\bHAVING\s+\d+\s*=\s*\d+/i,  // standalone HAVING 1=1 / HAVING 1=0
         /UNION.*SELECT/i,             // UNION SELECT
-        /;\s*DROP\s+TABLE/i,          // ; DROP TABLE
+        /\bDROP\s+(TABLE|FUNCTION|PROCEDURE|DATABASE|INDEX|VIEW)\b/i, // DROP TABLE/FUNCTION/…
         /' AND '/i,                   // ' AND '
+        /" AND "/i,                   // " AND " (double-quote variant)
         /' AND \d/i,                  // ' AND 1= tautology
+        /\b(OR|AND)\s+\d+\s*=\s*\d+/i, // bare numeric boolean probe: OR 1=0 / AND 1=1
+        /\b(OR|AND)\s+[a-zA-Z]\s*=\s*[a-zA-Z]\b/i, // bare identifier probe: OR x=y
+        /\bor\s+true\b/i,             // or true / or true--
+        /\blike\s+'%+'/i,             // LIKE '%' always-true wildcard bypass
+        /sleep\s*\(\s*\d/i,           // SLEEP(5), pg_SLEEP(5) - time-based blind
+        /\bbenchmark\s*\(\s*\d+\s*,/i, // MySQL BENCHMARK(count, expr) - time-based blind
+        /waitfor\s+delay\s+'/i,       // MSSQL WAITFOR DELAY '...' - time-based blind
+        /\brandomblob\s*\(/i,         // SQLite RANDOMBLOB() - time-based blind
+        /\brlike\s*\(/i,              // MySQL RLIKE(...) blind probe
+        /@@version\b/i,               // MySQL/MSSQL system variable fingerprinting
+        /\binformation_schema\b/i,    // metadata schema enumeration
+        /\b(cast|convert)\s*\([^)]*\bselect\b/i, // CAST/CONVERT wrapping a nested SELECT
+        /\bcase\s+when\b[\s\S]{0,60}\bthen\b/i,  // CASE WHEN … THEN conditional probe
+        /(?:char|chr)\s*\(\s*\d+\s*\)\s*(?:\+|\|\|)\s*(?:char|chr)\s*\(\s*\d+\s*\)/i, // CHAR()/CHR() concatenation obfuscation
     ];
-    
+
     for (const pattern of quickPatterns) {
         if (pattern.test(input)) {
             return true;
         }
+    }
+
+    if (input.length < 5) {
+        return false;
     }
 
     const tokens = tokenize(input);

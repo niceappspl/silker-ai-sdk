@@ -60,7 +60,7 @@ npm run benchmark:import-community  # refresh community/*.json from GitHub
 npm run benchmark:all          # core + extended (not community - run separately)
 ```
 
-## Current results (@silker-ai/agent v1.6.7 · 2026-06-29)
+## Current results (@silker-ai/agent v1.6.8 · 2026-07-01)
 
 ### Core suite (~210 samples) - CI gate
 
@@ -86,7 +86,7 @@ npm run benchmark:all          # core + extended (not community - run separately
 
 | Dataset | Policy | TPR | Macro TPR | FPR |
 | --- | --- | ---: | ---: | ---: |
-| SQL Injection | block on detection | 68.1% | 68.3% | 0.0% |
+| SQL Injection | block on detection | 97.7% | 95.9% | 0.0% |
 | XSS | block on detection | 96.1% | 97.4% | 0.0% |
 
 ## Detectors
