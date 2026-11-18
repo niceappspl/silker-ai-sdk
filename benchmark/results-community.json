@@ -1,7 +1,7 @@
 {
   "suite": "community",
-  "version": "1.6.8",
-  "generatedAt": "2026-07-01T06:13:07.024Z",
+  "version": "1.6.9",
+  "generatedAt": "2026-09-17T19:04:55.574Z",
   "sampleCount": 1494,
   "datasets": [
     {
@@ -10,13 +10,13 @@
       "total": 986,
       "attacks": 786,
       "benign": 200,
-      "tpr": 0.9771,
+      "tpr": 0.9822,
       "fpr": 0,
       "precision": 1,
-      "macroTpr": 0.9585,
+      "macroTpr": 0.9671,
       "confusion": {
-        "truePositives": 768,
-        "falseNegatives": 18,
+        "truePositives": 772,
+        "falseNegatives": 14,
         "falsePositives": 0,
         "trueNegatives": 200
       },
@@ -82,18 +82,6 @@
           "predicted": "benign"
         },
         {
-          "text": "')) or (('x'))=(('x",
-          "category": "pat-Auth_Bypass",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "\")) or ((\"x\"))=((\"x",
-          "category": "pat-Auth_Bypass",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
           "text": "==",
           "category": "pat-Auth_Bypass2",
           "expected": "attack",
@@ -107,18 +95,6 @@
         },
         {
           "text": "'",
-          "category": "pat-Auth_Bypass2",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "' –",
-          "category": "pat-Auth_Bypass2",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "'=\"or'",
           "category": "pat-Auth_Bypass2",
           "expected": "attack",
           "predicted": "benign"
@@ -142,14 +118,14 @@
           "category": "pat-Auth_Bypass",
           "attacks": 78,
           "benign": 0,
-          "tpr": 0.8462,
+          "tpr": 0.8718,
           "fpr": 0
         },
         {
           "category": "pat-Auth_Bypass2",
           "attacks": 113,
           "benign": 0,
-          "tpr": 0.9558,
+          "tpr": 0.9735,
           "fpr": 0
         },
         {
@@ -181,83 +157,17 @@
       "total": 508,
       "attacks": 308,
       "benign": 200,
-      "tpr": 0.961,
+      "tpr": 0.9968,
       "fpr": 0,
       "precision": 1,
-      "macroTpr": 0.9738,
+      "macroTpr": 0.9941,
       "confusion": {
-        "truePositives": 296,
-        "falseNegatives": 12,
+        "truePositives": 307,
+        "falseNegatives": 1,
         "falsePositives": 0,
         "trueNegatives": 200
       },
       "misclassified": [
-        {
-          "text": "'%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<<scr\\0ipt/src=http://xss.com/xss.js></script",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "%27%22--%3E%3C%2Fstyle%3E%3C%2Fscript%3E%3Cscript%3ERWAR%280x00010E%29%3C%2Fscript%3E",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<%73%63%72%69%70%74> %64 = %64%6f%63%75%6d%65%6e%74%2e%63%72%65%61%74%65%45%6c%65%6d%65%6e%74(%22%64%69%76%22); %64%2e%61%70%70%65%6e%64%43%68%69%6c%64(%64%6f%63%75%6d%65%6e%74%2e%68%65%61%64%2e%63%6c%6f%6e%65%4e%6f%64%65(%74%72%75%65)); %61%6c%65%72%74(%64%2e%69%6e%6e%65%72%48%54%4d%4c%2e%6d%61%74%63%68(%22%63%6f%6f%6b%69%65 = '(%2e%2a%3f)'%22)[%31]); </%73%63%72%69%70%74>",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<a aa aaa aaaa aaaaa aaaaaa aaaaaaa aaaaaaaa  aaaaaaaaa aaaaaaaaaa  href=j&#97v&#97script&#x3A;&#97lert(1)>ClickMe",
-          "category": "pat-JHADDIX_XSS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<x %6Fnxxx=1",
-          "category": "pat-BRUTELOGIC-XSS-STRINGS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<x o%6Exxx=1",
-          "category": "pat-BRUTELOGIC-XSS-STRINGS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<x on%78xx=1",
-          "category": "pat-BRUTELOGIC-XSS-STRINGS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<x onxxx%3D1",
-          "category": "pat-BRUTELOGIC-XSS-STRINGS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
-        {
-          "text": "<http://onxxx%3D1/",
-          "category": "pat-BRUTELOGIC-XSS-STRINGS",
-          "expected": "attack",
-          "predicted": "benign"
-        },
         {
           "text": "<h1>INJECTX</h1>",
           "category": "pat-xss_payloads_quick",
@@ -277,7 +187,7 @@
           "category": "pat-BRUTELOGIC-XSS-STRINGS",
           "attacks": 110,
           "benign": 0,
-          "tpr": 0.9545,
+          "tpr": 1,
           "fpr": 0
         },
         {
@@ -291,7 +201,7 @@
           "category": "pat-JHADDIX_XSS",
           "attacks": 107,
           "benign": 0,
-          "tpr": 0.9439,
+          "tpr": 1,
           "fpr": 0
         },
         {

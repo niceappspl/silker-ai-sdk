@@ -115,7 +115,7 @@ export function detectSqliHeuristic(input: string): boolean {
         /' OR '/i,                    // ' OR '
         /" OR "/i,                    // " OR " (double-quote variant)
         /' OR \d+\s*=/i,              // ' OR 1= (tautology, allows spaces)
-        /['");]\s*--/,                // line comment after quote/paren/semicolon
+        /['");]\s*(?:--|[–—])/,       // line comment after quote/paren/semicolon (including unicode dashes)
         /['");]\s*#/,                 // MySQL hash comment after quote/paren/semicolon
         /['")]\s*\/\*/,               // block comment after quote/paren
         /'[^']*\bORDER\s+BY\b/i,      // quote-break column enumeration (1' ORDER BY 1--)
@@ -131,6 +131,8 @@ export function detectSqliHeuristic(input: string): boolean {
         /' AND \d/i,                  // ' AND 1= tautology
         /\b(OR|AND)\s+\d+\s*=\s*\d+/i, // bare numeric boolean probe: OR 1=0 / AND 1=1
         /\b(OR|AND)\s+[a-zA-Z]\s*=\s*[a-zA-Z]\b/i, // bare identifier probe: OR x=y
+        /\b(OR|AND)\s+[\(\s\'\"]*([a-zA-Z0-9_]+)[\)\s\'\"]*\s*=\s*[\(\s\'\"]*\2\b/i, // nested paren tautology: )) or (('x'))=(('x
+        /['"]\s*=\s*['"]or['"]?/i,    // assignment tautology probe: '="or'
         /\bor\s+true\b/i,             // or true / or true--
         /\blike\s+'%+'/i,             // LIKE '%' always-true wildcard bypass
         /sleep\s*\(\s*\d/i,           // SLEEP(5), pg_SLEEP(5) - time-based blind
@@ -179,7 +181,7 @@ export function detectSqliHeuristic(input: string): boolean {
         // Only IDENTICAL operands flag, so benign "key=value" pairs near "or"/"and"
         // (e.g. "active and verified=true", "red or blue&sort=name") are NOT flagged.
         if (t.value === 'OR' || t.value === 'AND') {
-            const windowEnd = Math.min(i + 12, tokens.length);
+            const windowEnd = Math.min(i + 24, tokens.length);
             let eqIndex = -1;
             for (let j = i + 1; j < windowEnd; j++) {
                 if (tokens[j].value === '=') {
@@ -217,12 +219,31 @@ export function detectSqliHeuristic(input: string): boolean {
 }
 
 /**
+ * Decodes common URL encoding (e.g. %3C, %2F, %22, %6F) up to 2 passes.
+ */
+function decodeUrl(input: string): string {
+    let prev = input;
+    for (let pass = 0; pass < 2; pass++) {
+        try {
+            const next = decodeURIComponent(prev.replace(/\+/g, ' '));
+            if (next === prev) break;
+            prev = next;
+        } catch {
+            const next = prev.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+            if (next === prev) break;
+            prev = next;
+        }
+    }
+    return prev;
+}
+
+/**
  * Decodes common HTML entities like &#97; or &#x3A; to their character equivalents.
  */
 function decodeEntities(input: string): string {
     return input
-        .replace(/&#([0-9]{1,3});/gi, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
-        .replace(/&#x([0-9a-f]{1,2});/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+        .replace(/&#([0-9]{1,3});?/gi, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
+        .replace(/&#x([0-9a-f]{1,2});?/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
         .replace(/&[a-z0-9]+;/gi, (match) => {
             const entities: Record<string, string> = {
                 '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'", '&amp;': '&',
@@ -238,8 +259,10 @@ function decodeEntities(input: string): string {
 export function detectXssHeuristic(input: string): boolean {
     if (!input || input.length < 5) return false;
 
-    // 1. Pre-normalization: Decode HTML entities and lowercase
-    const decoded = decodeEntities(input);
+    // 1. Pre-normalization: Strip null bytes, decode URL, decode HTML entities and lowercase
+    let cleaned = input.replace(/\\0|\0|\x00/g, '');
+    cleaned = decodeUrl(cleaned);
+    const decoded = decodeEntities(cleaned);
     const lower = decoded.toLowerCase();
 
     // 2. High-confidence regex patterns for obfuscated XSS
@@ -249,6 +272,7 @@ export function detectXssHeuristic(input: string): boolean {
         /data\s*:\s*text\/html/i,
         /base64\s*,/i,
         /on\w+\s*=/i, // Any event handler (onerror, onload, etc.)
+        /xlink:href\s*=/i, // SVG/MathML namespace execution
         /alert\s*\(/i,
         /prompt\s*\(/i,
         /confirm\s*\(/i,

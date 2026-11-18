@@ -86,8 +86,8 @@ npm run benchmark:all          # core + extended (not community - run separately
 
 | Dataset | Policy | TPR | Macro TPR | FPR |
 | --- | --- | ---: | ---: | ---: |
-| SQL Injection | block on detection | 97.7% | 95.9% | 0.0% |
-| XSS | block on detection | 96.1% | 97.4% | 0.0% |
+| SQL Injection | block on detection | 98.2% | 96.7% | 0.0% |
+| XSS | block on detection | 99.7% | 99.4% | 0.0% |
 
 ## Detectors
 

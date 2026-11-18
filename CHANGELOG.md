@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.9] - 2026-09-17
+### XSS & SQLi heuristics: community XSS 96.1% → 99.7% TPR, community SQLi 97.7% → 98.2% TPR (0% FPR)
+- **XSS pre-normalization & evasion handling** (`src/detection/heuristics.ts`):
+  - Added URL-decoding pass (`decodeUrl`) for multi-pass `%xx` percent-encoded evasion payloads (e.g. `%3Cscript`, `%2Fscript`, `%6Fnxxx=1`, `%73%63%72%69%70%74`).
+  - Added null-byte stripping (`\\0`, `\0`, `\x00`) to defeat browser parser evasion quirks (e.g. `<<scr\0ipt`).
+  - Expanded HTML entity decoder to support semicolon-less numeric entities (e.g. `j&#97v&#97script&#3A;` → `javascript:`).
+  - Added `xlink:href` detection for SVG/MathML namespace script execution.
+- **SQLi tautology & comment probe enhancements** (`src/detection/heuristics.ts`):
+  - Expanded quick patterns to match Unicode en-dash (`–`) and em-dash (`—`) line comments after quote/paren delimiters (`' –`).
+  - Added regex capture for deeply nested parenthesized tautology probes (`\b(OR|AND)\s+[\(\s\'\"]*([a-zA-Z0-9_]+)[\)\s\'\"]*\s*=\s*[\(\s\'\"]*\2\b`) and widened tokenizer tautology window (from 12 to 24 tokens), catching `')) or (('x'))=(('x` and `")) or (("x"))=(("x`.
+  - Added assignment tautology probe `/['"]\s*=\s*['"]or['"]?/i` (`'="or'`).
+- **Benchmark impact**:
+  - **Community suite**: XSS TPR **96.1% → 99.7%** (1 FN down from 12, with the sole remaining FN being `<h1>INJECTX</h1>` preserved to avoid false positives on legitimate HTML/markdown); SQLi TPR **97.7% → 98.2%** (14 FN down from 18, all remaining 14 being bare single-symbol fuzz fragments).
+  - **FPR remains 0.0%** across all suites (core, extended, community). Core and extended remain 100% TPR / 0% FPR. Full test suite: 571 tests green.
+
 ## [1.6.8] - 2026-07-01
 ### SQLi heuristic: community benchmark 68.1% → 97.7% TPR (0% FPR, no core/extended regression)
 - **`detectSqliHeuristic` quick-pattern expansion** (`src/detection/heuristics.ts`) - the length gate (`input.length < 5`) previously ran *before* the regex fast-path, silently skipping short-but-structural payloads (`'--`, `'#`, `" or "..."`). Regex patterns now run first (all structural, no bare-symbol matching), length gate only applies to the tokenizer pass.
